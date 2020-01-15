@@ -2,11 +2,11 @@
 # Makefile for MPX/Linux
 
 AS      = nasm
-CC      = i386-elf-gcc
-CFLAGS  = -Wall -Wextra -Werror -nostartfiles -nostdlib -nodefaultlibs -ffreestanding -g -c
-LD      = i386-elf-ld
-LDFLAGS = 
-ASFLAGS = -f elf -g
+CC      = gcc
+CFLAGS  = -Wall -Wextra -Werror -nostartfiles -nostdlib -nodefaultlibs -ffreestanding -g -c -m32
+LD      = ld
+LDFLAGS = -m elf_i386
+ASFLAGS = -f elf32 -g
 
 OBJFILES =\
 core/gdt.o\

@@ -2,11 +2,11 @@
 # Makefile for MPX
 
 AS	= nasm
-CC	= i386-elf-gcc
-CFLAGS  = -Wall -Wextra -Werror -nostartfiles -nodefaultlibs -nostdlib -g -c
-LD	= i386-elf-ld
-LDFLAGS = -T link.ld
-ASFLAGS = -f elf -g
+CC	= gcc
+CFLAGS  = -Wall -Wextra -Werror -nostartfiles -nodefaultlibs -nostdlib -g -c -m32
+LD	= ld
+LDFLAGS = -m elf_i386 -T link.ld
+ASFLAGS = -f elf32 -g
 
 OBJFILES =\
 boot/loader.o\
