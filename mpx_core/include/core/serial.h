@@ -17,13 +17,13 @@ int init_serial(int device);
   Description..: Writes a message to the active serial output device.
     Appends a newline character.
 */
-int serial_println(const char *msg);
+int serial_println(const char* msg);
 
 /*
   Procedure..: serial_print
   Description..: Writes a message to the active serial output device.
 */
-int serial_print(const char *msg);
+int serial_print(const char* msg);
 
 /*
   Procedure..: set_serial_out

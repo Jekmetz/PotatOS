@@ -9,15 +9,15 @@
 #define WRITE 3
 #define INVALID_OPERATION 4
 
-#define TRUE  1
-#define FALSE  0
+#define TRUE 1
+#define FALSE 0
 
 #define MODULE_R1 0
 #define MODULE_R2 1
 #define MODULE_R3 2
 #define MODULE_R4 4
 #define MODULE_R5 8
-#define MODULE_F  9
+#define MODULE_F 9
 #define IO_MODULE 10
 #define MEM_MODULE 11
 
@@ -31,8 +31,8 @@
 typedef struct {
   int op_code;
   int device_id;
-  char *buffer_ptr;
-  int *count_ptr;
+  char* buffer_ptr;
+  int* count_ptr;
 } param;
 
 /*
@@ -40,8 +40,7 @@ typedef struct {
   Description..: Generate interrupt 60H
   Params..: int op_code one of (IDLE, EXIT, READ, WRITE)
 */
-int sys_req( int op_code, int device_id, char *buffer_ptr, 
-			int *count_ptr );
+int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr);
 
 /*
   Procedure..: mpx_init
@@ -62,30 +61,30 @@ void sys_set_malloc(u32int (*func)(u32int));
   Description..: Sets the memory free function for sys_free_mem
   Params..: s1-destination, s2-source
 */
-void sys_set_free(int (*func)(void *));
+void sys_set_free(int (*func)(void*));
 
 /*
   Procedure..: sys_set_read
   Description..: Sets the default function for reading input
-			from the keyboard, to the function developed
-			by the students
+                        from the keyboard, to the function developed
+                        by the students
   Params..: Function pointer
 */
-void sys_set_read(int (*func)(char *, int *));
+void sys_set_read(int (*func)(char*, int*));
 
 /*
   Procedure..: sys_alloc_mem
   Description..: Allocates a block of memory (similar to malloc)
   Params..: Number of bytes to allocate
 */
-void *sys_alloc_mem(u32int size);
+void* sys_alloc_mem(u32int size);
 
 /*
   Procedure..: sys_free_mem
   Description..: Frees memory
   Params..: Pointer to block of memory to free
 */
-int sys_free_mem(void *ptr);
+int sys_free_mem(void* ptr);
 
 /*
   Procedure..: idle

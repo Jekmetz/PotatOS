@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef _PAGING_H
 #define _PAGING_H
 
@@ -10,12 +12,12 @@
   Describes a single page in memory
 */
 typedef struct {
-  u32int present   : 1;
+  u32int present : 1;
   u32int writeable : 1;
-  u32int usermode  : 1;
-  u32int accessed  : 1;
-  u32int dirty     : 1;
-  u32int reserved  : 7;
+  u32int usermode : 1;
+  u32int accessed : 1;
+  u32int dirty : 1;
+  u32int reserved : 7;
   u32int frameaddr : 20;
 } page_entry;
 
@@ -32,7 +34,7 @@ typedef struct {
   Limited to 1024 tables for now
 */
 typedef struct {
-  page_table *tables[1024];
+  page_table* tables[1024];
   u32int tables_phys[1024];
 } page_dir;
 
@@ -62,7 +64,7 @@ u32int first_free();
 
 /*
   Procedure..: init_paging
-  Description..: Initializes the kernel page directory and 
+  Description..: Initializes the kernel page directory and
     initial kernel heap area. Performs identity mapping of
     the kernel frames such that the virtual addresses are
     equivalent to the physical addresses.
@@ -77,14 +79,14 @@ void init_paging();
     linear to physical addresses.
     http://en.wikipedia.org/wiki/Control_register#Control_registers_in_x86_series
 */
-void load_page_dir(page_dir *new_page_dir);
+void load_page_dir(page_dir* new_page_dir);
 
 /*
   Procedure..: get_page
-  Description..: Finds and returns a page, allocating a new 
+  Description..: Finds and returns a page, allocating a new
    page table if necessary.
 */
-page_entry* get_page(u32int addr, page_dir *dir, int make_table);
+page_entry* get_page(u32int addr, page_dir* dir, int make_table);
 
 /*
   Procedure..: new_frame

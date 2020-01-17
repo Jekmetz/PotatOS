@@ -1,6 +1,6 @@
+#include <stdarg.h>
 #include <string.h>
 #include <system.h>
-#include <stdarg.h>
 
 #define F_MINUS (1 << 0)
 #define F_PLUS (1 << 1)
@@ -27,12 +27,12 @@ typedef unsigned char BYTE;
   Description..: Returns the length of a string.
   Params..: s-input string
 */
-int strlen(const char *s) {
+int strlen(const char* s) {
   int r1 = 0;
   if (*s)
     while (*s++)
       r1++;
-  return r1; // return length of string
+  return r1;  // return length of string
 }
 
 /*
@@ -40,11 +40,11 @@ int strlen(const char *s) {
   Description..: Copy one string to another.
   Params..: s1-destination, s2-source
 */
-char *strcpy(char *s1, const char *s2) {
-  char *rc = s1;
+char* strcpy(char* s1, const char* s2) {
+  char* rc = s1;
   while ((*s1++ = *s2++))
     ;
-  return rc; // return pointer to destination string
+  return rc;  // return pointer to destination string
 }
 
 /*
@@ -52,7 +52,7 @@ char *strcpy(char *s1, const char *s2) {
   Description..: Convert an ASCII string to an integer
   Params..: const char *s -- String
 */
-int atoi(const char *s) {
+int atoi(const char* s) {
   int res = 0;
   int charVal = 0;
   char sign = ' ';
@@ -61,10 +61,10 @@ int atoi(const char *s) {
   while (isspace(&c)) {
     ++s;
     c = *s;
-  } // advance past whitespace
+  }  // advance past whitespace
 
   if (*s == '-' || *s == '+')
-    sign = *(s++); // save the sign
+    sign = *(s++);  // save the sign
 
   while (*s != '\0') {
     charVal = *s - 48;
@@ -75,15 +75,14 @@ int atoi(const char *s) {
   if (sign == '-')
     res = res * -1;
 
-  return res; // return integer
+  return res;  // return integer
 }
 /*
   Procedure..: strcmp
   Description..: String comparison
   Params..: s1-string 1, s2-string 2
 */
-int strcmp(const char *s1, const char *s2) {
-
+int strcmp(const char* s1, const char* s2) {
   // Remarks:
   // 1) If we made it to the end of both strings (i. e. our pointer points to a
   //    '\0' character), the function will return 0
@@ -94,7 +93,7 @@ int strcmp(const char *s1, const char *s2) {
     ++s1;
     ++s2;
   }
-  return (*(unsigned char *)s1 - *(unsigned char *)s2);
+  return (*(unsigned char*)s1 - *(unsigned char*)s2);
 }
 
 /* ---------------------------------------
@@ -107,8 +106,8 @@ int strcmp(const char *s1, const char *s2) {
   Description..: Concatenate the contents of one string onto another.
   Params..: s1-destination, s2-source
 */
-char *strcat(char *s1, const char *s2) {
-  char *rc = s1;
+char* strcat(char* s1, const char* s2) {
+  char* rc = s1;
   if (*s1)
     while (*++s1)
       ;
@@ -122,7 +121,7 @@ char *strcat(char *s1, const char *s2) {
   Description..: Determine if a character is whitespace.
   Params..: c-character to check
 */
-int isspace(const char *c) {
+int isspace(const char* c) {
   if (*c == ' ' || *c == '\n' || *c == '\r' || *c == '\f' || *c == '\t' ||
       *c == '\v') {
     return 1;
@@ -135,8 +134,8 @@ int isspace(const char *c) {
   Description..: Set a region of memory.
   Params..: s-destination, c-byte to write, n-count
 */
-void *memset(void *s, int c, size_t n) {
-  unsigned char *p = (unsigned char *)s;
+void* memset(void* s, int c, size_t n) {
+  unsigned char* p = (unsigned char*)s;
   while (n--) {
     *p++ = (unsigned char)c;
   }
@@ -148,9 +147,9 @@ void *memset(void *s, int c, size_t n) {
   Description..: Split string into tokens
   Params..: s1-string, s2-delimiter
 */
-char *strtok(char *s1, const char *s2) {
-  static char *tok_tmp = NULL;
-  const char *p = s2;
+char* strtok(char* s1, const char* s2) {
+  static char* tok_tmp = NULL;
+  const char* p = s2;
 
   // new string
   if (s1 != NULL) {
@@ -204,14 +203,16 @@ char *strtok(char *s1, const char *s2) {
   Description..: returns 1 if digit, else 0
   Params..: c-character to test
 */
-int isdigit(char c) { return (c >= '0' && c <= '9'); }
+int isdigit(char c) {
+  return (c >= '0' && c <= '9');
+}
 
 /*
   Procedure..: reverse
   Description..: reverse a string from 0 to j
   Params..: str-string to reverse, j-index to reverse to
 */
-char *reverse(char *str, int j) {
+char* reverse(char* str, int j) {
   int i = 0;
   while (i < j) {
     *(str + i) ^= *(str + j);
@@ -228,25 +229,25 @@ char *reverse(char *str, int j) {
   Params..: num-number to convert to string, str-string to store it in,
   base-base of the number to convert
 */
-char *itoa(int num, char *str, int base) {
+char* itoa(int num, char* str, int base) {
   int idx = 0;
   int neg = 0;
 
-  if (num == 0) // if num is 0... handle specifically
+  if (num == 0)  // if num is 0... handle specifically
   {
     str[idx++] = '0';
     str[idx] = '\0';
     return str;
   }
 
-  if (num < 0 && base == 10) // if num is negative and it is in base 10...
+  if (num < 0 && base == 10)  // if num is negative and it is in base 10...
   {
     num = -num;
     neg = 1;
   }
 
   int r;
-  while (num) // while num is nonzero...
+  while (num)  // while num is nonzero...
   {
     r = num % base;
     str[idx++] = (r > 9) ? (r - 10) + 'a' : r + '0';
@@ -254,11 +255,10 @@ char *itoa(int num, char *str, int base) {
   }
   if (neg)
     str[idx++] = '-';
-  str[idx] = '\0'; // end it
+  str[idx] = '\0';  // end it
   reverse(str, idx - 1);
   return str;
 }
-
 
 /* And finally....
    For the brave ones! (Note: you'll need to add a prototype to string.h)
@@ -273,43 +273,43 @@ char *itoa(int num, char *str, int base) {
    int sprintf(char *str, const char *format, ...);
 */
 
-int sprintf(char *buffer, char *format, ...) {
+int sprintf(char* buffer, char* format, ...) {
   int ret = 0;
   BYTE flag = 0;
   int fNum = 0;
-  char *temp;
+  char* temp;
 
   va_list valist;
   va_start(valist, format);
 
   while (*format) {
-    if (*format != '%') // If the current token is a %...
+    if (*format != '%')  // If the current token is a %...
     {
-      *buffer++ = *format++; // add character to buffer
-      continue;              // move on with your life
+      *buffer++ = *format++;  // add character to buffer
+      continue;               // move on with your life
     }
 
-    format++; // increment the format
+    format++;  // increment the format
     // if we need to evaluate a format...
 
     flag = 0;
     switch (*format) {
-    case '+':
-      flag |= F_PLUS;
-      format++;
-      break;
-    case '-':
-      flag |= F_MINUS;
-      format++;
-      break;
-    case '%':
-      flag |= F_PERCENT;
-      format++;
-      break;
+      case '+':
+        flag |= F_PLUS;
+        format++;
+        break;
+      case '-':
+        flag |= F_MINUS;
+        format++;
+        break;
+      case '%':
+        flag |= F_PERCENT;
+        format++;
+        break;
     }
 
     fNum = 0;
-    while (isdigit(*format)) // while we have a digit...
+    while (isdigit(*format))  // while we have a digit...
       fNum = fNum * 10 + (*format++ - '0');
 
     if (flag & F_MINUS)
@@ -329,48 +329,48 @@ int sprintf(char *buffer, char *format, ...) {
       char str[n];
       itoa(num, str, 10);
 
-      if (fNum > 0) // if there was a number we care about...
+      if (fNum > 0)  // if there was a number we care about...
       {
         int i;
         for (i = 0; i < fNum - n;
-             i++) // for the amount of spaces to add to the buffer...
+             i++)  // for the amount of spaces to add to the buffer...
           *buffer++ = ' ';
       }
 
       cnt = 0;
-      while ( (*buffer++ = str[cnt++]) )
-        ; // copy argument into buffer
+      while ((*buffer++ = str[cnt++]))
+        ;  // copy argument into buffer
       buffer--;
 
-      if (fNum < 0) // if there was a negative number we care about...
+      if (fNum < 0)  // if there was a negative number we care about...
       {
         int i;
         for (i = 0; i < -fNum - n;
-             i++) // for the amount of spaces to add to the buffer...
+             i++)  // for the amount of spaces to add to the buffer...
           *buffer++ = ' ';
       }
 
       format++;
     } else if (test == 's') {
-      temp = va_arg(valist, char *);
+      temp = va_arg(valist, char*);
       n = strlen(temp);
-      if (fNum > 0) // if there was a number we care about...
+      if (fNum > 0)  // if there was a number we care about...
       {
         int i;
         for (i = 0; i < fNum - n;
-             i++) // for the amount of spaces to add to the buffer...
+             i++)  // for the amount of spaces to add to the buffer...
           *buffer++ = ' ';
       }
 
-      while ( (*buffer++ = *temp++) )
-        ; // copy argument into buffer
+      while ((*buffer++ = *temp++))
+        ;  // copy argument into buffer
       buffer--;
 
-      if (fNum < 0) // if there was a negative number we care about...
+      if (fNum < 0)  // if there was a negative number we care about...
       {
         int i;
         for (i = 0; i < -fNum - n;
-             i++) // for the amount of spaces to add to the buffer...
+             i++)  // for the amount of spaces to add to the buffer...
           *buffer++ = ' ';
       }
 
@@ -392,24 +392,24 @@ int sprintf(char *buffer, char *format, ...) {
       char str[n];
       itoa(num, str, 16);
 
-      if (fNum > 0) // if there was a number we care about...
+      if (fNum > 0)  // if there was a number we care about...
       {
         int i;
         for (i = 0; i < fNum - n;
-             i++) // for the amount of spaces to add to the buffer...
+             i++)  // for the amount of spaces to add to the buffer...
           *buffer++ = ' ';
       }
 
       cnt = 0;
-      while ( (*buffer++ = str[cnt++]) )
-        ; // copy argument into buffer
+      while ((*buffer++ = str[cnt++]))
+        ;  // copy argument into buffer
       buffer--;
 
-      if (fNum < 0) // if there was a negative number we care about...
+      if (fNum < 0)  // if there was a negative number we care about...
       {
         int i;
         for (i = 0; i < -fNum - n;
-             i++) // for the amount of spaces to add to the buffer...
+             i++)  // for the amount of spaces to add to the buffer...
           *buffer++ = ' ';
       }
 
