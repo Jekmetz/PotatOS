@@ -260,168 +260,191 @@ char* itoa(int num, char* str, int base) {
   return str;
 }
 
-/* And finally....
-   For the brave ones! (Note: you'll need to add a prototype to string.h)
-   sprintf must work properly for the following types to receive extra credit:
-     1) characters
-     2) strings
-     3) signed integers
-     4) hexadecimal numbers may be useful
-     ...
-     \infty) Or feel free to completely implement sprintf
-             (Read the man Page: $ man sprintf)
-   int sprintf(char *str, const char *format, ...);
+/*
+  Procedure: sprintf
+  Description: brings a lot of parameters into buffer based off of the format
+    Format works for: %s, %d, %i, %c, and %x
+  Params: buffer-char* to write to, format-format string, ...- parameters to match format
 */
-
-int sprintf(char* buffer, char* format, ...) {
-  int ret = 0;
-  BYTE flag = 0;
-  int fNum = 0;
-  char* temp;
+int sprintf(char *buffer, char *format, ...) {
+  int ret = 0;   // return value
+  BYTE flag = 0; // keeps track of certain flags
+  int fNum = 0;  // format number ex: %-10s
+  char *temp;    // temp char* to use when needed
 
   va_list valist;
-  va_start(valist, format);
+  va_start(valist, format); // start with the parameter nonsense
 
-  while (*format) {
-    if (*format != '%')  // If the current token is a %...
+  while (*format) // while there is still stuff in the format...
+  {
+    if (*format != '%') // If the current token is a %...
     {
-      *buffer++ = *format++;  // add character to buffer
-      continue;               // move on with your life
+      *buffer++ = *format++; // add character to buffer
+      continue;              // move on with your life
     }
 
-    format++;  // increment the format
+    format++; // increment the format
     // if we need to evaluate a format...
 
     flag = 0;
-    switch (*format) {
-      case '+':
-        flag |= F_PLUS;
-        format++;
-        break;
-      case '-':
-        flag |= F_MINUS;
-        format++;
-        break;
-      case '%':
-        flag |= F_PERCENT;
-        format++;
-        break;
+    switch (*format) // switch through the first character
+    {
+    case '+':
+      flag |= F_PLUS;
+      format++;
+      break;
+    case '-':
+      flag |= F_MINUS;
+      format++;
+      break;
+    case '%':
+      flag |= F_PERCENT;
+      format++;
+      break;
     }
 
     fNum = 0;
-    while (isdigit(*format))  // while we have a digit...
+    while (isdigit(*format)) // while we have a digit...
+    {
       fNum = fNum * 10 + (*format++ - '0');
+    }
 
-    if (flag & F_MINUS)
+    if (flag & F_MINUS) // if we have a minus number...
+    {
       fNum *= -1;
+    }
 
-    int num, tmp, n, cnt;
-    char c;
-    char test = *format;
-    if (test == 'd' || test == 'i') {
-      num = va_arg(valist, int);
-      tmp = num;
-      n = 0;
-      while (tmp) {
-        n++;
-        tmp = tmp / 10;
-      }
-      char str[n];
-      itoa(num, str, 10);
+    switch (*format) {
 
-      if (fNum > 0)  // if there was a number we care about...
+    // integer input
+    case 'd':
+    case 'i': {
+      int num = va_arg(valist, int);
+      int tmp = num;
+      int n = 0;
+
+      while (tmp) // while tmp is nonzero...
       {
-        int i;
-        for (i = 0; i < fNum - n;
-             i++)  // for the amount of spaces to add to the buffer...
-          *buffer++ = ' ';
+        n++;            // add one to the length...
+        tmp = tmp / 10; // divide by base 10
       }
 
-      cnt = 0;
+      char str[n];
+      itoa(num, str, 10); // store number in str
+
+      // Add spaces in the front if applicable
+      buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+
+      int cnt = 0;
       while ((*buffer++ = str[cnt++]))
-        ;  // copy argument into buffer
+        ; // copy argument into buffer
       buffer--;
 
-      if (fNum < 0)  // if there was a negative number we care about...
-      {
-        int i;
-        for (i = 0; i < -fNum - n;
-             i++)  // for the amount of spaces to add to the buffer...
-          *buffer++ = ' ';
-      }
+      // Add spaces in the back if applicable
+      buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
 
       format++;
-    } else if (test == 's') {
-      temp = va_arg(valist, char*);
-      n = strlen(temp);
-      if (fNum > 0)  // if there was a number we care about...
-      {
-        int i;
-        for (i = 0; i < fNum - n;
-             i++)  // for the amount of spaces to add to the buffer...
-          *buffer++ = ' ';
-      }
+      break;
+    }
+
+    case 's': {
+      temp = va_arg(valist, char *);
+      int n = strlen(temp); // n is length of string
+
+      // Add spaces in the front if applicable
+      buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
 
       while ((*buffer++ = *temp++))
-        ;  // copy argument into buffer
+        ; // copy argument into buffer
       buffer--;
 
-      if (fNum < 0)  // if there was a negative number we care about...
-      {
-        int i;
-        for (i = 0; i < -fNum - n;
-             i++)  // for the amount of spaces to add to the buffer...
-          *buffer++ = ' ';
-      }
+      // Add spaces in the back if applicable
+      buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
 
       format++;
+      break;
+    }
 
-    } else if (test == 'c') {
-      c = va_arg(valist, int);
+    case 'c': {
+      // add character to buffer
+      char c = va_arg(valist, int);
+
+      // Add spaces in the front if applicable
+      buffer = sprintf_space_helper(buffer, fNum, 1, fNum > 0);
+
       *buffer++ = c;
+
+      // Add spaces in the back if applicable
+      buffer = sprintf_space_helper(buffer, -fNum, 1, fNum < 0);
       format++;
+      break;
+    }
 
-    } else if (test == 'x') {
-      num = va_arg(valist, int);
-      tmp = num;
-      n = 0;
-      while (tmp) {
-        n++;
-        tmp = tmp / 16;
-      }
-      char str[n];
-      itoa(num, str, 16);
+    case 'x': {
+      int num = va_arg(valist, int);
+      int tmp = num;
+      int n = 0;
 
-      if (fNum > 0)  // if there was a number we care about...
+      while (tmp) // while tmp is nonzero...
       {
-        int i;
-        for (i = 0; i < fNum - n;
-             i++)  // for the amount of spaces to add to the buffer...
-          *buffer++ = ' ';
+        n++;            // add one to the length
+        tmp = tmp / 16; // divide by base 16
       }
 
-      cnt = 0;
+      char str[n];
+      itoa(num, str, 16); // put number into str
+
+      // Add spaces in the front if applicable
+      buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+
+      int cnt = 0;
       while ((*buffer++ = str[cnt++]))
-        ;  // copy argument into buffer
+        ; // copy argument into buffer
       buffer--;
 
-      if (fNum < 0)  // if there was a negative number we care about...
-      {
-        int i;
-        for (i = 0; i < -fNum - n;
-             i++)  // for the amount of spaces to add to the buffer...
-          *buffer++ = ' ';
-      }
+      // Add spaces in the back if applicable
+      buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
 
       format++;
+      break;
+    }
 
-    } else if (flag & F_PERCENT) {
-      *buffer++ = '%';
-    } else {
-      va_arg(valist, void*);
+    default: {
+      if (flag & F_PERCENT) // if there were 2 percent signs...
+      {
+        *buffer++ = '%';
+      } else // if there was a parameter type we did not realize...
+      {
+        format++;               // move on with your life
+        va_arg(valist, void *); // skip that parameter
+      }
+    }
     }
   }
 
+  *buffer = '\0'; // add null charachter at the end
+
   va_end(valist);
   return ret;
+}
+
+/*
+  Procedure: buffer = sprintf_space_helper
+  Description: adds spaces where needed for the sprintf function
+  Params: buffer-char* to store spaces to, 
+    fNum-format number, n-length of string that has been/will be
+    added, doAction-boolean on whether or not to add the spaces
+*/
+char* sprintf_space_helper(char *buffer, int fNum, int n,
+                          BYTE doAction) {
+  if (doAction) // if we are to add the spaces...
+  {
+    int i;
+    for (i = 0; i < fNum - n; i++) // for the amount of spaces to add to the buffer...
+    {
+      *buffer++ = ' '; // add spaces to the buffer
+    }  
+  }
+
+  return buffer;
 }
