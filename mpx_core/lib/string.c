@@ -418,7 +418,7 @@ int sprintf(char *buffer, char *format, ...) {
     } else if (flag & F_PERCENT) {
       *buffer++ = '%';
     } else {
-      va_arg(valist, void);
+      va_arg(valist, void*);
     }
   }
 
