@@ -261,6 +261,27 @@ char* itoa(int num, char* str, int base) {
 }
 
 /*
+  Procedure: buffer = sprintf_space_helper
+  Description: adds spaces where needed for the sprintf function
+  Params: buffer-char* to store spaces to, 
+    fNum-format number, n-length of string that has been/will be
+    added, doAction-boolean on whether or not to add the spaces
+*/
+char* sprintf_space_helper(char *buffer, int fNum, int n,
+                          BYTE doAction) {
+  if (doAction) // if we are to add the spaces...
+  {
+    int i;
+    for (i = 0; i < fNum - n; i++) // for the amount of spaces to add to the buffer...
+    {
+      *buffer++ = ' '; // add spaces to the buffer
+    }  
+  }
+
+  return buffer;
+}
+
+/*
   Procedure: sprintf
   Description: brings a lot of parameters into buffer based off of the format
     Format works for: %s, %d, %i, %c, and %x
@@ -426,25 +447,4 @@ int sprintf(char *buffer, char *format, ...) {
 
   va_end(valist);
   return ret;
-}
-
-/*
-  Procedure: buffer = sprintf_space_helper
-  Description: adds spaces where needed for the sprintf function
-  Params: buffer-char* to store spaces to, 
-    fNum-format number, n-length of string that has been/will be
-    added, doAction-boolean on whether or not to add the spaces
-*/
-char* sprintf_space_helper(char *buffer, int fNum, int n,
-                          BYTE doAction) {
-  if (doAction) // if we are to add the spaces...
-  {
-    int i;
-    for (i = 0; i < fNum - n; i++) // for the amount of spaces to add to the buffer...
-    {
-      *buffer++ = ' '; // add spaces to the buffer
-    }  
-  }
-
-  return buffer;
 }
