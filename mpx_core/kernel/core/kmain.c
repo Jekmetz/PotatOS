@@ -45,8 +45,17 @@ void kmain(void) {
   // 3) Descriptor Tables
   klogv("Initializing descriptor tables...");
 
+  init_gdt();
+  init_idt();
+
   // 4) Virtual Memory
   klogv("Initializing virtual memory...");
+
+  init_pic();
+  init_irq();
+  sti();
+
+  init_paging();
 
   // 5) Call YOUR command handler -  interface method
   klogv("Transferring control to commhand...");
