@@ -17,6 +17,7 @@
 #include <system.h>
 
 #include "modules/mpx_supt.h"
+#include "modules/command_handler.h"
 
 void kmain(void) {
   extern uint32_t magic;
@@ -28,13 +29,13 @@ void kmain(void) {
   init_serial(COM1);
   set_serial_out(COM1);
   set_serial_in(COM1);
-  mpx_init(MODULE_R1);
 
   klogv("Starting MPX boot sequence...");
   klogv("Initialized serial I/O on COM1 device...");
 
   // 1) Initialize the support software by identifying the current
   //     MPX Module.  This will change with each module.
+  mpx_init(MODULE_R1);
 
   // 2) Check that the boot was successful and correct when using grub
   // Comment this when booting the kernel directly using QEMU, etc.
@@ -59,6 +60,7 @@ void kmain(void) {
 
   // 5) Call YOUR command handler -  interface method
   klogv("Transferring control to commhand...");
+  command_handler();
 
   // 6) System Shutdown on return from your command handler
   klogv("Starting system shutdown procedure...");

@@ -11,7 +11,9 @@ ASFLAGS = -f elf32 -g
 # add new files as you create them.
 # I'll start you off with just mpx_supt.o
 OBJFILES =\
-mpx_supt.o 
+mpx_supt.o\
+m1/command_handler.o\
+m1/commands.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
