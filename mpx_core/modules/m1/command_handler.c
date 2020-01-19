@@ -32,7 +32,6 @@ COMMAND commands[] = {{"help", &cmd_help},
 /*  Procedure:commandHandler()
     Description: handles commands typed by the user
 */
-
 int command_handler() {
   // Initialize vars
   char cmd[CMDSIZE];
