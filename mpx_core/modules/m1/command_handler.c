@@ -6,6 +6,7 @@
 
 #include "../mpx_supt.h"
 #include "commands.h"
+#include "poll_input.h"
 
 #define CMDSIZE 100
 
@@ -38,7 +39,9 @@ int command_handler()
 	int exit = 0;
 	int bufSize;
 	int errCode;
-	int cmdidx; 
+	int cmdidx;
+
+	sys_set_read(&poll_input);
 
 	while(!exit)
 	{

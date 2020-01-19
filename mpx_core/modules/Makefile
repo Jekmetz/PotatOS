@@ -13,6 +13,7 @@ ASFLAGS = -f elf32 -g
 OBJFILES =\
 mpx_supt.o\
 m1/command_handler.o\
+m1/poll_input.o\
 m1/commands.o
 
 .c.s:

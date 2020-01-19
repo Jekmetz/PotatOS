@@ -1,0 +1,1 @@
+int poll_input(char* buffer, int* length);
