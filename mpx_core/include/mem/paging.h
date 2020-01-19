@@ -25,9 +25,7 @@ typedef struct {
   Page table structure
   Contains 1024 pages/frames
 */
-typedef struct {
-  page_entry pages[1024];
-} page_table;
+typedef struct { page_entry pages[1024]; } page_table;
 
 /*
   Page directory structure

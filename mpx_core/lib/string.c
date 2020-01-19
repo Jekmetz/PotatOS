@@ -263,19 +263,19 @@ char* itoa(int num, char* str, int base) {
 /*
   Procedure: buffer = sprintf_space_helper
   Description: adds spaces where needed for the sprintf function
-  Params: buffer-char* to store spaces to, 
+  Params: buffer-char* to store spaces to,
     fNum-format number, n-length of string that has been/will be
     added, doAction-boolean on whether or not to add the spaces
 */
-char* sprintf_space_helper(char *buffer, int fNum, int n,
-                          BYTE doAction) {
-  if (doAction) // if we are to add the spaces...
+char* sprintf_space_helper(char* buffer, int fNum, int n, BYTE doAction) {
+  if (doAction)  // if we are to add the spaces...
   {
     int i;
-    for (i = 0; i < fNum - n; i++) // for the amount of spaces to add to the buffer...
+    for (i = 0; i < fNum - n;
+         i++)  // for the amount of spaces to add to the buffer...
     {
-      *buffer++ = ' '; // add spaces to the buffer
-    }  
+      *buffer++ = ' ';  // add spaces to the buffer
+    }
   }
 
   return buffer;
@@ -285,165 +285,165 @@ char* sprintf_space_helper(char *buffer, int fNum, int n,
   Procedure: sprintf
   Description: brings a lot of parameters into buffer based off of the format
     Format works for: %s, %d, %i, %c, and %x
-  Params: buffer-char* to write to, format-format string, ...- parameters to match format
+  Params: buffer-char* to write to, format-format string, ...- parameters to
+  match format
 */
-int sprintf(char *buffer, char *format, ...) {
-  int ret = 0;   // return value
-  BYTE flag = 0; // keeps track of certain flags
-  int fNum = 0;  // format number ex: %-10s
-  char *temp;    // temp char* to use when needed
+int sprintf(char* buffer, char* format, ...) {
+  int ret = 0;    // return value
+  BYTE flag = 0;  // keeps track of certain flags
+  int fNum = 0;   // format number ex: %-10s
+  char* temp;     // temp char* to use when needed
 
   va_list valist;
-  va_start(valist, format); // start with the parameter nonsense
+  va_start(valist, format);  // start with the parameter nonsense
 
-  while (*format) // while there is still stuff in the format...
+  while (*format)  // while there is still stuff in the format...
   {
-    if (*format != '%') // If the current token is a %...
+    if (*format != '%')  // If the current token is a %...
     {
-      *buffer++ = *format++; // add character to buffer
-      continue;              // move on with your life
+      *buffer++ = *format++;  // add character to buffer
+      continue;               // move on with your life
     }
 
-    format++; // increment the format
+    format++;  // increment the format
     // if we need to evaluate a format...
 
     flag = 0;
-    switch (*format) // switch through the first character
+    switch (*format)  // switch through the first character
     {
-    case '+':
-      flag |= F_PLUS;
-      format++;
-      break;
-    case '-':
-      flag |= F_MINUS;
-      format++;
-      break;
-    case '%':
-      flag |= F_PERCENT;
-      format++;
-      break;
+      case '+':
+        flag |= F_PLUS;
+        format++;
+        break;
+      case '-':
+        flag |= F_MINUS;
+        format++;
+        break;
+      case '%':
+        flag |= F_PERCENT;
+        format++;
+        break;
     }
 
     fNum = 0;
-    while (isdigit(*format)) // while we have a digit...
+    while (isdigit(*format))  // while we have a digit...
     {
       fNum = fNum * 10 + (*format++ - '0');
     }
 
-    if (flag & F_MINUS) // if we have a minus number...
+    if (flag & F_MINUS)  // if we have a minus number...
     {
       fNum *= -1;
     }
 
     switch (*format) {
+      // integer input
+      case 'd':
+      case 'i': {
+        int num = va_arg(valist, int);
+        int tmp = num;
+        int n = 0;
 
-    // integer input
-    case 'd':
-    case 'i': {
-      int num = va_arg(valist, int);
-      int tmp = num;
-      int n = 0;
+        while (tmp)  // while tmp is nonzero...
+        {
+          n++;             // add one to the length...
+          tmp = tmp / 10;  // divide by base 10
+        }
 
-      while (tmp) // while tmp is nonzero...
-      {
-        n++;            // add one to the length...
-        tmp = tmp / 10; // divide by base 10
+        char str[n];
+        itoa(num, str, 10);  // store number in str
+
+        // Add spaces in the front if applicable
+        buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+
+        int cnt = 0;
+        while ((*buffer++ = str[cnt++]))
+          ;  // copy argument into buffer
+        buffer--;
+
+        // Add spaces in the back if applicable
+        buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
+
+        format++;
+        break;
       }
 
-      char str[n];
-      itoa(num, str, 10); // store number in str
+      case 's': {
+        temp = va_arg(valist, char*);
+        int n = strlen(temp);  // n is length of string
 
-      // Add spaces in the front if applicable
-      buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+        // Add spaces in the front if applicable
+        buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
 
-      int cnt = 0;
-      while ((*buffer++ = str[cnt++]))
-        ; // copy argument into buffer
-      buffer--;
+        while ((*buffer++ = *temp++))
+          ;  // copy argument into buffer
+        buffer--;
 
-      // Add spaces in the back if applicable
-      buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
+        // Add spaces in the back if applicable
+        buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
 
-      format++;
-      break;
-    }
-
-    case 's': {
-      temp = va_arg(valist, char *);
-      int n = strlen(temp); // n is length of string
-
-      // Add spaces in the front if applicable
-      buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
-
-      while ((*buffer++ = *temp++))
-        ; // copy argument into buffer
-      buffer--;
-
-      // Add spaces in the back if applicable
-      buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
-
-      format++;
-      break;
-    }
-
-    case 'c': {
-      // add character to buffer
-      char c = va_arg(valist, int);
-
-      // Add spaces in the front if applicable
-      buffer = sprintf_space_helper(buffer, fNum, 1, fNum > 0);
-
-      *buffer++ = c;
-
-      // Add spaces in the back if applicable
-      buffer = sprintf_space_helper(buffer, -fNum, 1, fNum < 0);
-      format++;
-      break;
-    }
-
-    case 'x': {
-      int num = va_arg(valist, int);
-      int tmp = num;
-      int n = 0;
-
-      while (tmp) // while tmp is nonzero...
-      {
-        n++;            // add one to the length
-        tmp = tmp / 16; // divide by base 16
+        format++;
+        break;
       }
 
-      char str[n];
-      itoa(num, str, 16); // put number into str
+      case 'c': {
+        // add character to buffer
+        char c = va_arg(valist, int);
 
-      // Add spaces in the front if applicable
-      buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+        // Add spaces in the front if applicable
+        buffer = sprintf_space_helper(buffer, fNum, 1, fNum > 0);
 
-      int cnt = 0;
-      while ((*buffer++ = str[cnt++]))
-        ; // copy argument into buffer
-      buffer--;
+        *buffer++ = c;
 
-      // Add spaces in the back if applicable
-      buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
-
-      format++;
-      break;
-    }
-
-    default: {
-      if (flag & F_PERCENT) // if there were 2 percent signs...
-      {
-        *buffer++ = '%';
-      } else // if there was a parameter type we did not realize...
-      {
-        format++;               // move on with your life
-        va_arg(valist, void *); // skip that parameter
+        // Add spaces in the back if applicable
+        buffer = sprintf_space_helper(buffer, -fNum, 1, fNum < 0);
+        format++;
+        break;
       }
-    }
+
+      case 'x': {
+        int num = va_arg(valist, int);
+        int tmp = num;
+        int n = 0;
+
+        while (tmp)  // while tmp is nonzero...
+        {
+          n++;             // add one to the length
+          tmp = tmp / 16;  // divide by base 16
+        }
+
+        char str[n];
+        itoa(num, str, 16);  // put number into str
+
+        // Add spaces in the front if applicable
+        buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+
+        int cnt = 0;
+        while ((*buffer++ = str[cnt++]))
+          ;  // copy argument into buffer
+        buffer--;
+
+        // Add spaces in the back if applicable
+        buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
+
+        format++;
+        break;
+      }
+
+      default: {
+        if (flag & F_PERCENT)  // if there were 2 percent signs...
+        {
+          *buffer++ = '%';
+        } else  // if there was a parameter type we did not realize...
+        {
+          format++;               // move on with your life
+          va_arg(valist, void*);  // skip that parameter
+        }
+      }
     }
   }
 
-  *buffer = '\0'; // add null charachter at the end
+  *buffer = '\0';  // add null charachter at the end
 
   va_end(valist);
   return ret;

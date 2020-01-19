@@ -17,9 +17,7 @@ typedef struct {
   int index_id;
 } header;
 
-typedef struct {
-  header head;
-} footer;
+typedef struct { header head; } footer;
 
 typedef struct {
   int size;
