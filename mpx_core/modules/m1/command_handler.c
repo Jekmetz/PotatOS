@@ -3,6 +3,7 @@
  **************************************************************/
 #include<string.h>
 #include<core/serial.h>
+#include<core/utility.h>
 
 #include "../mpx_supt.h"
 #include "commands.h"
@@ -16,14 +17,16 @@ int search_commands(char*);
 /********COMMANDS AND FUNCTION DECLARATION*******/
 
 //Initialize commands
-char *commmands[] = 
-{
-	"help"
+char *commands[] = 
+{ 
+	"help",
+	NULL
 };
 
 int (*functions[])(char *) =
 {
-	&cmd_help
+	&cmd_help,
+	NULL
 };
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
@@ -77,15 +80,19 @@ int command_handler()
 
 		//at this point, we know we have a good command
 
-		if(strcmp(cmd,"exit") == 0)	//if they have typed in exit...
-			exit = 1;				//set exit to true
+		//if they have typed in exit... (in the future maybe make a more elegant space-killing solution)
+		if(strcmp(cmd,"exit") == 0)	exit = 1; //set exit to true
 
-
-		//TODO: search through array of commands and process correct function
 		cmdidx = search_commands(cmd);
-		//ex (*functions[cmdidx])(cmd)
-		(*functions[cmdidx])("");
 
+		if(cmdidx == -1) //if we did not find anything...
+		{	char ret [CMDSIZE + 18];
+			sprintf(ret,"Invalid Command: %s\n",cmd);
+			serial_println(ret);
+		} else //if we did find something...
+		{
+			(*functions[cmdidx])("");
+		}
 
 	}
 
@@ -96,9 +103,44 @@ int command_handler()
 
 int search_commands(char* cmd)
 {
-	//TODO: search through cmd
-	if(*cmd == 'a')
-	{}
+	int cmdidx;
+	unsigned char found;
+	char *cmdStart;
+	char *testCmd;
+	//remove spaces from beginning of cmd
+	while(*cmd == ' ')
+	{	cmd++;  }
 
-	return 0;
+	cmdStart = cmd;	//save starting position for command
+	cmdidx = 0;		//start at command 0
+	found = 0;		//we didn't find anything yet
+
+	//while we have another command ahead to process
+	//and we have not found a match yet...
+	while(commands[cmdidx] != NULL && !found)
+	{
+		testCmd = commands[cmdidx];	//*testCmd is easier than writing *commands[cmdidx] :)
+
+		//while each character matches and they are not null or space...
+		while( (*testCmd == *cmd && !isnullorspace(*cmd)) ) 
+		{	//increment both
+			testCmd++;
+			cmd++;
+		}
+
+		if(isnullorspace(*cmd)) //if cmd is pointing to a space or a null..
+		{	//this means that testCmd matched until a space and we have ourselves a match!
+			found = 1;
+		} else //if we did not find a match...
+		{
+			cmdidx++;	//increment cmdidx!
+		}
+
+		cmd = cmdStart;	//reset cmd back to the beginning
+	}
+
+	//if we did not find anything...
+	if(commands[cmdidx] == NULL) cmdidx = -1;	//set cmdidx to -1
+
+	return cmdidx;
 }
