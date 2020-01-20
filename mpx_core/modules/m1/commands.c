@@ -15,13 +15,46 @@
   Params: params-will serve as the params for each of these things
 */
 int cmd_help(char* params) {
-  // TODO: split params on \s+ and deal with them separately...
-  if (strcmp(params, "")) {
-  }
-
-  serial_println(
-      "This will serve as the help menu \n"
-      "This is line one of the help menu\n");
+	
+	char* token = strtok(params, " ");
+	
+	int help_argument = 1, counter = 0; // help_argument is the 2nd argument when using help, which is the command you are requesting help for	
+	while(token != NULL && counter < help_argument){
+		token = strtok(NULL, " ");
+		counter++;
+	}
+  	
+	// TODO: Decide if we want to take the token and take every character to lower case so we avoid the edge case of Help vs help
+	if(strcmp(token, "help") == 0) {
+		serial_println(
+			"Help page for help command\n");
+	}
+	else if(strcmp(token, "version") == 0) {
+		serial_println(
+			"Help page for version command\n");
+	}
+	else if(strcmp(token, "shutdown") == 0) {
+		serial_println(
+			"Help page for shutdown command\n");
+	}
+	else if(strcmp(token, "date") == 0) {
+		serial_println(
+			"Help page for date command\n");
+	}
+	else if(strcmp(token, "time") == 0) {
+		serial_println(
+			"Help page for time command\n");
+	}
+	else{
+		serial_println(
+			"Something went wrong?\n");
+	}
 
   return SUCCESS;  // successful response
 }
+
+// How should we do this? Is it so simple as to have it just print a line?
+int cmd_version(char* params) {
+	serial_println(
+		"Version 1.?\tModule one");
+}	
