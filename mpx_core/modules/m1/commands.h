@@ -7,3 +7,11 @@ for commands.c*/
   Params: params-will serve as the params for each of these things
 */
 int cmd_help(char* params);
+
+int cmd_version(char* params);
+
+int cmd_shutdown(char* params);
+
+int cmd_date(char* params);
+
+int cmd_time(char* params);
