@@ -259,33 +259,31 @@ int cmd_time(char* params) {
                    to integer representing the parameter count
 */
 int set_gparams(char* params, int* pcount) {
-  // Init vars
   int loc = 0;
-
-  strcpy(gparamstr, params);  // copy params into global space;
-
-  // kill previous gparams
-  for (int i = 0; i < MAXPARAMCOUNT; i++) {
-    gparams[i] = gparamstr;
-  }
+  *pcount = 0;  // initialize pcount at 0
+  strcpy(gparamstr, params);
 
   while (gparamstr[loc] != '\0' &&
          *pcount < MAXPARAMCOUNT)  // while we still have more to process...
   {
+    serial_print(&gparamstr[loc]);
     // skip all spaces
-    while (gparamstr[loc] == ' ')  // while we are looking at a space...
+    while (isspace(&gparamstr[loc]))  // while we are looking at a space...
     {
       gparamstr[loc] = '\0';  // set all spaces to null
       loc++;                  // inc string location
     }
-    // at this point, we are looking at the start of a param
-    gparams[*pcount] =
-        (gparamstr +
-         loc);  // set the (pcount)th gparam to the start of that pointer
-    (*pcount)++;
+    // at this point, we are looking at the start of a param or the end of the
+    // string
+    if (gparamstr[loc] != '\0') {
+      gparams[*pcount] =
+          (gparamstr +
+           loc);  // set the (pcount)th gparam to the start of that pointer
+      (*pcount)++;
+    }
 
     // skip all nonspaces
-    while (!isnullorspace(gparamstr[loc])) {
+    while ((gparamstr[loc] != ' ') && (gparamstr[loc] != '\0')) {
       loc++;
     }
   }
