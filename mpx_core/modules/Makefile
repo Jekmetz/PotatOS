@@ -14,7 +14,8 @@ OBJFILES =\
 mpx_supt.o\
 m1/command_handler.o\
 m1/poll_input.o\
-m1/commands.o
+m1/commands.o\
+m1/time.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
