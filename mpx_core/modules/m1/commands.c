@@ -13,11 +13,15 @@
 
 #define SUCCESS 0
 #define FAILURE -1
+#define SHUTDOWN 1
 #define MAXPARAMCOUNT 10
 
 // cmd_help flags
 #define FULLFLAG (1 << 0)
 #define ONELINEFLAG (1 << 1)
+#define SETDATE (1 << 2)
+
+#include <core/io.h>
 
 // Global variables
 char gparamstr[CMDSIZE];
@@ -50,8 +54,7 @@ int cmd_help(char* params) {
   int pcount;
   unsigned char flag = 0;
 
-  if (set_gparams(params, &pcount) != SUCCESS)  // if setting gparams failed...
-  {
+  if (set_gparams(params, &pcount) != SUCCESS) {  // if setting gparams failed...
     // we know it is because too many parameters
     char ret[100];
     sprintf(ret, "There were more than %d parameters. Command FAILURE.",
@@ -61,57 +64,151 @@ int cmd_help(char* params) {
   }
   // if we are here, params are in gparams! parameter count is in pcount
 
-  // Maybe unnecessary for help but to get the idea across
-  // feel free to delete this and the adjacent 'help help' response
-  for (int i = 0; i < pcount; i++)  // for every parameter...
-  {
+  // Getting flags from gparams and assigning to flag
+  for (int i = 0; i < pcount; i++) {  // for every parameter...
+
     // set the correct flag if it is there
     if ((strcmp(gparams[i], "-f") == 0) ||
         (strcmp(gparams[i], "--full") == 0)) {  // FULLLINE
       flag = flag | FULLFLAG;
-    } else if ((strcmp(gparams[i], "-o") == 0) ||
-               (strcmp(gparams[i], "--oneline") == 0)) {  // ONELINE
-      flag = flag | ONELINEFLAG;
     }
   }
 
+  // lists all the commands that have help pages, help without pararms
+  if(strcmp(gparams[0], "help") == 0){
+    serial_println(
+      "You can request a help page for the following command\n"
+      "Command name: help\tHow to request: help help\n"
+      "Command name: version\tHow to request: help version\n"
+      "Command name: shutdown\tHow to request: help shutdown\n"
+      "Command name: date\tHow to request: help date\n"
+      "Command name: time\tHow to request: help time\n"
+    );
+  }
+
+  // Help page for help
   if (strcmp(gparams[1], "help") == 0) {
-    serial_println("Help page for help command\n");
-    if (flag & FULLFLAG)  // if full was mentioned
+    serial_println(
+      "View help pages for individual commands."
+      " Use flag [-f | --full] for more information\n"
+    );
+
+    // If full flag was used
+    if (flag & FULLFLAG)
     {
       serial_println(
           "Implementation:\n"
-          "\thelp <command> [--full] [--oneline]\n"
+          "\thelp <command> [-f | --full]\n"
           "\n"
           "Flags:\n"
-          "\t-f, --full: Show Implementation and Flags for each command\n"
+          "\t[-f | --full] - Show implementation and flags for each command\n"
           "\t\twith explanations\n"
-          "\t-o, --oneline: Show only syntax of command\n");
-    } else if (flag & ONELINEFLAG)  // if oneline flag was happening
-    {
-      serial_println("help <command> [--full] [--oneline]");
+        );
     }
-  } else if (strcmp(gparams[1], "version") == 0) {
-    serial_println("Help page for version command\n");
-  } else if (strcmp(gparams[1], "shutdown") == 0) {
-    serial_println("Help page for shutdown command\n");
-  } else if (strcmp(gparams[1], "date") == 0) {
-    serial_println("Help page for date command\n");
-  } else if (strcmp(gparams[1], "time") == 0) {
-    serial_println("Help page for time command\n");
-  } else {
+  }
+
+  // Help page for version
+  else if (strcmp(gparams[1], "version") == 0) {
+    serial_println(
+      "Display version information."
+      "Use flag [-f | --full] for more information"
+    );
+
+    // If full flag was used
+    if (flag & FULLFLAG)
+    {
+      serial_println(
+        "Implementatoin:\n"
+        "\tversion [-f | --full]\n"
+        "Flags:\n"
+        "\t[-f | --full] - Show implementation and flags for each command\n"
+        "\t\twith explanations"
+      );
+    }
+  }
+
+  // Help page for shutdown
+  else if (strcmp(gparams[1], "shutdown") == 0) {
+    serial_println(
+      "Shutdown the mpx instance."
+      "Use flag [-f | --full] for more information"
+    );
+
+    // If full flag was used
+    if (flag & FULLFLAG)
+    {
+      serial_println(
+        "Implementatoin:\n"
+        "\tshutdown\n"
+      );
+    }
+  }
+
+  // Help page for date
+  else if (strcmp(gparams[1], "date") == 0) {
+    serial_println(
+      "Display date."
+      "Use flag [-f | --full] for more information"
+    );
+
+    // If full flag was used
+    if (flag & FULLFLAG)
+    {
+      serial_println(
+        "Implementatoin:\n"
+        "\tdate [-f | --full] [-s | --set]\n"
+        "Flags:\n"
+        "\t[-f | --full] - Show implementation and flags for each command\n"
+        "\t\twith explanations"
+        "\t[-s | --set] - Set the date in DD-MM-YYYY\n"
+        "\t\tWhere all values are integers"
+        "Example:\n"
+        "\tdate -s 08-24-1994\n"
+        "\tdate -s 01-01-2019\n"
+      );
+    }
+  }
+
+  // Help page for time
+  else if (strcmp(gparams[1], "time") == 0) {
+    serial_println(
+      "Display time."
+      "Use flag [-f | --full] for more information"
+    );
+
+    // If full flag was used
+    if (flag & FULLFLAG)
+    {
+      serial_println(
+        "Implementatoin:\n"
+        "\tdate [-f | --full] [-s | --set]\n"
+        "Flags:\n"
+        "\t[-f | --full] - Show implementation and flags for each command\n"
+        "\t\twith explanations"
+        "\t[-s | --set] - Set the time in HH:MM:SS\n"
+        "\t\tWhere all values are integers and using 24 hour time"
+        "Example:\n"
+        "\time -s 12:24:32\n"
+        "\time -s 16:02:00\n"
+      );
+    }
+  }
+
+  // Help command error
+  else {
     char ret[150];
     sprintf(ret, "Command '%s' not in list!", gparams[1]);
-    serial_println("Something went wrong?\n");
+    //serial_println("Something went wrong?\n");
   }
 
   return SUCCESS;  // successful response
 }
 
-// How should we do this? Is it so simple as to have it just print a line?
+// Print the current version of the mpx
 int cmd_version(char* params) {
   // Init vars
   int pcount;
+  unsigned char flag = 0;
 
   if (set_gparams(params, &pcount) != SUCCESS)  // if setting gparams failed...
   {
@@ -122,9 +219,35 @@ int cmd_version(char* params) {
     serial_println(ret);
     return FAILURE;
   }
-  serial_println(
-      "Version 1.?\tModule one\nDevelopers: Hasan Ibraheem, Henry Vos, Jay "
-      "Kmetz, Nicholas Fryer\n");
+
+  // Getting flags from gparams and assigning to flag
+  for (int i = 0; i < pcount; i++) {  // for every parameter...
+
+    // set the correct flag if it is there
+    if ((strcmp(gparams[i], "-f") == 0) ||
+        (strcmp(gparams[i], "--full") == 0)) {  // FULLLINE
+      flag = flag | FULLFLAG;
+    }
+  }
+
+  if(strcmp(gparams[0], "version") == 0){
+    serial_println(
+      "Version 1.0"
+    );
+
+    if (flag & FULLFLAG){
+      serial_println(
+        "\nVersion 1.0\n"
+        "Module one\n"
+        "Developers:\n"
+        "\tHasan Ibraheem\n"
+        "\tHenry Vos\n"
+        "\tJay Kmetz\n"
+        "\tNicholas Fryer\n"
+      );
+    }
+  }
+
   return SUCCESS;
 }
 
@@ -143,7 +266,7 @@ int cmd_shutdown(char* params) {
   }
   // Do we need to implement this here?
   // It is already implemented in comamnd_handler.c
-  return SUCCESS;
+  return SHUTDOWN;
 }
 
 int cmd_date(char* params) {
@@ -266,7 +389,6 @@ int set_gparams(char* params, int* pcount) {
   while (gparamstr[loc] != '\0' &&
          *pcount < MAXPARAMCOUNT)  // while we still have more to process...
   {
-    serial_print(&gparamstr[loc]);
     // skip all spaces
     while (isspace(&gparamstr[loc]))  // while we are looking at a space...
     {

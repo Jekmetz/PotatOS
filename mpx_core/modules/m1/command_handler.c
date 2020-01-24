@@ -22,7 +22,8 @@ typedef struct {
 
 /********COMMANDS AND FUNCTION DECLARATION*******/
 
-COMMAND commands[] = {{"help", &cmd_help},
+COMMAND commands[] = {{"help", &cmd_help},{"version",&cmd_version},
+                        {"shutdown", &cmd_shutdown},{"date",&cmd_date},
 
                       // leave NULL at the end for searching reasons
                       {NULL, NULL}};
@@ -103,7 +104,7 @@ int command_handler() {
       serial_println(ret);
     } else  // if we did find something...
     {
-      (*commands[cmdidx].func)(cmd);
+      exit = (*commands[cmdidx].func)(cmd);
     }
   }
 
