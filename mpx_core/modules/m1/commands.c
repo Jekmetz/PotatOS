@@ -1,3 +1,5 @@
+//int validate_date(int months, int day, int year);
+
 /*************************************************************
  *	This C file contains all of the commands that will be used
  *  by the command handler. All of the commands in this file
@@ -18,6 +20,41 @@
 
 
 #include <core/io.h>
+
+#include "date_and_time.c"
+
+int set_flags(char** gparams, int * flag, int pcount);
+
+int set_gparams(char* params, int* pcount);
+
+
+// cmd_help flags
+#define A_FLAG (1 << 0)
+#define B_FLAG (1 << 1)
+#define C_FLAG (1 << 2)
+#define D_FLAG (1 << 3)
+#define E_FLAG (1 << 4)
+#define F_FLAG (1 << 5)
+#define G_FLAG (1 << 6)
+#define H_FLAG (1 << 7)
+#define I_FLAG (1 << 8)
+#define J_FLAG (1 << 9)
+#define K_FLAG (1 << 10)
+#define L_FLAG (1 << 11)
+#define M_FLAG (1 << 12)
+#define N_FLAG (1 << 13)
+#define O_FLAG (1 << 14)
+#define P_FLAG (1 << 15)
+#define Q_FLAG (1 << 16)
+#define R_FLAG (1 << 17)
+#define S_FLAG (1 << 18)
+#define T_FLAG (1 << 19)
+#define U_FLAG (1 << 20)
+#define V_FLAG (1 << 21)
+#define W_FLAG (1 << 22)
+#define Y_FLAG (1 << 23)
+#define X_FLAG (1 << 24)
+#define Z_FLAG (1 << 25)
 
 // Global variables
 char gparamstr[CMDSIZE];
@@ -43,6 +80,41 @@ char* gparams[MAXPARAMCOUNT];  // will hold all of the parameters
   Procedure: cmd_help
   Params: params-will serve as the params for each of these things
 */
+
+// A general testing cmd that I can call "test" from mpx to test stuff
+int cmd_test(char* params){
+  if(params != NULL){
+    serial_println("Test is working");
+
+    int day, month,year;
+    char buf[100];
+
+    char temp = 0;
+    outb(0x70,0x07);
+    temp = inb(0x71);
+    day = bcd_to_decimal(temp);
+
+    sprintf(buf,"Day is: %d\n",day);
+    serial_println(buf);
+
+    outb(0x70,0x08);
+    temp = inb(0x71);
+    month = bcd_to_decimal(temp);
+
+    sprintf(buf,"Month is: %d\n",month);
+    serial_println(buf);
+
+    outb(0x70,0x09);
+    temp = inb(0x71);
+    year = bcd_to_decimal(temp);
+
+    sprintf(buf, "Year is: %d\n", year);
+    serial_println(buf);
+  }
+  return SUCCESS;
+}
+
+
 int cmd_help(char* params) {
   // Init vars
   int pcount;
@@ -178,9 +250,9 @@ int cmd_version(char* params) {
 int cmd_date(char* params) {
   // Init vars
   int pcount;
+  int flag = 0;
 
-  if (set_gparams(params, &pcount) != SUCCESS)  // if setting gparams failed...
-  {
+  if (set_gparams(params, &pcount) != SUCCESS) { // if setting gparams failed...
     // we know it is because too many parameters
     char ret[100];
     sprintf(ret, "There were more than %d parameters. Command FAILURE.",
@@ -188,40 +260,30 @@ int cmd_date(char* params) {
     serial_println(ret);
     return FAILURE;
   }
-  /*
-  // TODO: Actuallt implement date, this is just the prelim framework
-  // Arbitrary cap on 4 arguments, we can add more
-  char* command = strtok(params, " "); // The primary command
-  char* arg1 = strtok(NULL, " ");
-  char* arg2 = strtok(NULL, " ");
-  char* arg3 = strtok(NULL, " ");
-  char* arg4 = strtok(NULL, " ");
 
-  // Assuming that the only flag for this will be -s, set value, arg1 will be -s
-  while arg2-4 will be the month-day-year
-  if(arg1 == NULL) { // Date called with no args, just requesting current date
-          serial_println("The date is\n");
+  // Calling set_flags which will set the binary flags for each flag passed
+  set_flags(gparams, &flag, pcount);
+
+  if(strcmp(gparams[0], "date") == 0 && gparams[1] == NULL) {
+    serial_println("Entered date");
+      get_date();
   }
-  else if(strcmp(arg1, "-s") == 0 && (arg2 == NULL || arg3 == NULL || arg4 ==
-  NULL)) { // If set date arg is passed without the values
-          serial_println("To set date, enter valid dates for month:day:year\n");
+
+  // If full flag used
+  else if (flag & S_FLAG){
+    serial_println("Entered set date");
+    set_date(atoi(gparams[2]), atoi(gparams[3]), atoi(gparams[4]));
   }
-  else if(strcmp(arg1,"-s") == 0 && arg2 != NULL && arg3 != NULL && arg4 !=
-  NULL){ //If set date arg is passed and the values are not null
-          // Coded to use number dates, could implement 3 letter month
-          int month = atoi(arg2);
-          int day = atoi(arg3);
-          int year = atoi(arg4);
-          // More will need to be done here due to the complexities of dates an
-  uneven months, damn gregorian calander
-          serial_println("month=%d\tday=%d\tyear=%d\n");
-  }*/
+
+
   return SUCCESS;
+
 }
 
 int cmd_time(char* params) {
   // Init vars
   int pcount;
+  int flag = 0;
 
   if (set_gparams(params, &pcount) != SUCCESS)  // if setting gparams failed...
   {
@@ -233,44 +295,19 @@ int cmd_time(char* params) {
     return FAILURE;
   }
 
-  /*
-  // TODO: Actually implement time with the registry, this is just the prelim
-  framework
-  // Arbitrary cap on 4 arguments, we can add more
-  char* command = strtok(params, " "); // The primary command
-  char* arg1 = strtok(NULL, " ");
-  char* arg2 = strtok(NULL, " ");
-  char* arg3 = strtok(NULL, " ");
-  char* arg4 = strtok(NULL, " ");
+  // Calling set_flags which will set the binary flags for each flag passed
+  set_flags(gparams, &flag, pcount);
 
-  // Assuming that the only flag for this will be -s, set value, arg1 will be -s
-  while arg2-4 will be hour:minute:second (24 hour time)
-  if(arg1 == NULL) { // Time was called with no args, just requesting current
-  time
-          serial_println("The time is\n");
+  if(strcmp(gparams[0], "time") == 0 && gparams[1] == NULL) {
+    serial_println("Entered time");
+      get_time();
   }
-  else if(strcmp(arg1, "-s") == 0 && (arg2 == NULL || arg3 == NULL || arg4 ==
-  NULL)) { // If set time arg is set without the values
-          serial_println("To set time, enter a valid value for
-  hours:minutes:seconds\n");
+  // If full flag used
+  else if (flag & S_FLAG){
+    serial_println("Entered set time");
+    set_time(atoi(gparams[2]), atoi(gparams[3]), atoi(gparams[4]));
   }
-  else if(strcmp(arg1, "-s") == 0 && arg2 != NULL && arg3 != NULL && arg4 !=
-  NULL) { // If set time arg is set and values are not null
-          // Time string -> int
-          int hours =  atoi(arg2);
-          int minutes = atoi(arg3);
-          int seconds = atoi(arg4);
 
-          if(hours > 24 || hours < 0 || minutes > 60 || minutes < 0 || seconds >
-  60 || seconds < 0) { // Checking for valid times
-                  serial_println("Please enter a valid value for
-  hours:minutes:seconds\n");
-          }
-          else{
-                  serial_println("Set time as hours=%d, minutes=%d,
-  seconds=%d\n",hours,minutes,seconds);
-          }
-  }*/
   return SUCCESS;
 }
 
@@ -329,8 +366,11 @@ int set_gparams(char* params, int* pcount) {
   }
 }
 
+
+// Using the pcount from set_gparams to iterate through all the gparams, passing
+//
 // Setting the flags for each command
-int set_flags(char** gparams, int * flag, int pcount){
+int set_flags(char** gparams, int * flag, int pcount ){
   // Using the gparams and pcount, which are already set, to set the flag
 
   // For 0 -> pcount ... Iterates through all the arguments
@@ -340,6 +380,16 @@ int set_flags(char** gparams, int * flag, int pcount){
         (strcmp(gparams[i], "--full") == 0)) {  // FULLLINE
       *flag = *flag | F_FLAG;
     }
+    else if ((strcmp(gparams[i], "-s") == 0)) {
+      *flag = *flag | S_FLAG;
+    }
+
   }
   return SUCCESS;
 }
+
+
+// int validate_date(int months, int day, int year){
+//   // Need to check for edge cases
+//
+// }
