@@ -21,12 +21,16 @@ typedef struct {
 } COMMAND;
 
 /********COMMANDS AND FUNCTION DECLARATION*******/
+COMMAND commands[] = {
+  {"help", &cmd_help},
+  {"version",&cmd_version},
+  {"shutdown", &cmd_shutdown},
+  {"date",&cmd_date},
+  {"time", &cmd_time},
 
-COMMAND commands[] = {{"help", &cmd_help},{"version",&cmd_version},
-                        {"shutdown", &cmd_shutdown},{"date",&cmd_date},
-
-                      // leave NULL at the end for searching reasons
-                      {NULL, NULL}};
+  // leave NULL at the end for searching reasons
+  {NULL, NULL}
+};
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
 

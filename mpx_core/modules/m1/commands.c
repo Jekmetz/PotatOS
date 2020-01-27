@@ -8,10 +8,12 @@
  **************************************************************/
 #include <string.h>
 #include <core/serial.h>
-
 #include <core/utility.h>
+
 #include "help.h"
 #include "commands.h"
+#include "time.h"
+
 #define CMDSIZE 100
 
 #define SUCCESS 0
@@ -267,7 +269,7 @@ int cmd_date(char* params) {
   if(strcmp(gparams[0], "date") == 0 && gparams[1] == NULL) {
     serial_println("Entered date");
       get_date();
-  }
+	}
 
   // If full flag used
   else if (flag & S_FLAG){
@@ -294,6 +296,11 @@ int cmd_time(char* params) {
     serial_println(ret);
     return FAILURE;
   }
+	
+	time_h tim = get_current_time();
+	char form_tim[64];
+	format_time(form_tim, &tim);
+	serial_println(form_tim);
 
   // Calling set_flags which will set the binary flags for each flag passed
   set_flags(gparams, &flag, pcount);
@@ -365,7 +372,6 @@ int set_gparams(char* params, int* pcount) {
     return 0;
   }
 }
-
 
 // Using the pcount from set_gparams to iterate through all the gparams, passing
 //

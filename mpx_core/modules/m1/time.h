@@ -1,12 +1,13 @@
 #pragma once
 
-#define SEC_REG 0x00
-#define MIN_REG 0x02
-#define HOU_REG 0x04
-#define DOW_REG 0x06
-#define DOM_REG 0x07
-#define MON_REG 0x08
-#define YER_REG 0x09
+#define SECOND_REG 0x71
+#define MINUTE_REG 0x72
+#define HOUR_REG 0x73
+#define DAY_OF_WEEK_REG 0x74
+#define DAY_OF_MONTH_REG 0x75
+#define MONTH_REG 0x76
+#define YEAR_REG 0x77
+#define ACCESS_REG 0x70
 
 
 enum DAY_OF_WEEK
@@ -52,4 +53,4 @@ void format_time(char *dest, time_h *t);
 
 time_h get_current_time();
 
-void set_current_time(time_h time);
+//void set_current_time(time_h time);
