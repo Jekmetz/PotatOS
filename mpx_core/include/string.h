@@ -95,7 +95,18 @@ char* itoa(int num, char* str, int base);
              (Read the man Page: $ man sprintf)
    int sprintf(char *str, const char *format, ...);
 */
-
 int sprintf(char* buffer, char* format, ...);
+
+/*Procedure: tolower
+  Description: takes in a character and converts it
+               to lower if necessary
+*/
+int tolower(int c);
+
+/*Procedure: toupper
+  Description: takes in a character and converts it
+               to upper if necessary
+*/
+int toupper(int c);
 
 #endif

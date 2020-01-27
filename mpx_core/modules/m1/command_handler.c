@@ -37,14 +37,14 @@ int command_handler() {
   // Initialize vars
   char cmd[CMDSIZE];
   int exit = 0;
-  int bufSize;
+  int bufSize = CMDSIZE;
   int errCode;
   int cmdidx;
 
   sys_set_read(&poll_input);
 
   while (!exit) {
-    serial_print("\n>> ");  // show prompt
+    serial_print("\nMPX User Shell>> ");  // show prompt
 
     memset(cmd, '\0', CMDSIZE);  // set command as a bunch of \0s
     bufSize = CMDSIZE - 1;       // set bufSize as the command size - 1
@@ -77,7 +77,23 @@ int command_handler() {
     // if they have typed in exit... (in the future maybe make a more elegant
     // space-killing solution)
     if (strcmp(cmd, "exit") == 0)
-      exit = 1;  // set exit to true
+    {
+      char shutdownCmd[10];
+      int shutdownBufSize = 10;
+      serial_print("Are you sure that you would like to shutdown? (Y/N): ");
+      //read the command and put it into shutdownCmd;
+      sys_req(READ, DEFAULT_DEVICE, shutdownCmd, &shutdownBufSize);
+
+      if(tolower(shutdownCmd[0]) == 'y')
+      {
+      	exit = 1;  // set exit to true
+      }
+      else
+      {
+      	serial_println("System shutdown canceled!");
+      }
+      continue;	//no need to search commands if we have tried to exit
+    }
 
     cmdidx = search_commands(cmd);
 

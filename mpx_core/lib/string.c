@@ -448,3 +448,21 @@ int sprintf(char* buffer, char* format, ...) {
   va_end(valist);
   return ret;
 }
+
+/*Procedure: tolower
+  Description: takes in a character and converts it
+               to lower if necessary
+*/
+int tolower(int c)
+{
+  return ( ('A' <= c && c <= 'Z') ? c + 'a' - 'A' : c);
+}
+
+/*Procedure: toupper
+  Description: takes in a character and converts it
+               to upper if necessary
+*/
+int toupper(int c)
+{
+  return ( ('a' <= c && c <= 'z') ? c - 'a' - 'A' : c);
+}
