@@ -1,11 +1,11 @@
 //int validate_date(int months, int day, int year);
 
 /*************************************************************
- *	This C file contains all of the commands that will be used
- *  by the command handler. All of the commands in this file
- *  should have the syntax:
- *  int cmd_<cmd_name>(char* params);
- **************************************************************/
+*	This C file contains all of the commands that will be used
+*  by the command handler. All of the commands in this file
+*  should have the syntax:
+*  int cmd_<cmd_name>(char* params);
+**************************************************************/
 #include <string.h>
 #include <core/serial.h>
 #include <core/utility.h>
@@ -65,22 +65,22 @@ char* gparams[MAXPARAMCOUNT];  // will hold all of the parameters
 // private function prototypes
 
 /* Procedure: set_gparams
-   Description: Should be called at the beginning of each command function
-                                to set the params based on the param string.
-   gparams[i] will
-                                be the (i)th parameter passed in by the user
-   after calling
-                                this function. Will mutate the string passed in
-   by params to
-                                save space
-   Params: params-string of parameters delimited by space charaters,
-   pcount-pointer
-                   to integer representing the parameter count
+Description: Should be called at the beginning of each command function
+to set the params based on the param string.
+gparams[i] will
+be the (i)th parameter passed in by the user
+after calling
+this function. Will mutate the string passed in
+by params to
+save space
+Params: params-string of parameters delimited by space charaters,
+pcount-pointer
+to integer representing the parameter count
 */
 
 /*
-  Procedure: cmd_help
-  Params: params-will serve as the params for each of these things
+Procedure: cmd_help
+Params: params-will serve as the params for each of these things
 */
 
 // A general testing cmd that I can call "test" from mpx to test stuff
@@ -127,12 +127,11 @@ int cmd_help(char* params) {
     // we know it is because too many parameters
     char ret[100];
     sprintf(ret, "There were more than %d parameters. Command FAILURE.",
-            MAXPARAMCOUNT);
+    MAXPARAMCOUNT);
     serial_println(ret);
     return FAILURE;
   }
   // if we are here, params are in gparams! parameter count is in pcount
-
   // Calling set_flags which will set the binary flags for each flag passed
   set_flags(gparams, &flag, pcount);
 
@@ -212,8 +211,8 @@ int cmd_help(char* params) {
     }
   }
 
-  return SUCCESS;  // successful response
-}
+    return SUCCESS;  // successful response
+  }
 
 // Print the current version of the mpx
 int cmd_version(char* params) {
@@ -249,37 +248,51 @@ int cmd_version(char* params) {
   return SUCCESS;
 }
 
+
 int cmd_date(char* params) {
   // Init vars
   int pcount;
-  int flag = 0;
 
-  if (set_gparams(params, &pcount) != SUCCESS) { // if setting gparams failed...
+  if (set_gparams(params, &pcount) != SUCCESS)  // if setting gparams failed...
+  {
     // we know it is because too many parameters
     char ret[100];
     sprintf(ret, "There were more than %d parameters. Command FAILURE.",
-            MAXPARAMCOUNT);
+    MAXPARAMCOUNT);
     serial_println(ret);
     return FAILURE;
   }
 
-  // Calling set_flags which will set the binary flags for each flag passed
-  set_flags(gparams, &flag, pcount);
+  // checking if there are flags
+  for (int i = 0;i < pcount;i++)
+  {
+    // set flag enabled
+    if (strcmp(gparams[i], "-s") == 0 ||
+      strcmp(gparams[i], "--set") == 0)
+    {
+      if (i + 1 > pcount)
+      {
+        return FAILURE;
+      }
+      char *aday = strtok(gparams[i+1], "/");
+      char *amonth = strtok(NULL, "/");
+      char *ayear = strtok(NULL, "/");
 
-  if(strcmp(gparams[0], "date") == 0 && gparams[1] == NULL) {
-    serial_println("Entered date");
-      get_date();
-	}
-
-  // If full flag used
-  else if (flag & S_FLAG){
-    serial_println("Entered set date");
-    set_date(atoi(gparams[2]), atoi(gparams[3]), atoi(gparams[4]));
+      time_h n_date = {-1,-1,-1,-1,-1,-1};
+      n_date.day_of_month = atoi(aday);
+      n_date.month = atoi(amonth);
+      n_date.year = atoi(ayear);
+      set_current_time(n_date);
+    }
   }
 
+  // printing the date
+  time_h tim = get_current_time();
+  char buff[64];
+  sprintf(buff, "\n%d/%d/%d", tim.day_of_month, tim.month, tim.year);
+  serial_println(buff);
 
   return SUCCESS;
-
 }
 
 int cmd_time(char* params) {
@@ -292,44 +305,54 @@ int cmd_time(char* params) {
     // we know it is because too many parameters
     char ret[100];
     sprintf(ret, "There were more than %d parameters. Command FAILURE.",
-            MAXPARAMCOUNT);
+    MAXPARAMCOUNT);
     serial_println(ret);
     return FAILURE;
   }
-	
-	time_h tim = get_current_time();
-	char form_tim[64];
-	format_time(form_tim, &tim);
-	serial_println(form_tim);
 
-  // Calling set_flags which will set the binary flags for each flag passed
-  set_flags(gparams, &flag, pcount);
+  // checking if there are flags
+  for (int i = 0;i < pcount;i++)
+  {
+    // set flag enabled
+    if (strcmp(gparams[i], "-s") == 0 ||
+      strcmp(gparams[i], "--set") == 0)
+    {
+      if (i + 1 > pcount)
+      {
+        return FAILURE;
+      }
+      char *ahour = strtok(gparams[i+1], ":");
+      char *aminute = strtok(NULL, ":");
+      char *asecond = strtok(NULL, ":");
 
-  if(strcmp(gparams[0], "time") == 0 && gparams[1] == NULL) {
-    serial_println("Entered time");
-      get_time();
+      time_h n_date = {-1,-1,-1,-1,-1,-1};
+      n_date.seconds = atoi(asecond);
+      n_date.minutes = atoi(aminute);
+      n_date.hours = atoi(ahour);
+      set_current_time(n_date);
+    }
   }
-  // If full flag used
-  else if (flag & S_FLAG){
-    serial_println("Entered set time");
-    set_time(atoi(gparams[2]), atoi(gparams[3]), atoi(gparams[4]));
-  }
+
+  time_h tim = get_current_time();
+  char form_tim[64];
+  sprintf(form_tim, "\n%d:%d:%d", tim.hours, tim.minutes, tim.seconds);
+  serial_println(form_tim);
 
   return SUCCESS;
 }
 
 /* Procedure: set_gparams
-   Description: Should be called at the beginning of each command function
-                                to set the params based on the param string.
-   gparams[i] will
-                                be the (i)th parameter passed in by the user
-   after calling
-                                this function. Will mutate the string passed in
-   by params to
-                                save space
-   Params: params-string of parameters delimited by space charaters,
-   pcount-pointer
-                   to integer representing the parameter count
+Description: Should be called at the beginning of each command function
+to set the params based on the param string.
+gparams[i] will
+be the (i)th parameter passed in by the user
+after calling
+this function. Will mutate the string passed in
+by params to
+save space
+Params: params-string of parameters delimited by space charaters,
+pcount-pointer
+to integer representing the parameter count
 */
 int set_gparams(char* params, int* pcount) {
   int loc = 0;
@@ -342,7 +365,7 @@ int set_gparams(char* params, int* pcount) {
   }
 
   while (gparamstr[loc] != '\0' &&
-         *pcount < MAXPARAMCOUNT)  // while we still have more to process...
+  *pcount < MAXPARAMCOUNT)  // while we still have more to process...
   {
     // skip all spaces
     while (isspace(&gparamstr[loc]))  // while we are looking at a space...
@@ -354,24 +377,24 @@ int set_gparams(char* params, int* pcount) {
     // string
     if (gparamstr[loc] != '\0') {
       gparams[*pcount] =
-          (gparamstr +
-           loc);  // set the (pcount)th gparam to the start of that pointer
-      (*pcount)++;
+      (gparamstr +
+        loc);  // set the (pcount)th gparam to the start of that pointer
+        (*pcount)++;
+      }
+
+      // skip all nonspaces
+      while ((gparamstr[loc] != ' ') && (gparamstr[loc] != '\0')) {
+        loc++;
+      }
     }
 
-    // skip all nonspaces
-    while ((gparamstr[loc] != ' ') && (gparamstr[loc] != '\0')) {
-      loc++;
+    if (gparamstr[loc] != '\0')  // if we have exceeded the maxparamcount
+    {
+      return -1;
+    } else {
+      return 0;
     }
   }
-
-  if (gparamstr[loc] != '\0')  // if we have exceeded the maxparamcount
-  {
-    return -1;
-  } else {
-    return 0;
-  }
-}
 
 // Using the pcount from set_gparams to iterate through all the gparams, passing
 //
@@ -393,9 +416,3 @@ int set_flags(char** gparams, int * flag, int pcount ){
   }
   return SUCCESS;
 }
-
-
-// int validate_date(int months, int day, int year){
-//   // Need to check for edge cases
-//
-// }
