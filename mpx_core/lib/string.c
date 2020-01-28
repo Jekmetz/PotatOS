@@ -5,6 +5,7 @@
 #define F_MINUS (1 << 0)
 #define F_PLUS (1 << 1)
 #define F_PERCENT (1 << 2)
+#define F_ZERO (1 << 3s)
 
 typedef unsigned char BYTE;
 
@@ -261,20 +262,20 @@ char* itoa(int num, char* str, int base) {
 }
 
 /*
-  Procedure: buffer = sprintf_space_helper
+  Procedure: buffer = sprintf_pad_helper
   Description: adds spaces where needed for the sprintf function
   Params: buffer-char* to store spaces to,
     fNum-format number, n-length of string that has been/will be
     added, doAction-boolean on whether or not to add the spaces
 */
-char* sprintf_space_helper(char* buffer, int fNum, int n, BYTE doAction) {
+char* sprintf_pad_helper(char* buffer, char pad, int fNum, int n, BYTE doAction) {
   if (doAction)  // if we are to add the spaces...
   {
     int i;
     for (i = 0; i < fNum - n;
          i++)  // for the amount of spaces to add to the buffer...
     {
-      *buffer++ = ' ';  // add spaces to the buffer
+      *buffer++ = pad;  // add pad to the buffer
     }
   }
 
@@ -311,6 +312,10 @@ int sprintf(char* buffer, char* format, ...) {
     flag = 0;
     switch (*format)  // switch through the first character
     {
+      case '0':
+        flag |= F_ZERO;
+        format++;
+        break;
       case '+':
         flag |= F_PLUS;
         format++;
@@ -326,14 +331,29 @@ int sprintf(char* buffer, char* format, ...) {
     }
 
     fNum = 0;
-    while (isdigit(*format))  // while we have a digit...
-    {
-      fNum = fNum * 10 + (*format++ - '0');
-    }
 
-    if (flag & F_MINUS)  // if we have a minus number...
+    if(!(flag&F_PERCENT)) //if we had something other than a percent...
     {
-      fNum *= -1;
+      //Set zero pad or not if it is a plus or a minus
+      if(flag&F_PLUS || flag & F_MINUS)
+      {
+        if(*format == '0')  //if it is a zero...
+        {
+          //act accordingly
+          flag |= F_ZERO;
+          format++;
+        }
+      }
+
+      while (isdigit(*format))  // while we have a digit...
+      {
+        fNum = fNum * 10 + (*format++ - '0');
+      }
+
+      if (flag & F_MINUS)  // if we have a minus number...
+      {
+        fNum *= -1;
+      }
     }
 
     switch (*format) {
@@ -354,7 +374,7 @@ int sprintf(char* buffer, char* format, ...) {
         itoa(num, str, 10);  // store number in str
 
         // Add spaces in the front if applicable
-        buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), fNum, n, fNum > 0);
 
         int cnt = 0;
         while ((*buffer++ = str[cnt++]))
@@ -362,7 +382,7 @@ int sprintf(char* buffer, char* format, ...) {
         buffer--;
 
         // Add spaces in the back if applicable
-        buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), -fNum, n, fNum < 0);
 
         format++;
         break;
@@ -373,14 +393,13 @@ int sprintf(char* buffer, char* format, ...) {
         int n = strlen(temp);  // n is length of string
 
         // Add spaces in the front if applicable
-        buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), fNum, n, fNum > 0);
 
-        while ((*buffer++ = *temp++))
-          ;  // copy argument into buffer
+        while ((*buffer++ = *temp++));  // copy argument into buffer
         buffer--;
 
         // Add spaces in the back if applicable
-        buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), -fNum, n, fNum < 0);
 
         format++;
         break;
@@ -391,12 +410,12 @@ int sprintf(char* buffer, char* format, ...) {
         char c = va_arg(valist, int);
 
         // Add spaces in the front if applicable
-        buffer = sprintf_space_helper(buffer, fNum, 1, fNum > 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), fNum, 1, fNum > 0);
 
         *buffer++ = c;
 
         // Add spaces in the back if applicable
-        buffer = sprintf_space_helper(buffer, -fNum, 1, fNum < 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), -fNum, 1, fNum < 0);
         format++;
         break;
       }
@@ -416,7 +435,7 @@ int sprintf(char* buffer, char* format, ...) {
         itoa(num, str, 16);  // put number into str
 
         // Add spaces in the front if applicable
-        buffer = sprintf_space_helper(buffer, fNum, n, fNum > 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), fNum, n, fNum > 0);
 
         int cnt = 0;
         while ((*buffer++ = str[cnt++]))
@@ -424,7 +443,7 @@ int sprintf(char* buffer, char* format, ...) {
         buffer--;
 
         // Add spaces in the back if applicable
-        buffer = sprintf_space_helper(buffer, -fNum, n, fNum < 0);
+        buffer = sprintf_pad_helper(buffer, (flag&F_ZERO ? '0':' '), -fNum, n, fNum < 0);
 
         format++;
         break;
@@ -455,7 +474,7 @@ int sprintf(char* buffer, char* format, ...) {
 */
 int tolower(int c)
 {
-  return ( ('A' <= c && c <= 'Z') ? c + 'a' - 'A' : c);
+  return ( ('A' <= c && c <= 'Z') ? c + ('a' - 'A') : c);
 }
 
 /*Procedure: toupper
@@ -464,5 +483,5 @@ int tolower(int c)
 */
 int toupper(int c)
 {
-  return ( ('a' <= c && c <= 'z') ? c - 'a' - 'A' : c);
+  return ( ('a' <= c && c <= 'z') ? c - ('a' - 'A') : c);
 }
