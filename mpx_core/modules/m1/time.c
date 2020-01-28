@@ -103,9 +103,11 @@ int set_current_time(time_h time)
 	// checking if day is valid
 	if (time.day_of_month > -1)
 	{
+		int is_leap = curr.year % 4 == 0 && !(curr.year % 400 != 0 && curr.year % 100 == 0);
+
 		if (time.day_of_month == 0 || // day cannot be 0 (negatives are allowed because of no write case)
-		(curr.month == 2 && curr.year % 4 == 0 && time.day_of_month > 29) || // leap year in FEBRUARY
-		(curr.month == 2 && time.day_of_month > 28) || // FEBRUARY
+		(curr.month == 2 && is_leap && time.day_of_month > 29) || // leap year in FEBRUARY
+		(curr.month == 2 && !is_leap && time.day_of_month > 28) || // FEBRUARY
 		(curr.month % 2 == 0 && time.day_of_month > 30) || // Even months have 30 days
 		(time.day_of_month > 31)) // no month has more than 31 days
 		{
