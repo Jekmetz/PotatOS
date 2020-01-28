@@ -5,7 +5,7 @@
 #define F_MINUS (1 << 0)
 #define F_PLUS (1 << 1)
 #define F_PERCENT (1 << 2)
-#define F_ZERO (1 << 3s)
+#define F_ZERO (1 << 3)
 
 typedef unsigned char BYTE;
 
