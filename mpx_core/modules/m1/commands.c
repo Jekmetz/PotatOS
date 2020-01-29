@@ -298,7 +298,6 @@ int cmd_date(char* params) {
 int cmd_time(char* params) {
   // Init vars
   int pcount;
-  int flag = 0;
 
   if (set_gparams(params, &pcount) != SUCCESS)  // if setting gparams failed...
   {
