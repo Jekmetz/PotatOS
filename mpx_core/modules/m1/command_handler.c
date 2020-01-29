@@ -24,7 +24,6 @@ typedef struct {
 COMMAND commands[] = {
   {"help", &cmd_help},
   {"version",&cmd_version},
-  {"shutdown", &cmd_shutdown},
   {"date",&cmd_date},
   {"time", &cmd_time},
 

@@ -9,6 +9,7 @@
 #include <string.h>
 #include <core/serial.h>
 #include <core/utility.h>
+#include <core/io.h>
 
 #include "help.h"
 #include "commands.h"
@@ -19,11 +20,6 @@
 #define SUCCESS 0
 #define FAILURE -1
 #define MAXPARAMCOUNT 10
-
-
-#include <core/io.h>
-
-#include "date_and_time.c"
 
 int set_flags(char** gparams, int * flag, int pcount);
 
@@ -64,59 +60,10 @@ char* gparams[MAXPARAMCOUNT];  // will hold all of the parameters
 
 // private function prototypes
 
-/* Procedure: set_gparams
-Description: Should be called at the beginning of each command function
-to set the params based on the param string.
-gparams[i] will
-be the (i)th parameter passed in by the user
-after calling
-this function. Will mutate the string passed in
-by params to
-save space
-Params: params-string of parameters delimited by space charaters,
-pcount-pointer
-to integer representing the parameter count
-*/
-
 /*
 Procedure: cmd_help
 Params: params-will serve as the params for each of these things
 */
-
-// A general testing cmd that I can call "test" from mpx to test stuff
-int cmd_test(char* params){
-  if(params != NULL){
-    serial_println("Test is working");
-
-    int day, month,year;
-    char buf[100];
-
-    char temp = 0;
-    outb(0x70,0x07);
-    temp = inb(0x71);
-    day = bcd_to_decimal(temp);
-
-    sprintf(buf,"Day is: %d\n",day);
-    serial_println(buf);
-
-    outb(0x70,0x08);
-    temp = inb(0x71);
-    month = bcd_to_decimal(temp);
-
-    sprintf(buf,"Month is: %d\n",month);
-    serial_println(buf);
-
-    outb(0x70,0x09);
-    temp = inb(0x71);
-    year = bcd_to_decimal(temp);
-
-    sprintf(buf, "Year is: %d\n", year);
-    serial_println(buf);
-  }
-  return SUCCESS;
-}
-
-
 int cmd_help(char* params) {
   // Init vars
   int pcount;

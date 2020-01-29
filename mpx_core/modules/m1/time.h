@@ -42,3 +42,5 @@ void format_time(char *dest, time_h *t);
 time_h get_current_time();
 
 int set_current_time(time_h time);
+
+int bcd_to_decimal(int bcd);
