@@ -171,7 +171,7 @@ int cmd_version(char* params) {
   {
     // we know it is because too many parameters
     char ret[100];
-    sprintf(ret, "There were more than %d parameters. Command FAILURE.",
+    sprintf(ret, "\033[31mThere were more than %d parameters. Command FAILURE.\033[0m",
             MAXPARAMCOUNT);
     serial_println(ret);
     return FAILURE;
@@ -204,7 +204,7 @@ int cmd_date(char* params) {
   {
     // we know it is because too many parameters
     char ret[100];
-    sprintf(ret, "There were more than %d parameters. Command FAILURE.",
+    sprintf(ret, "\033[31mThere were more than %d parameters. Command FAILURE.\033[0m",
     MAXPARAMCOUNT);
     serial_println(ret);
     return FAILURE;
@@ -236,7 +236,7 @@ int cmd_date(char* params) {
   // printing the date
   time_h tim = get_current_time();
   char buff[64];
-  sprintf(buff, "\n%d/%d/%d", tim.day_of_month, tim.month, tim.year);
+  sprintf(buff, "%d/%d/%d", tim.day_of_month, tim.month, tim.year);
   serial_println(buff);
 
   return SUCCESS;
@@ -250,7 +250,7 @@ int cmd_time(char* params) {
   {
     // we know it is because too many parameters
     char ret[100];
-    sprintf(ret, "There were more than %d parameters. Command FAILURE.",
+    sprintf(ret, "\033[31mThere were more than %d parameters. Command FAILURE.\033[0m",
     MAXPARAMCOUNT);
     serial_println(ret);
     return FAILURE;
@@ -281,7 +281,7 @@ int cmd_time(char* params) {
 
   time_h tim = get_current_time();
   char form_tim[64];
-  sprintf(form_tim, "\n%d:%d:%d", tim.hours, tim.minutes, tim.seconds);
+  sprintf(form_tim, "%d:%d:%d", tim.hours, tim.minutes, tim.seconds);
   serial_println(form_tim);
 
   return SUCCESS;

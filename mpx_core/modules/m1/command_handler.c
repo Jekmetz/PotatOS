@@ -47,7 +47,7 @@ int command_handler() {
   sys_set_read(&poll_input);
 
   while (!exit) {
-    serial_print("\nMPX User Shell>> ");  // show prompt
+    serial_print("\n\033[33;1mPOS User Shell\033[34m>>\033[0m ");  // show prompt
 
     memset(cmd, '\0', CMDSIZE);  // set command as a bunch of \0s
     bufSize = CMDSIZE - 1;       // set bufSize as the command size - 1
@@ -58,19 +58,19 @@ int command_handler() {
     {
       switch (errCode) {
         case INVALID_OPERATION:
-          serial_println("Invalid Operation from command handler!");
+          serial_println("\033[31;1mInvalid Operation from command handler!\033[0m");
           break;
 
         case INVALID_BUFFER:
-          serial_println("Invalid Buffer from command handler!");
+          serial_println("\033[31;1mInvalid Buffer from command handler!\033[0m");
           break;
 
         case INVALID_COUNT:
-          serial_println("Invalid Count from command handler!");
+          serial_println("\033[31;1mInvalid Count from command handler!\033[0m");
           break;
       }
 
-      serial_println("Failure to execute command!");
+      serial_println("\033[31;1mFailure to execute command!\033[0m");
       continue;  // move forward with your life!
     }
     /*******END SYS_REQ VALIDATION*******/
@@ -93,7 +93,7 @@ int command_handler() {
       }
       else
       {
-      	serial_println("System shutdown canceled!");
+      	serial_println("\033[32mSystem shutdown canceled!\033[0m");
       }
       continue;	//no need to search commands if we have tried to exit
     }
@@ -103,7 +103,7 @@ int command_handler() {
     if (cmdidx == -1)  // if we did not find anything...
     {
       char ret[CMDSIZE + 18];
-      sprintf(ret, "Invalid Command: %s\n", cmd);
+      sprintf(ret, "\033[31mInvalid Command: %s\033[0m\n", cmd);
       serial_println(ret);
     } else  // if we did find something...
     {
@@ -111,7 +111,7 @@ int command_handler() {
     }
   }
 
-  serial_println("Exiting prompt! Goodbye and have a splendiferous day!");
+  serial_println("Exiting prompt! Goodbye and have a \033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033[33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
 
   return 0;
 }
