@@ -107,7 +107,7 @@ int command_handler() {
       serial_println(ret);
     } else  // if we did find something...
     {
-      exit = (*commands[cmdidx].func)(cmd);
+      (*commands[cmdidx].func)(cmd);
     }
   }
 
