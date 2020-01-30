@@ -5,6 +5,29 @@
 #include <system.h>
 #include <string.h>
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 const EscapeCode escape_codes[] = {
     {"A", UP_ARROW},
     {"B", DOWN_ARROW},
@@ -40,13 +63,105 @@ int get_key();
 
 // How many NOP cycles can we count until we get a new byte and consider it
 // part of the same control sequence?
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 const int TOLERANCE = 300;
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 const char ESC = '\x1B';
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 // Make the alt flag be the 9th bit. Avoiding any char business
 const int ALT_FLAG = 1 << 8;
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int poll_input(char* buffer, int* length) {
   int max_length = *length;
   int current_i = 0;
@@ -88,6 +203,29 @@ int poll_input(char* buffer, int* length) {
   }
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int get_key() {
   // Wait until input is available
   while (!input_available()) {
@@ -149,10 +287,56 @@ int get_key() {
   return escape_code_id;
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int input_available() {
   return inb(COM1 + 5) & 1;
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 // Tries N times to see if input is available, if input was not
 // available, 0 is returned. If it was, the remaining try count
 // is returned.

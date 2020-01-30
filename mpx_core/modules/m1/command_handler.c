@@ -1,3 +1,6 @@
+/*  Procedure:commandHandler()
+    Description: handles commands typed by the user
+*/
 #include <string.h>
 #include <core/serial.h>
 #include <core/utility.h>

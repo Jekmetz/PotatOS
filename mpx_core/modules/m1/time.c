@@ -5,6 +5,29 @@
 
 #include "time.h"
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 #define pull_data(val, loc) \
 {\
 	outb(INDEX_REG, loc);\
@@ -17,8 +40,54 @@
 	}\
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 #define decimal_to_bcd(val) ((val/10)<<4 | (val%10))
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 #define neg_safe_set(in, loc) \
 {\
 	if (in > -1)\
@@ -28,6 +97,29 @@
 	}\
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int bcd_to_decimal(int bcd){
 	// Accepts a bcd value as bcd
 	// We need to take the first nyble and multiply by 10
@@ -38,11 +130,57 @@ int bcd_to_decimal(int bcd){
 	return ret;
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 void format_time(char *dest, time_h *time)
 {
 	sprintf(dest, "%d:%d:%d:%d:%d:%d", time->year, time->month, time->day_of_month, time->hours, time->minutes, time->seconds);
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 time_h get_current_time()
 {
 	time_h ret;
@@ -60,6 +198,29 @@ time_h get_current_time()
 	return ret;
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int set_current_time(time_h time)
 {
 	time_h curr = get_current_time();
