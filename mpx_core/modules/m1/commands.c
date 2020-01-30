@@ -1,4 +1,4 @@
-//int validate_date(int months, int day, int year);
+
 
 /*************************************************************
 *	This C file contains all of the commands that will be used
@@ -17,6 +17,29 @@
 #include "time.h"
 #include "../mpx_supt.h"
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 #define CMDSIZE 100
 
 #define SUCCESS 0
@@ -90,12 +113,30 @@ char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
 // Global variables
 char gparamstr[CMDSIZE];
 char* gparams[26];  // will hold all of the parameters
-
 // private function prototypes
 
-/*
-Procedure: cmd_help
-Params: params-will serve as the params for each of these things
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
 */
 int cmd_help(char* params) {
   // Init vars
@@ -189,7 +230,29 @@ int cmd_help(char* params) {
     return SUCCESS;  // successful response
   }
 
-// Print the current version of the mpx
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int cmd_version(char* params) {
   // Init vars
   int flag = 0, chk;
@@ -218,7 +281,29 @@ int cmd_version(char* params) {
   return SUCCESS;
 }
 
-
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int cmd_date(char* params) {
   // Init vars
   int flag = 0, chk;
@@ -267,6 +352,29 @@ int cmd_date(char* params) {
   return SUCCESS;
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int cmd_time(char* params) {
   // Init vars
   int flag = 0, chk;
@@ -376,6 +484,7 @@ int set_flags(char* paramstr, int* flag, int num_aliases, ...)
   //Init Vars
   char* hold;
   int paramstrlen = strlen(paramstr);
+
   int loc = 0;
   char identChar;
   ALIAS aliases[num_aliases];

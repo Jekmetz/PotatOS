@@ -1,0 +1,47 @@
+Below is an example of what needs to go before every element in any set of code.
+I still need to decide on what to do with *.h files. I am requesting the teams input in this.
+Below is just an example of what could be included. Remove things if needed. For instance, if
+you do not need a code segment, just remove it. 
+
+Use the doxygen_config_file to generate the doxygen files. You can apt install doxygen to install
+the program on your machine. To run doxygen and generate files, 
+"doxygen doxygen_config_file"
+This will only create documentation on .c and .h files inside of modules/m1/* currently. We need to 
+decide if we are documenting the project that we were gave or just our code. 
+
+If anyone has any questions just text me. 
+
+Other notes. The "*" at the begining of every line is inportant. Doxygen doesnt know what to do without it.
+The first "//" and the last "*/" are the code blocks that doxygen recognizes. So "//" is not recognized and 
+can be used for our internal code review and documentation. I have included TODO at the top. I believe that
+we have removed TODO from everywhere in our code. So you should be able to search for TODO in the code to 
+see areas that still need completed. Once you finish a section, please remove the TODO so we know that the
+section is done. 
+
+I included the doxygen comments in command_handler.c and commands.c. You can refer to those files to see
+the below code used in examples.
+
+
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/

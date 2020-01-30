@@ -1,6 +1,3 @@
-/*************************************************************
- *	This C file contains the command handler
- **************************************************************/
 #include <string.h>
 #include <core/serial.h>
 #include <core/utility.h>
@@ -9,18 +6,85 @@
 #include "commands.h"
 #include "poll_input.h"
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 #define CMDSIZE 100
 
 // Prototypes
 int search_commands(char*);
 
-// structs
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 typedef struct {
   char* str;
   int (*func)(char*);
 } COMMAND;
 
-/********COMMANDS AND FUNCTION DECLARATION*******/
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 COMMAND commands[] = {
   {"help", &cmd_help},
   {"version",&cmd_version},
@@ -34,8 +98,28 @@ COMMAND commands[] = {
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
 
-/*  Procedure:commandHandler()
-    Description: handles commands typed by the user
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
 */
 int command_handler() {
   // Initialize vars
@@ -117,6 +201,29 @@ int command_handler() {
   return 0;
 }
 
+// TODO
+/**
+* @brief Enter a brief description of the element below
+*
+* Enter a detailed description of the of the element below
+*
+* @param param1 Description of param1
+* @param param2 Description of param2
+*
+* @return Description of return
+*
+* @code
+* include code here if you wish
+* as many lines as you like
+* if(name = nick){
+*   look = sexy
+* }
+* @endcode
+*
+* @note Something to note
+*
+* @warning A warning
+*/
 int search_commands(char* cmd) {
   int cmdidx;
   unsigned char found;
