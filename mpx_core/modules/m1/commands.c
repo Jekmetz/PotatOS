@@ -314,6 +314,17 @@ int cmd_time(char* params) {
   return SUCCESS;
 }
 
+int cmd_clear(char* params)
+{
+  //Unused... supresses warning
+  if(params){}
+
+  int size = 10;
+  sys_req(WRITE,DEFAULT_DEVICE,"\033[2J\033[H",&size);
+
+  return SUCCESS;
+}
+
 /*
   Procedure: set_flags_search_alias
   Description: helps set-flags by searching alias list

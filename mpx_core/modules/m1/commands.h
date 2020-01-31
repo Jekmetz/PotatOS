@@ -17,3 +17,5 @@ int cmd_date(char* params);
 int cmd_time(char* params);
 
 int cmd_test(char* params);
+
+int cmd_clear(char* params);

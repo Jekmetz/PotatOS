@@ -26,6 +26,7 @@ COMMAND commands[] = {
   {"version",&cmd_version},
   {"date",&cmd_date},
   {"time", &cmd_time},
+  {"clear", &cmd_clear},
 
   // leave NULL at the end for searching reasons
   {NULL, NULL}
