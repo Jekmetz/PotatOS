@@ -144,13 +144,13 @@ int set_current_time(time_h time)
 	}
 
 	sti();
-	neg_safe_set(time.seconds, SECOND_REG);
-	neg_safe_set(time.minutes, MINUTE_REG);
-	neg_safe_set(time.hours, HOUR_REG);
 	neg_safe_set(century, CENTURY_REG);
 	neg_safe_set(year, YEAR_REG);
-	neg_safe_set(time.month, MONTH_REG);
 	neg_safe_set(time.day_of_month, DAY_OF_MONTH_REG);
+	neg_safe_set(time.month, MONTH_REG);
+	neg_safe_set(time.hours, HOUR_REG);
+	neg_safe_set(time.minutes, MINUTE_REG);
+	neg_safe_set(time.seconds, SECOND_REG);
 	cli();
 	return 1; // Successful exit
 }
