@@ -5,28 +5,20 @@
 
 #include "time.h"
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Macro aquires data from a RTC register and converts the output from BCD to decimal.
 *
-* Enter a detailed description of the of the element below
+* This macro is used by the get_time function to aquire the RTC value and convert it into a usable decimal. 
+* The data at the location that is specified is written to the given vlaue. The function outb is used to 
+* select the type of information that is going to be written to the value, this is years, months, etc..
+* The bcd to base 2 conversion happens within the bcd_to_decimal macro.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param val Value that the requested data is to be stored into. This data must not be a pointer.
+* @param loc Type of data being requested, this is using the macros specifed in time.h as YEAR_REG, MONTH_REG, etc.
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return void
+* 
+* @warning Do not use values that are not specifed as 'locations' as the loc field.
 */
 #define pull_data(val, loc) \
 {\
@@ -40,53 +32,34 @@
 	}\
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Simple macro to convert values into BCD format to write time to the RTC.
 *
-* Enter a detailed description of the of the element below
+* This is used to convert a value that could be defined as a literal or calculated by code,
+* into BCD so that writing to the RTC is correct, and that it can keep time. This macro is
+* nested in neg_safe_set.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param val The value to be converted into BCD format.
 *
-* @return Description of return
+* @return Returns the BCD of the given value.
 *
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
 */
 #define decimal_to_bcd(val) ((val/10)<<4 | (val%10))
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Wrties a value to a RTC register.
 *
-* Enter a detailed description of the of the element below
+* Writes a decimal value to a RTC register. This converts the given value to BCD, and then
+* writes it into the correct data location for the RTC to recognise what is being set. Uses
+* outb to set the location of the data that is being written, and writing the actual data.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param in The value that is being written to the RTC.
+* @param loc Type of data being requested, this is using the macros specifed in time.h as YEAR_REG, MONTH_REG, etc.
 *
-* @return Description of return
+* @return void
 *
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @warning Do not use values that are not specifed as 'locations' as the loc field.
+* @warning 'in' should not be BCD, it should be a normal value.
 */
 #define neg_safe_set(in, loc) \
 {\
@@ -97,28 +70,14 @@
 	}\
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Converts BCD values into decimal.
 *
-* Enter a detailed description of the of the element below
+* This function converts BCD values, to be a more code friendly decimal value.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param bcd Value that is in BCD that needs to be a normal decimal value.
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return The value of the BCD as an integer.
 */
 int bcd_to_decimal(int bcd){
 	// Accepts a bcd value as bcd
@@ -130,65 +89,41 @@ int bcd_to_decimal(int bcd){
 	return ret;
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Generates a string with a standard format of time.
 *
-* Enter a detailed description of the of the element below
+* Generates a string that contains all the data contained in a time_h. This
+* form shows all data from largest timescale to smallest timescale.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param dest Pointer to a string that is large enough to contain the output string
+* @param time Pointer to the time to write into the destination string.
 *
-* @return Description of return
+* @return Return is through the 'dest' pointer.
 *
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @note This is merely a convienience, as it is only an sprintf call.
 */
 void format_time(char *dest, time_h *time)
 {
 	sprintf(dest, "%d:%d:%d:%d:%d:%d", time->year, time->month, time->day_of_month, time->hours, time->minutes, time->seconds);
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Retrieves the current time in the Real Time Clock(RTC).
 *
-* Enter a detailed description of the of the element below
+* Aquires data from the RTC, packaging the data into a time_h struct for ease of use.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return Returns the current time represented as 6 values in a time_h struct.
 */
 time_h get_current_time()
 {
 	time_h ret;
+	// getting data
 	pull_data(ret.day_of_month, DAY_OF_MONTH_REG);
 	pull_data(ret.month, MONTH_REG);
 	int century, year;
 	pull_data(century, CENTURY_REG);
 	pull_data(year, YEAR_REG);
+	// assembling year
 	ret.year = century * 100 + year;
 
 	pull_data(ret.hours, HOUR_REG);
@@ -198,28 +133,20 @@ time_h get_current_time()
 	return ret;
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Sets the current time in the RTC.
 *
-* Enter a detailed description of the of the element below
+* Uses a time_h struct to set the data members of the RTC. This function also does error
+* checking on valid times, including leap-years, valid days of months, etc., to ensure the given
+* time is valid.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param time A time_h struct containing the new time, as defined by the user.
 *
-* @return Description of return
+* @return If the operation was successful in boolean format (1 = true, 0 = false).
 *
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @note This function also ensures that the date will be set in the correct order within the RTC.
+* @note Setting a value in the input struct to a '-1' will skip the value in setting the time. Essentially, 
+*		keeping the value as it was before. This is demonstrated in the commands.c file.
 */
 int set_current_time(time_h time)
 {
@@ -264,13 +191,22 @@ int set_current_time(time_h time)
 	// checking if day is valid
 	if (time.day_of_month > -1)
 	{
+		// Leap year condition
+		// if the year is divisible by 400 it is a leapyear
+		// if not, and the year is divisible by 100 it is not a leapyear (1900 and 2100)
+		// otherwise the year must be divisible by 4 to be a leapyear
 		int is_leap = curr.year % 4 == 0 && !(curr.year % 400 != 0 && curr.year % 100 == 0);
 
-		if (time.day_of_month == 0 || // day cannot be 0 (negatives are allowed because of no write case)
-		(curr.month == 2 && is_leap && time.day_of_month > 29) || // leap year in FEBRUARY
-		(curr.month == 2 && !is_leap && time.day_of_month > 28) || // FEBRUARY
-		(curr.month % 2 == 0 && time.day_of_month > 30) || // Even months have 30 days
-		(time.day_of_month > 31)) // no month has more than 31 days
+		// day cannot be 0 (negatives are allowed because of no write case)
+		// leap year in FEBRUARY
+		// FEBRUARY
+		// Even months have 30 days
+		// no month has more than 31 days
+		if (time.day_of_month == 0 || 
+		(curr.month == 2 && is_leap && time.day_of_month > 29) || 
+		(curr.month == 2 && !is_leap && time.day_of_month > 28) ||
+		(curr.month % 2 == 0 && time.day_of_month > 30) || 
+		(time.day_of_month > 31)) 
 		{
 			char msg[64];
 			sprintf(msg, "\033[31mTIME ERROR: The day %d is not valid.\033[0m", time.day_of_month);
@@ -280,6 +216,7 @@ int set_current_time(time_h time)
 		curr.day_of_month = time.day_of_month;
 	}
 
+	// checking if the hour is valid
 	if (time.hours > 24)
 	{
 		char msg[64];
@@ -288,6 +225,7 @@ int set_current_time(time_h time)
 		return 0;
 	}
 
+	// checking if the minutes are valid
 	if (time.minutes > 59)
 	{
 		char msg[64];
@@ -296,6 +234,7 @@ int set_current_time(time_h time)
 		return 0;
 	}
 
+	// checking if the seconds are valid
 	if (time.seconds > 59)
 	{
 		char msg[64];
@@ -304,7 +243,9 @@ int set_current_time(time_h time)
 		return 0;
 	}
 
+	// disallowing interrupts
 	sti();
+	// setting values in order so that they are properly written
 	neg_safe_set(century, CENTURY_REG);
 	neg_safe_set(year, YEAR_REG);
 	neg_safe_set(time.day_of_month, DAY_OF_MONTH_REG);
@@ -312,6 +253,8 @@ int set_current_time(time_h time)
 	neg_safe_set(time.hours, HOUR_REG);
 	neg_safe_set(time.minutes, MINUTE_REG);
 	neg_safe_set(time.seconds, SECOND_REG);
+	// reallowing interrupts
 	cli();
-	return 1; // Successful exit
+	// Successful exit
+	return 1; 
 }
