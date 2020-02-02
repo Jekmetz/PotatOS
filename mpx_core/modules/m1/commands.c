@@ -81,31 +81,48 @@ typedef struct {
   char* val;
 } ALIAS;
 
-//Prototypes for private functions
-/*Procedure: set_flags
-  Description: sets flags based on param string, flags and num aliases
-  Usage: 
-    set_flags(paramstr,&flag,5,
-    'a',"alpha",
-    'b',"bravo",
-    'f',"foxtrot",
-    'g',"golf",
-    'r',"whiskey"
-    )
- */
+
+/**
+* @brief sets flags based on param string, flags and num aliases
+*
+* Usage: 
+*    set_flags(paramstr,&flag,5,
+*    'a',"alpha",
+*    'b',"bravo",
+*    'f',"foxtrot",
+*    'g',"golf",
+*    'r',"whiskey"
+*    )
+*
+* @param paramstr string that each command gets. Typed by the user
+* @param flag pointer to integer flag
+* @param num_aliases number of aliases specified
+*
+* @return success or failure
+*
+* @note num_aliases must be the exact number of parameters. In the example, 5
+*/
 int set_flags(char* paramstr, int* flag, int num_aliases, ...);
 
-/*
-  Procedure: get_pvalue
-  Description: used to get value for certain flag
-  Usage: get_pvalue('a') for a's value
+/**
+* @brief Gets value of specific flag
+*
+* Usage: get_pvalue('a');
+*
+* @param c character of flag to get the value from 
+*
+* @return value after the flag specified
 */
 char* get_pvalue(char c);
 
-/*
-  Procedure: set_flags_search_alias
-  Description: helps set-flags by searching alias list
-               to see if there exists an alias in it
+/**
+* @brief Used as a helper function for set_flags
+*
+* @param alias alias to search for in aliases
+* @param num_aliases number of aliases in aliases
+* @param aliases array of ALIASes to search through
+*
+* @return charachter of flag that it found
 */
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
 
@@ -422,6 +439,13 @@ int cmd_time(char* params) {
   return SUCCESS;
 }
 
+/**
+* @brief clears the screen and sets the pointer at home
+*
+* @param params param string typed by user
+*
+* @return SUCCESS or FAILURE
+*/
 int cmd_clear(char* params)
 {
   //Unused... supresses warning
@@ -433,10 +457,14 @@ int cmd_clear(char* params)
   return SUCCESS;
 }
 
-/*
-  Procedure: set_flags_search_alias
-  Description: helps set-flags by searching alias list
-               to see if there exists an alias in it
+/**
+* @brief Used as a helper function for set_flags
+*
+* @param alias alias to search for in aliases
+* @param num_aliases number of aliases in aliases
+* @param aliases array of ALIASes to search through
+*
+* @return charachter of flag that it found
 */
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[])
 {
@@ -458,27 +486,40 @@ char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[])
   return ret;
 }
 
-/*
-  Procedure: get_pvalue
-  Description: used to get value for certain flag
-  Usage: get_pvalue('a') for a's value
+/**
+* @brief Gets value of specific flag
+*
+* Usage: get_pvalue('a');
+*
+* @param c character of flag to get the value from 
+*
+* @return value after the flag specified
 */
 char* get_pvalue(char c)
 {
   return gparams[alphanum(c)];
 }
 
-/*Procedure: set_flags
-  Description: sets flags based on param string, flags and num aliases
-  Usage: 
-    set_flags(paramstr,&flag,5,
-    'a',"alpha",
-    'b',"bravo",
-    'f',"foxtrot",
-    'g',"golf",
-    'r',"whiskey"
-    )
- */
+/**
+* @brief sets flags based on param string, flags and num aliases
+*
+* Usage: 
+*    set_flags(paramstr,&flag,5,
+*    'a',"alpha",
+*    'b',"bravo",
+*    'f',"foxtrot",
+*    'g',"golf",
+*    'r',"whiskey"
+*    )
+*
+* @param paramstr string that each command gets. Typed by the user
+* @param flag pointer to integer flag
+* @param num_aliases number of aliases specified
+*
+* @return success or failure
+*
+* @note num_aliases must be the exact number of parameters. In the example, 5
+*/
 int set_flags(char* paramstr, int* flag, int num_aliases, ...)
 {
   //Init Vars

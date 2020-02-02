@@ -18,4 +18,11 @@ int cmd_time(char* params);
 
 int cmd_test(char* params);
 
+/**
+* @brief clears the screen and sets the pointer at home
+*
+* @param params param string typed by user
+*
+* @return SUCCESS or FAILURE
+*/
 int cmd_clear(char* params);

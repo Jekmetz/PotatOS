@@ -37,56 +37,13 @@
 // Prototypes
 int search_commands(char*);
 
-// TODO
-/**
-* @brief Enter a brief description of the element below
-*
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
-*/
 typedef struct {
   char* str;
   int (*func)(char*);
 } COMMAND;
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
-*
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @brief Array of COMMANDS that are supported
 */
 COMMAND commands[] = {
   {"help", &cmd_help},
@@ -101,28 +58,8 @@ COMMAND commands[] = {
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
-*
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @brief Entry point for the command handler
 */
 int command_handler() {
   // Initialize vars
@@ -204,28 +141,10 @@ int command_handler() {
   return 0;
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Finds which command in the global COMMANDS array
 *
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @param cmd cmd typed by user
 */
 int search_commands(char* cmd) {
   int cmdidx;
