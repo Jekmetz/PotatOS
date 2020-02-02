@@ -2,8 +2,8 @@
 
 #include <core/io.h>
 #include <core/serial.h>
-#include <system.h>
 #include <string.h>
+#include <system.h>
 
 // TODO
 /**
@@ -29,32 +29,32 @@
 * @warning A warning
 */
 const EscapeCode escape_codes[] = {
-    {"A", UP_ARROW},
-    {"B", DOWN_ARROW},
-    {"C", RIGHT_ARROW},
-    {"D", LEFT_ARROW},
+  {"A", UP_ARROW},
+  {"B", DOWN_ARROW},
+  {"C", RIGHT_ARROW},
+  {"D", LEFT_ARROW},
 
-    {"1~", HOME},
-    {"2~", INSERT},
-    {"3~", DELETE},
-    {"4~", END},
-    {"5~", PAGE_DOWN},
-    {"6~", PAGE_UP},
+  {"1~", HOME},
+  {"2~", INSERT},
+  {"3~", DELETE},
+  {"4~", END},
+  {"5~", PAGE_DOWN},
+  {"6~", PAGE_UP},
 
-    {"[A", F1},
-    {"[B", F2},
-    {"[C", F3},
-    {"[D", F4},
-    {"[E", F5},
-    {"17~", F6},
-    {"18~", F7},
-    {"19~", F8},
-    {"20~", F9},
-    {"21~", F10},
-    {"23~", F11},
-    {"24~", F12},
+  {"[A", F1},
+  {"[B", F2},
+  {"[C", F3},
+  {"[D", F4},
+  {"[E", F5},
+  {"17~", F6},
+  {"18~", F7},
+  {"19~", F8},
+  {"20~", F9},
+  {"21~", F10},
+  {"23~", F11},
+  {"24~", F12},
 
-    {"", 0}
+  {"", 0}
 };
 
 int input_available();
@@ -164,7 +164,8 @@ const int ALT_FLAG = 1 << 8;
 */
 int poll_input(char* buffer, int* length) {
   int max_length = *length;
-  int current_i = 0;
+  int current_length = 0;
+  int cursor_position = 0;
 
   // Buffer to hold one char and a null byte for passing to serial_print
   char minibuf[2] = {0, 0};
@@ -172,33 +173,96 @@ int poll_input(char* buffer, int* length) {
   while (1) {
     int input = get_key();
 
-    if (0x20 <= input && input <= 0x7E && current_i < max_length) {
+    if (0x20 <= input && input <= 0x7E && current_length < max_length) {
       char input_ch = (char)input;
+
       // If the char is printable, add it to the buffer and print
-      buffer[current_i] = input_ch;
-      current_i += 1;
+      for (int i = current_length; i > cursor_position; i--) {
+        buffer[i] = buffer[i - 1];
+      }
+
+      buffer[cursor_position] = input_ch;
+
+      current_length += 1;
+      cursor_position += 1;
 
       minibuf[0] = input_ch;
       serial_print(minibuf);
-    } else if (input == 0x7F && current_i > 0) {
-      // If it's backspace then delete the last char in the buffer
-      current_i -= 1;
-      buffer[current_i] = 0;
-
-      // \b moves the cursor one back. So this moves back, overwrites
-      // with a space, and then moves back again.
-      serial_print("\b \b");
     }
 
-    if (input == 0x0A || input == 0x0D) {
-      // 0A is newline, and 0D is carriage return. For some reason
-      // when I hit enter I was receiving \r in the OS, so I just
-      // check for both here for enter. If we hit enter, we print
-      // a newline and return. We also return if we've hit the max
-      // length
-      serial_print("\n");
-      *length = current_i;
-      return 0;
+    switch (input) {
+      case UP_ARROW:
+        break;
+
+      case DOWN_ARROW:
+        break;
+
+      case RIGHT_ARROW:
+        if (cursor_position < current_length) {
+          cursor_position += 1;
+          serial_print("\x1B[C");
+        }
+        break;
+
+      case LEFT_ARROW:
+        if (cursor_position > 0) {
+          cursor_position -= 1;
+          serial_print("\x1B[D");
+        }
+        break;
+
+      case DELETE:
+        // Delete the character after the cursor position
+        if (cursor_position < current_length) {
+          current_length -= 1;
+
+          for (int i = cursor_position; i <= current_length; i++) {
+            buffer[i] = buffer[i + 1];
+          }
+
+          // ESC [s - save cursor position
+          // ESC [K - delete line following cursor
+          serial_print("\x1B[s\x1B[K");
+
+          serial_print(&buffer[cursor_position]);
+
+          // ESC [u - restore cursor position
+          serial_print("\x1B[u");
+        }
+        break;
+
+      case 0x7F:  // Backspace
+        // Delete the character before the cursor position
+        if (cursor_position > 0 && current_length > 0) {
+          current_length -= 1;
+          cursor_position -= 1;
+
+          for (int i = cursor_position; i <= current_length; i++) {
+            buffer[i] = buffer[i + 1];
+          }
+
+          // ESC [D - move cursor back
+          // ESC [s - save cursor position
+          // ESC [K - delete line following cursor
+          serial_print("\x1B[D\x1B[s\x1B[K");
+
+          serial_print(&buffer[cursor_position]);
+
+          // ESC [u - restore cursor position
+          serial_print("\x1B[u");
+        }
+        break;
+
+      case 0x0A:  // \n
+      case 0x0D:  // \r
+        // 0A is newline, and 0D is carriage return. For some reason
+        // when I hit enter I was receiving \r in the OS, so I just
+        // check for both here for enter. If we hit enter, we print
+        // a newline and return. We also return if we've hit the max
+        // length
+        serial_print("\n");
+        *length = current_length;
+        return 0;
     }
   }
 }
