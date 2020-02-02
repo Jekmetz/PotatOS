@@ -3,10 +3,12 @@
 *********************************************************/
 #include <string.h>
 
-/*
-        Procedure: isnullorspace
-        Description: returns true if test is '\0' or a space
-        Parameters: test-character to test
+/**
+* @brief Determines if a passed character is a null or space
+*
+* @param test charachter to test
+*
+* @return 1 if space or null, 0 otherwise
 */
 int isnullorspace(char test) {
   return (isspace(&test) || test == '\0');
