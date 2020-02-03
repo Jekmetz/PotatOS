@@ -7,7 +7,7 @@
 *  int cmd_<cmd_name>(char* params);
 **************************************************************/
 #include <string.h>
-#include <core/serial.h>
+#include <core/stdio.h>
 #include <core/utility.h>
 #include <core/io.h>
 #include <stdarg.h>
@@ -165,9 +165,7 @@ int cmd_help(char* params) {
     );
 
   if (chk != SUCCESS) {
-    char *ret = "\033[31mHouston, we have a problem. Check your flags!\033[0m";
-    int size = strlen(ret);
-    sys_req(WRITE,DEFAULT_DEVICE,ret,&size);
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
   }
 
@@ -279,9 +277,7 @@ int cmd_version(char* params) {
     );
 
   if (chk != SUCCESS) {
-    char *ret = "\033[31mHouston, we have a problem. Check your flags!\033[0m";
-    int size = strlen(ret);
-    sys_req(WRITE,DEFAULT_DEVICE,ret,&size);
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
   }
 
@@ -330,9 +326,7 @@ int cmd_date(char* params) {
     );
 
   if (chk != SUCCESS) {
-    char *ret = "\033[31mHouston, we have a problem. Check your flags!\033[0m";
-    int size = strlen(ret);
-    sys_req(WRITE,DEFAULT_DEVICE,ret,&size);
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
   }
 
@@ -343,9 +337,7 @@ int cmd_date(char* params) {
   {
     if(date == NULL)
     {
-      char *ret = "\033[31mMust include time value after [-s | --set]! Exiting!\033[0m";
-      int size = strlen(ret);
-      sys_req(WRITE,DEFAULT_DEVICE,ret,&size);
+      puts("\033[31mMust include time value after [-s | --set]! Exiting!\033[0m");
       return FAILURE;
     }
 
@@ -362,10 +354,7 @@ int cmd_date(char* params) {
 
   // printing the date
   time_h tim = get_current_time();
-  char buff[64];
-  sprintf(buff, "%d/%d/%d", tim.day_of_month, tim.month, tim.year);
-  serial_println(buff);
-
+  printf("%d/%d/%d\n", tim.day_of_month, tim.month, tim.year);
   return SUCCESS;
 }
 
@@ -401,9 +390,7 @@ int cmd_time(char* params) {
     );
 
   if (chk != SUCCESS) {
-    char *ret = "\033[31mHouston, we have a problem. Check your flags!\033[0m";
-    int size = strlen(ret);
-    sys_req(WRITE,DEFAULT_DEVICE,ret,&size);
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
   }
 
@@ -414,9 +401,7 @@ int cmd_time(char* params) {
   {
       if(time == NULL)
       {
-        char *ret = "\033[31mMust include time value after [-s | --set]! Exiting!\033[0m";
-        int size = strlen(ret);
-        sys_req(WRITE,DEFAULT_DEVICE,ret,&size);
+        puts("\033[31mMust include time value after [-s | --set]! Exiting!\033[0m");
         return FAILURE;
       }
 
@@ -432,9 +417,7 @@ int cmd_time(char* params) {
   }
 
   time_h tim = get_current_time();
-  char form_tim[64];
-  sprintf(form_tim, "%d:%d:%d", tim.hours, tim.minutes, tim.seconds);
-  serial_println(form_tim);
+  printf("%d:%d:%d\n", tim.hours, tim.minutes, tim.seconds);
 
   return SUCCESS;
 }
@@ -451,8 +434,7 @@ int cmd_clear(char* params)
   //Unused... supresses warning
   if(params){}
 
-  int size = 10;
-  sys_req(WRITE,DEFAULT_DEVICE,"\033[2J\033[H",&size);
+  puts("\033[2J\033[H");
 
   return SUCCESS;
 }

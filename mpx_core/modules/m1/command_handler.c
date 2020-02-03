@@ -2,7 +2,7 @@
     Description: handles commands typed by the user
 */
 #include <string.h>
-#include <core/serial.h>
+#include <core/stdio.h>
 #include <core/utility.h>
 
 #include "../mpx_supt.h"
@@ -72,7 +72,7 @@ int command_handler() {
   sys_set_read(&poll_input);
 
   while (!exit) {
-    serial_print("\n\033[33;1mPOS User Shell\033[34m>>\033[0m ");  // show prompt
+    printf("\n\033[33;1mPOS User Shell\033[34m>>\033[0m ");  // show prompt
 
     memset(cmd, '\0', CMDSIZE);  // set command as a bunch of \0s
     bufSize = CMDSIZE - 1;       // set bufSize as the command size - 1
@@ -83,19 +83,19 @@ int command_handler() {
     {
       switch (errCode) {
         case INVALID_OPERATION:
-          serial_println("\033[31;1mInvalid Operation from command handler!\033[0m");
+          puts("\033[31;1mInvalid Operation from command handler!\033[0m");
           break;
 
         case INVALID_BUFFER:
-          serial_println("\033[31;1mInvalid Buffer from command handler!\033[0m");
+          puts("\033[31;1mInvalid Buffer from command handler!\033[0m");
           break;
 
         case INVALID_COUNT:
-          serial_println("\033[31;1mInvalid Count from command handler!\033[0m");
+          puts("\033[31;1mInvalid Count from command handler!\033[0m");
           break;
       }
 
-      serial_println("\033[31;1mFailure to execute command!\033[0m");
+      puts("\033[31;1mFailure to execute command!\033[0m");
       continue;  // move forward with your life!
     }
     /*******END SYS_REQ VALIDATION*******/
@@ -108,7 +108,7 @@ int command_handler() {
     {
       char shutdownCmd[10];
       int shutdownBufSize = 10;
-      serial_print("Are you sure that you would like to shutdown? (Y/N): ");
+      printf("Are you sure that you would like to shutdown? (Y/N): ");
       //read the command and put it into shutdownCmd;
       sys_req(READ, DEFAULT_DEVICE, shutdownCmd, &shutdownBufSize);
 
@@ -118,7 +118,7 @@ int command_handler() {
       }
       else
       {
-      	serial_println("\033[32mSystem shutdown canceled!\033[0m");
+      	puts("\033[32mSystem shutdown canceled!\033[0m");
       }
       continue;	//no need to search commands if we have tried to exit
     }
@@ -129,14 +129,14 @@ int command_handler() {
     {
       char ret[CMDSIZE + 18];
       sprintf(ret, "\033[31mInvalid Command: %s\033[0m\n", cmd);
-      serial_println(ret);
+      puts(ret);
     } else  // if we did find something...
     {
       (*commands[cmdidx].func)(cmd);
     }
   }
 
-  serial_println("Exiting prompt! Goodbye and have a \033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033[33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
+  puts("Exiting prompt! Goodbye and have a \033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033[33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
 
   return 0;
 }

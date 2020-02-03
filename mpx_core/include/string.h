@@ -4,6 +4,7 @@
 #define _STRING_H
 
 #include <system.h>
+#include <stdarg.h>
 
 /*
   Procedure..: isspace
@@ -96,6 +97,8 @@ char* itoa(int num, char* str, int base);
    int sprintf(char *str, const char *format, ...);
 */
 int sprintf(char* buffer, char* format, ...);
+
+int sprintf_internal(char *buffer, char *format, va_list valist);
 
 /*Procedure: tolower
   Description: takes in a character and converts it

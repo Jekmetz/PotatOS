@@ -1,12 +1,14 @@
+#pragma once
+#include <core/stdio.h>
 // This files serves as a central repository of the printable
 // blocks of commands.c
 
 // Below is the verions information
-#define VERSION serial_println(\
+#define VERSION puts(\
       "Version 1.0"\
 );
 
-#define VERSION_FULL serial_println(\
+#define VERSION_FULL puts(\
         "Version 1.0\n"\
         "Module one\n"\
         "Developers:\n"\
@@ -17,7 +19,7 @@
 );
 
 // Below are all the help outputs
-#define HELP serial_println(\
+#define HELP puts(\
       "You can request a help page for the following commands"\
       " using help <cmd name>\n"\
       "help\n"\
@@ -27,12 +29,12 @@
       "time"\
 );
 
-#define HELP_HELP serial_println(\
+#define HELP_HELP puts(\
   "View help pages for individual commands."\
   " Use flag [-f | --full] for more information"\
 );
 
-#define HELP_HELP_FULL serial_println(\
+#define HELP_HELP_FULL puts(\
           "Implementation:\n"\
           "\thelp <command> [-f | --full]\n"\
           "\n"\
@@ -41,24 +43,24 @@
           "\t\twith explanations"\
 );
 
-#define HELP_VERSION serial_println(\
+#define HELP_VERSION puts(\
       "Display version information."\
       "Use flag [-f | --full] for more information"\
 );
 
-#define HELP_VERSION_FULL serial_println(\
+#define HELP_VERSION_FULL puts(\
         "Implementatoin:\n"\
         "\tversion [-f | --full]\n"\
         "Flags:\n"\
         "\t[-f | --full] - Show entire verion"\
 );
 
-#define HELP_SHUTDOWN serial_println(\
+#define HELP_SHUTDOWN puts(\
       "Shutdown the MPX System."\
       "Use flag [-f | --full] for more information"\
 );
 
-#define HELP_SHUTDOWN_FULL serial_println(\
+#define HELP_SHUTDOWN_FULL puts(\
         "Implementatoin:\n"\
         "\tshutdown\n"\
         "Flags:\n"\
@@ -67,12 +69,12 @@
         "\tMust confirm before shutdown"\
 );
 
-#define HELP_DATE serial_println(\
+#define HELP_DATE puts(\
       "Display date."\
       "Use flag [-f | --full] for more information"\
 );
 
-#define HELP_DATE_FULL serial_println(\
+#define HELP_DATE_FULL puts(\
         "Implementatoin:\n"\
         "\tdate [-s | --set]\n"\
         "Flags:\n"\
@@ -83,12 +85,12 @@
         "\tdate -s 01-01-2019"\
 );
 
-#define HELP_TIME serial_println(\
+#define HELP_TIME puts(\
       "Display time."\
       "Use flag [-f | --full] for more information"\
 );
 
-#define HELP_TIME_FULL serial_println(\
+#define HELP_TIME_FULL puts(\
         "Implementatoin:\n"\
         "\tdate [-f | --full] [-s | --set]\n"\
         "Flags:\n"\

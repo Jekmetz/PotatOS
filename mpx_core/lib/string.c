@@ -1,6 +1,5 @@
-#include <stdarg.h>
 #include <string.h>
-#include <system.h>
+#include <stdarg.h>
 
 #define F_MINUS (1 << 0)
 #define F_PLUS (1 << 1)
@@ -283,22 +282,16 @@ char* sprintf_pad_helper(char* buffer, char pad, int fNum, int n, BYTE doAction)
 }
 
 /*
-  Procedure: sprintf
-  Description: brings a lot of parameters into buffer based off of the format
-    Format works for: %s, %d, %i, %c, and %x
-  Params: buffer-char* to write to, format-format string, ...- parameters to
-  match format
+  Procedure: buffer = sprintf_internal
 */
-int sprintf(char* buffer, char* format, ...) {
+int sprintf_internal(char *buffer, char *format, va_list valist)
+{
   int ret = 0;    // return value
   BYTE flag = 0;  // keeps track of certain flags
   int fNum = 0;   // format number ex: %-10s
   char* temp;     // temp char* to use when needed
 
-  va_list valist;
-  va_start(valist, format);  // start with the parameter nonsense
-
-  while (*format)  // while there is still stuff in the format...
+    while (*format)  // while there is still stuff in the format...
   {
     if (*format != '%')  // If the current token is a %...
     {
@@ -463,7 +456,20 @@ int sprintf(char* buffer, char* format, ...) {
   }
 
   *buffer = '\0';  // add null charachter at the end
+  return ret;
+}
 
+/*
+  Procedure: sprintf
+  Description: brings a lot of parameters into buffer based off of the format
+    Format works for: %s, %d, %i, %c, and %x
+  Params: buffer-char* to write to, format-format string, ...- parameters to
+  match format
+*/
+int sprintf(char* buffer, char* format, ...) {
+  va_list valist;
+  va_start(valist, format);  // start with the parameter nonsense
+  int ret = sprintf_internal(buffer, format, valist);
   va_end(valist);
   return ret;
 }

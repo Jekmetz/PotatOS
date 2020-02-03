@@ -1,7 +1,7 @@
 #include <string.h>
 #include <core/io.h>
 #include <core/utility.h>
-#include <core/serial.h>
+#include <core/stdio.h>
 
 #include "time.h"
 
@@ -27,7 +27,7 @@
 	val = bcd_to_decimal(temp);\
 	if (val < 0)\
 	{\
-		serial_println("\033[31mTIME ERROR: BCD conversion error in "#val".\033[0m");\
+		puts("\033[31mTIME ERROR: BCD conversion error in "#val".\033[0m");\
 		return (time_h){-1,-1,-1,-1,-1,-1};\
 	}\
 }
@@ -159,9 +159,7 @@ int set_current_time(time_h time)
 	{
 		if (time.year < 1700 || time.year > 3000)
 		{
-			char msg[64];
-			sprintf(msg, "\033[31mTIME ERROR: The year %d is not valid.\033[0m", time.year);
-			serial_println(msg);
+			printf("\033[31mTIME ERROR: The year %d is not valid.\033[0m\n", time.year);
 			return 0;
 		}
 		century = time.year / 100;
@@ -180,9 +178,7 @@ int set_current_time(time_h time)
 	{
 		if (time.month == 0 || time.month > 12)
 		{
-			char msg[64];
-			sprintf(msg, "\033[31mTIME ERROR: The month %d is not valid.\033[0m", time.month);
-			serial_println(msg);
+			printf("\033[31mTIME ERROR: The month %d is not valid.\033[0m\n", time.month);
 			return 0;
 		}
 		curr.month = time.month;
@@ -208,9 +204,7 @@ int set_current_time(time_h time)
 		(curr.month % 2 == 0 && time.day_of_month > 30) || 
 		(time.day_of_month > 31)) 
 		{
-			char msg[64];
-			sprintf(msg, "\033[31mTIME ERROR: The day %d is not valid.\033[0m", time.day_of_month);
-			serial_println(msg);
+			printf("\033[31mTIME ERROR: The day %d is not valid.\033[0m\n", time.day_of_month);
 			return 0;
 		}
 		curr.day_of_month = time.day_of_month;
@@ -219,27 +213,21 @@ int set_current_time(time_h time)
 	// checking if the hour is valid
 	if (time.hours > 24)
 	{
-		char msg[64];
-		sprintf(msg, "\033[31mTIME ERROR: The hour %d is not valid.\033[0m", time.hours);
-		serial_println(msg);
+		printf("\033[31mTIME ERROR: The hour %d is not valid.\033[0m\n", time.hours);
 		return 0;
 	}
 
 	// checking if the minutes are valid
 	if (time.minutes > 59)
 	{
-		char msg[64];
-		sprintf(msg, "\033[31mTIME ERROR: The minute %d is not valid.\033[0m", time.minutes);
-		serial_println(msg);
+		printf("\033[31mTIME ERROR: The minute %d is not valid.\033[0m\n", time.minutes);
 		return 0;
 	}
 
 	// checking if the seconds are valid
 	if (time.seconds > 59)
 	{
-		char msg[64];
-		sprintf(msg, "\033[31mTIME ERROR: The second %d is not valid.\033[0m", time.seconds);
-		serial_println(msg);
+		printf("\033[31mTIME ERROR: The second %d is not valid.\033[0m\n", time.seconds);
 		return 0;
 	}
 

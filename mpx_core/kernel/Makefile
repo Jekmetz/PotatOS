@@ -13,6 +13,7 @@ core/gdt.o\
 core/idt.o\
 core/interrupts.o\
 core/io.o\
+core/stdio.o\
 core/irq.o\
 core/kmain.o\
 core/serial.o\
