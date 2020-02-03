@@ -57,9 +57,15 @@ const EscapeCode escape_codes[] = {
   {"", 0}
 };
 
+#define BUFFER_LEN 100
+
 int input_available();
 int wait_for_input(int timeout);
 int get_key();
+void move_cursor(int n);
+void print_after_cursor(const char* str);
+void delete_after_cursor();
+void memcpy(char* destination, const char* source, int n);
 
 // How many NOP cycles can we count until we get a new byte and consider it
 // part of the same control sequence?
@@ -163,6 +169,11 @@ const int ALT_FLAG = 1 << 8;
 * @warning A warning
 */
 int poll_input(char* buffer, int* length) {
+  static char history[11][BUFFER_LEN] = { {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0} };
+  static int history_length = 0;
+
+  int history_index = 0;
+
   int max_length = *length;
   int current_length = 0;
   int cursor_position = 0;
@@ -188,26 +199,59 @@ int poll_input(char* buffer, int* length) {
 
       minibuf[0] = input_ch;
       serial_print(minibuf);
+
+      print_after_cursor(&buffer[cursor_position]);
     }
 
-    switch (input) {
+      switch (input) {
       case UP_ARROW:
+          if (history_index < history_length) {
+              if (history_index == 0) {
+                  memcpy(history[0], buffer, BUFFER_LEN);
+              }
+
+              history_index += 1;
+
+              move_cursor(-cursor_position);
+              delete_after_cursor();
+
+              // Copy the history into the buffer and print
+              memcpy(buffer, history[history_index], BUFFER_LEN);
+              serial_print(buffer);
+              cursor_position = strlen(buffer);
+              current_length = cursor_position;
+          }
         break;
 
       case DOWN_ARROW:
+          if (history_index > 0) {
+              history_index -= 1;
+
+              move_cursor(-cursor_position);
+              delete_after_cursor();
+
+              // Clear the buffer so we can use it for sprintf
+              memset(buffer, 0, max_length);
+
+              // Copy the history into the buffer and print
+              memcpy(buffer, history[history_index], BUFFER_LEN);
+              serial_print(buffer);
+              cursor_position = strlen(buffer);
+              current_length = cursor_position;
+          }
         break;
 
       case RIGHT_ARROW:
         if (cursor_position < current_length) {
           cursor_position += 1;
-          serial_print("\x1B[C");
+          move_cursor(1);
         }
         break;
 
       case LEFT_ARROW:
         if (cursor_position > 0) {
           cursor_position -= 1;
-          serial_print("\x1B[D");
+          move_cursor(-1);
         }
         break;
 
@@ -220,14 +264,7 @@ int poll_input(char* buffer, int* length) {
             buffer[i] = buffer[i + 1];
           }
 
-          // ESC [s - save cursor position
-          // ESC [K - delete line following cursor
-          serial_print("\x1B[s\x1B[K");
-
-          serial_print(&buffer[cursor_position]);
-
-          // ESC [u - restore cursor position
-          serial_print("\x1B[u");
+          print_after_cursor(&buffer[cursor_position]);
         }
         break;
 
@@ -241,15 +278,8 @@ int poll_input(char* buffer, int* length) {
             buffer[i] = buffer[i + 1];
           }
 
-          // ESC [D - move cursor back
-          // ESC [s - save cursor position
-          // ESC [K - delete line following cursor
-          serial_print("\x1B[D\x1B[s\x1B[K");
-
-          serial_print(&buffer[cursor_position]);
-
-          // ESC [u - restore cursor position
-          serial_print("\x1B[u");
+          move_cursor(-1);
+          print_after_cursor(&buffer[cursor_position]);
         }
         break;
 
@@ -260,7 +290,18 @@ int poll_input(char* buffer, int* length) {
         // check for both here for enter. If we hit enter, we print
         // a newline and return. We also return if we've hit the max
         // length
+        memcpy(history[0], buffer, BUFFER_LEN);
+
         serial_print("\n");
+        for (int i = 10; i > 0; i--) {
+            memset(history[i], 0, 100);
+            memcpy(history[i], history[i - 1], BUFFER_LEN);
+        }
+
+        if (history_length < 10) {
+            history_length += 1;
+        }
+
         *length = current_length;
         return 0;
     }
@@ -411,4 +452,44 @@ int wait_for_input(int timeout) {
   }
 
   return timeout;
+}
+
+void print_after_cursor(const char* str) {
+    // ESC [s - save cursor position
+    // ESC [K - delete line following cursor
+    serial_print("\x1B[s\x1B[K");
+
+    serial_print(str);
+
+    // ESC [u - restore cursor position
+    serial_print("\x1B[u");
+}
+
+void delete_after_cursor() {
+    // ESC [K - delete line following cursor
+    serial_print("\x1B[K");
+}
+
+void move_cursor(int n) {
+    char buffer[16] = {0};
+
+    if (n > 0) {
+        // ESC [ n C - Move cursor forward n times
+        sprintf(buffer, "\x1B[%dC", n);
+        serial_print(buffer);
+    } else if (n < 0) {
+        // ESC [ n D - Move cursor backwards n times
+        sprintf(buffer, "\x1B[%dD", -n);
+        serial_print(buffer);
+    }
+    // When it's zero we don't do anything
+}
+
+void memcpy(char* destination, const char* source, int n) {
+    while (n > 0) {
+        *destination = *source;
+        destination += 1;
+        source += 1;
+        n -= 1;
+    }
 }
