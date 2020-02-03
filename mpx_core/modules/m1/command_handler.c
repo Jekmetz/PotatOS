@@ -172,7 +172,7 @@ int search_commands(char* cmd) {
       cmd++;
     }
 
-    if (isnullorspace(*cmd))  // if cmd is pointing to a space or a null..
+    if (isnullorspace(*testCmd) && isnullorspace(*cmd))  // if cmd is pointing to a space or a null..
     {  // this means that testCmd matched until a space and we have ourselves a
        // match!
       found = 1;
