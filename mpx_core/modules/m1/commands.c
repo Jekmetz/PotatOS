@@ -161,7 +161,7 @@ int cmd_help(char* params) {
 
   chk = set_flags(params, &flag, 2,
     'f',"full",
-    'c',"cmd"
+    'c',"command"
     );
 
   if (chk != SUCCESS) {
@@ -241,6 +241,10 @@ int cmd_help(char* params) {
       HELP_TIME_FULL;
     }
   }
+  
+  else {
+	serial_println("Command not found");
+  }
 
     return SUCCESS;  // successful response
   }
@@ -284,7 +288,7 @@ int cmd_version(char* params) {
   //get flag values
   // If no full flag set
   if( !(flag & F_FLAG)){
-    VERSION;
+	VERSION;
   }
   // If full flag used
   else{
