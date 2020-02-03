@@ -1,9 +1,10 @@
 // This files serves as a central repository of the printable
 // blocks of commands.c
 
+
 // Below is the verions information
 #define VERSION serial_println(\
-      "Version 1.0"\
+	"Version 1.0"\
 );
 
 #define VERSION_FULL serial_println(\
