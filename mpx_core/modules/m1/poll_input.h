@@ -2,10 +2,10 @@
 
 int poll_input(char* buffer, int* length);
 
-typedef struct EscapeCode_s {
+typedef struct control_sequence {
   char code[8];
   int id;
-} EscapeCode;
+} ControlSequence;
 
 enum KEYS {
   BASE = 1024,

@@ -5,30 +5,29 @@
 #include <string.h>
 #include <system.h>
 
-// TODO
+#define BUFFER_LEN 100
+
+// Internally used functions, not placed in the header file for external use
+int input_available();
+int wait_for_input(int timeout);
+int get_key();
+void move_cursor(int n);
+void print_after_cursor(const char* str);
+void delete_after_cursor();
+void memcpy(char* destination, const char* source, int n);
+
 /**
-* @brief Enter a brief description of the element below
+* @brief A collection of known control sequences and what they mean.
 *
-* Enter a detailed description of the of the element below
+* Control sequences are used to encode special input keys from the
+* keyboard that aren't just a one byte character. They start with
+* ESCAPE [ and then a series of characters. This array holds the
+* series of characters that comes after the bracket, along with the
+* corresponding keyboard input. The keyboard inputs are from the KEYS
+* enum.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
 */
-const EscapeCode escape_codes[] = {
+const ControlSequence control_sequences[] = {
   {"A", UP_ARROW},
   {"B", DOWN_ARROW},
   {"C", RIGHT_ARROW},
@@ -57,116 +56,32 @@ const EscapeCode escape_codes[] = {
   {"", 0}
 };
 
-#define BUFFER_LEN 100
-
-int input_available();
-int wait_for_input(int timeout);
-int get_key();
-void move_cursor(int n);
-void print_after_cursor(const char* str);
-void delete_after_cursor();
-void memcpy(char* destination, const char* source, int n);
-
-// How many NOP cycles can we count until we get a new byte and consider it
-// part of the same control sequence?
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Maximum amount of NOP cycles that can occur between two inputs from the same control sequence.
 *
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @note This is entirely arbitrary and was just increased until things stopped being weird.
 */
 const int TOLERANCE = 300;
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
-*
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @brief The escape character
 */
 const char ESC = '\x1B';
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
-*
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @brief The bit indicating a key from get_key was held with the ALT key
 */
-// Make the alt flag be the 9th bit. Avoiding any char business
 const int ALT_FLAG = 1 << 8;
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Polls COM1 for input and puts it into buffer
 *
-* Enter a detailed description of the of the element below
+* An internal history is kept so the user can go through past commands
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param buffer a pointer to the buffer to put the user input into
+* @param length a pointer to the length of buffer, will be modified to length of input
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return function status
 */
 int poll_input(char* buffer, int* length) {
   static char history[11][BUFFER_LEN] = { {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0} };
@@ -308,28 +223,16 @@ int poll_input(char* buffer, int* length) {
   }
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Receives a key press, whether a full control sequence or simple character
 *
-* Enter a detailed description of the of the element below
+* Calls inb(COM1) to receive bytes. If a control sequence is detected then it
+* is parsed according to the control_sequences array. If it was just a simple
+* character like the A key. Then the char is sent as an int. Arrow keys and
+* other control sequences are special numbers higher than 255 to differentiate
+* themselves from the regular characters. The KEYS enum shows the special characters
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return Returns an int corresponding to the key
 */
 int get_key() {
   // Wait until input is available
@@ -376,75 +279,40 @@ int get_key() {
   // and then send the id related to it.
   int escape_code_id = 0;
 
-  for (int i = 0; escape_codes[i].id != 0; i++) {
-    if (strcmp(buffer, escape_codes[i].code) == 0) {
-      escape_code_id = escape_codes[i].id;
+  for (int i = 0; control_sequences[i].id != 0; i++) {
+    if (strcmp(buffer, control_sequences[i].code) == 0) {
+      escape_code_id = control_sequences[i].id;
       break;
     }
   }
 
-  // Remove in production lol
-  if (escape_code_id == 0) {
-    serial_print("\nUNKNOWN ESCAPE CODE: ESC [");
-    serial_print(buffer);
-  }
+//  // Remove in production lol
+//  if (escape_code_id == 0) {
+//    serial_print("\nUNKNOWN ESCAPE CODE: ESC [");
+//    serial_print(buffer);
+//  }
 
   return escape_code_id;
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Checks for input on COM1
 *
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return 1 if input is available, 0 if it isn't.
 */
 int input_available() {
   return inb(COM1 + 5) & 1;
 }
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief Loops N times to check for input
 *
-* Enter a detailed description of the of the element below
+* Calls NOP in a while loop at most `timeout` times until it returns.
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param timeout How many times to loop before we give up
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return how many times were left in the timeout
 */
-// Tries N times to see if input is available, if input was not
-// available, 0 is returned. If it was, the remaining try count
-// is returned.
 int wait_for_input(int timeout) {
   while (timeout > 0 && !input_available()) {
     nop(); // We nop to spend some time doing nothing
@@ -454,6 +322,11 @@ int wait_for_input(int timeout) {
   return timeout;
 }
 
+/**
+* @brief Prints text after the cursor without moving the cursor
+*
+* @param str A pointer to the string to print out
+*/
 void print_after_cursor(const char* str) {
     // ESC [s - save cursor position
     // ESC [K - delete line following cursor
@@ -465,11 +338,19 @@ void print_after_cursor(const char* str) {
     serial_print("\x1B[u");
 }
 
+/**
+* @brief Deletes all text after the cursor
+*/
 void delete_after_cursor() {
     // ESC [K - delete line following cursor
     serial_print("\x1B[K");
 }
 
+/**
+* @brief Moves the cursor n characters
+*
+* @param n How many characters to move the character, can be negative.
+*/
 void move_cursor(int n) {
     char buffer[16] = {0};
 
@@ -485,6 +366,14 @@ void move_cursor(int n) {
     // When it's zero we don't do anything
 }
 
+
+/**
+* @brief Copies n bytes from one buffer to another
+*
+* @param destination Where to copy the bytes to.
+* @param source Where to copy the bytes from.
+* @param n How many bytes to copy.
+*/
 void memcpy(char* destination, const char* source, int n) {
     while (n > 0) {
         *destination = *source;
