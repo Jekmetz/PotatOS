@@ -243,7 +243,7 @@ int cmd_help(char* params) {
   }
   
   else {
-	serial_println("Command not found");
+	printf("Command not found");
   }
 
     return SUCCESS;  // successful response
