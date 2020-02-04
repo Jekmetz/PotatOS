@@ -23,11 +23,11 @@
 #define HELP puts(\
       "You can request a help page for the following commands"\
       " using help <cmd name>\n"\
-      "help\n"\
-      "version\n"\
-      "shutdown\n"\
-      "date\n"\
-      "time"\
+      "\thelp\n"\
+      "\tversion\n"\
+      "\tshutdown\n"\
+      "\tdate\n"\
+      "\ttime"\
 );
 
 #define HELP_HELP puts(\
@@ -36,10 +36,11 @@
 );
 
 #define HELP_HELP_FULL puts(\
-          "Implementation:\n"\
-          "\thelp <command> [-f | --full]\n"\
+          "Usage:\n"\
+          "\thelp [-c | --command] <command> [-f | --full]\n"\
           "\n"\
           "Flags:\n"\
+          "\t[-c | --command] - Show the help page for a certain command\n"\
           "\t[-f | --full] - Show implementation and flags for each command\n"\
           "\t\twith explanations"\
 );
@@ -50,24 +51,24 @@
 );
 
 #define HELP_VERSION_FULL puts(\
-        "Implementatoin:\n"\
+        "Usage:\n"\
         "\tversion [-f | --full]\n"\
         "Flags:\n"\
         "\t[-f | --full] - Show entire verion"\
 );
 
 #define HELP_SHUTDOWN puts(\
-      "Shutdown the MPX System."\
+      "Shutdown the POS System."\
       "Use flag [-f | --full] for more information"\
 );
 
 #define HELP_SHUTDOWN_FULL puts(\
-        "Implementatoin:\n"\
+        "Usage:\n"\
         "\tshutdown\n"\
         "Flags:\n"\
         "\tNone\n"\
         "Notes:\n"\
-        "\tMust confirm before shutdown"\
+        "\tMust confirm with Yes before shutdown"\
 );
 
 #define HELP_DATE puts(\
@@ -76,14 +77,14 @@
 );
 
 #define HELP_DATE_FULL puts(\
-        "Implementatoin:\n"\
+        "Usage:\n"\
         "\tdate [-s | --set]\n"\
         "Flags:\n"\
-        "\t[-s | --set] - Set the date in DD-MM-YYYY\n"\
+        "\t[-s | --set] - Set the date in DD/MM/YYYY\n"\
         "\t\tWhere all values are integers\n"\
         "Example:\n"\
-        "\tdate -s 08-24-1994\n"\
-        "\tdate -s 01-01-2019"\
+        "\tdate -s 08/24/1994\n"\
+        "\tdate --set 01/01/2019"\
 );
 
 #define HELP_TIME puts(\
@@ -92,14 +93,12 @@
 );
 
 #define HELP_TIME_FULL puts(\
-        "Implementatoin:\n"\
-        "\tdate [-f | --full] [-s | --set]\n"\
+        "Usage:\n"\
+        "\tdate [-s | --set]\n"\
         "Flags:\n"\
-        "\t[-f | --full] - Show implementation and flags for each command\n"\
-        "\t\twith explanations"\
         "\t[-s | --set] - Set the time in HH:MM:SS\n"\
         "\t\tWhere all values are integers and using 24 hour time\n"\
         "Example:\n"\
-        "\time -s 12:24:32\n"\
-        "\time -s 16:02:00"\
+        "\ttime -s 12:24:32\n"\
+        "\ttime --set 16:02:00"\
 );

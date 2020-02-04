@@ -1,5 +1,3 @@
-
-
 /*************************************************************
 *	This C file contains all of the commands that will be used
 *  by the command handler. All of the commands in this file
@@ -19,6 +17,8 @@
 
 // TODO
 /**
+* @file commands.c
+*
 * @brief Enter a brief description of the element below
 *
 * Enter a detailed description of the of the element below
@@ -46,33 +46,60 @@
 #define FAILURE -1
 #define MAXPARAMCOUNT 10
 
-// cmd_help flags
+/** cmd_help flags */
+/** A flag binary bit shift macro */
 #define A_FLAG (1 << 0)
+/** B flag binary bit shift macro */
 #define B_FLAG (1 << 1)
+/** C flag binary bit shift macro */
 #define C_FLAG (1 << 2)
+/** D flag binary bit shift macro */
 #define D_FLAG (1 << 3)
+/** E flag binary bit shift macro */
 #define E_FLAG (1 << 4)
+/** F flag binary bit shift macro */
 #define F_FLAG (1 << 5)
+/** G flag binary bit shift macro */
 #define G_FLAG (1 << 6)
+/** H flag binary bit shift macro */
 #define H_FLAG (1 << 7)
+/** I flag binary bit shift macro */
 #define I_FLAG (1 << 8)
+/** J flag binary bit shift macro */
 #define J_FLAG (1 << 9)
+/** K flag binary bit shift macro */
 #define K_FLAG (1 << 10)
+/** L flag binary bit shift macro */
 #define L_FLAG (1 << 11)
+/** M flag binary bit shift macro */
 #define M_FLAG (1 << 12)
+/** N flag binary bit shift macro */
 #define N_FLAG (1 << 13)
+/** O flag binary bit shift macro */
 #define O_FLAG (1 << 14)
+/** P flag binary bit shift macro */
 #define P_FLAG (1 << 15)
+/** Q flag binary bit shift macro */
 #define Q_FLAG (1 << 16)
+/** R flag binary bit shift macro */
 #define R_FLAG (1 << 17)
+/** S flag binary bit shift macro */
 #define S_FLAG (1 << 18)
+/** T flag binary bit shift macro */
 #define T_FLAG (1 << 19)
+/** U flag binary bit shift macro */
 #define U_FLAG (1 << 20)
+/** V flag binary bit shift macro */
 #define V_FLAG (1 << 21)
+/** W flag binary bit shift macro */
 #define W_FLAG (1 << 22)
+/** Y flag binary bit shift macro */
 #define Y_FLAG (1 << 23)
+/** X flag binary bit shift macro */
 #define X_FLAG (1 << 24)
+/** Z flag binary bit shift macro */
 #define Z_FLAG (1 << 25)
+/** A flag binary bit shift macro */
 
 #define alphanum(c) (('a' <= c && c <= 'z') ? c - 'a' : c - 'A')
 
@@ -83,9 +110,11 @@ typedef struct {
 
 
 /**
+* @file commands.c
+*
 * @brief sets flags based on param string, flags and num aliases
 *
-* Usage: 
+* Usage:
 *    set_flags(paramstr,&flag,5,
 *    'a',"alpha",
 *    'b',"bravo",
@@ -105,17 +134,21 @@ typedef struct {
 int set_flags(char* paramstr, int* flag, int num_aliases, ...);
 
 /**
+* @file commands.c
+*
 * @brief Gets value of specific flag
 *
 * Usage: get_pvalue('a');
 *
-* @param c character of flag to get the value from 
+* @param c character of flag to get the value from
 *
 * @return value after the flag specified
 */
 char* get_pvalue(char c);
 
 /**
+* @file commands.c
+*
 * @brief Used as a helper function for set_flags
 *
 * @param alias alias to search for in aliases
@@ -134,6 +167,8 @@ char* gparams[26];  // will hold all of the parameters
 
 // TODO
 /**
+* @file commands.c
+*
 * @brief Enter a brief description of the element below
 *
 * Enter a detailed description of the of the element below
@@ -241,16 +276,14 @@ int cmd_help(char* params) {
       HELP_TIME_FULL;
     }
   }
-  
-  else {
-	printf("Command not found");
-  }
 
     return SUCCESS;  // successful response
   }
 
 // TODO
 /**
+* @file commands.c
+*
 * @brief Enter a brief description of the element below
 *
 * Enter a detailed description of the of the element below
@@ -278,17 +311,19 @@ int cmd_version(char* params) {
 
   chk = set_flags(params, &flag, 1,
     'f',"full"
-    );
+  );
 
   if (chk != SUCCESS) {
     puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
   }
 
+  // char* cmd = get_pvalue('f');
+
   //get flag values
   // If no full flag set
   if( !(flag & F_FLAG)){
-	VERSION;
+	   VERSION;
   }
   // If full flag used
   else{
@@ -300,6 +335,8 @@ int cmd_version(char* params) {
 
 // TODO
 /**
+* @file commands.c
+*
 * @brief Enter a brief description of the element below
 *
 * Enter a detailed description of the of the element below
@@ -364,6 +401,8 @@ int cmd_date(char* params) {
 
 // TODO
 /**
+* @file commands.c
+*
 * @brief Enter a brief description of the element below
 *
 * Enter a detailed description of the of the element below
@@ -421,12 +460,14 @@ int cmd_time(char* params) {
   }
 
   time_h tim = get_current_time();
-  printf("%d:%d:%d\n", tim.hours, tim.minutes, tim.seconds);
+  printf("%02d:%02d:%02d\n", tim.hours, tim.minutes, tim.seconds);
 
   return SUCCESS;
 }
 
 /**
+* @file commands.c
+*
 * @brief clears the screen and sets the pointer at home
 *
 * @param params param string typed by user
@@ -444,6 +485,8 @@ int cmd_clear(char* params)
 }
 
 /**
+* @file commands.c
+*
 * @brief Used as a helper function for set_flags
 *
 * @param alias alias to search for in aliases
@@ -473,11 +516,13 @@ char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[])
 }
 
 /**
+* @file commands.c
+*
 * @brief Gets value of specific flag
 *
 * Usage: get_pvalue('a');
 *
-* @param c character of flag to get the value from 
+* @param c character of flag to get the value from
 *
 * @return value after the flag specified
 */
@@ -487,9 +532,11 @@ char* get_pvalue(char c)
 }
 
 /**
+* @file commands.c
+*
 * @brief sets flags based on param string, flags and num aliases
 *
-* Usage: 
+* Usage:
 *    set_flags(paramstr,&flag,5,
 *    'a',"alpha",
 *    'b',"bravo",
@@ -554,7 +601,7 @@ int set_flags(char* paramstr, int* flag, int num_aliases, ...)
     *(gparamstr + loc) = '\0';
 
     identChar = set_flags_search_alias(hold, num_aliases, aliases);
-    
+
     //if an alias was not found... return failure
     if(identChar == '\0') return FAILURE;
 
