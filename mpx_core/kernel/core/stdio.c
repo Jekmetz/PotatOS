@@ -21,8 +21,9 @@ int printf(char *form, ...)
 
 int puts(char *buff)
 {
-    strcat(buff, "\n");
     int size = strlen(buff);
+    int nl_s = 2;
     sys_req(WRITE, DEFAULT_DEVICE, buff, &size);
+    sys_req(WRITE, DEFAULT_DEVICE, "\n", &nl_s);
     return 1;
 }
