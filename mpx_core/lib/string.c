@@ -357,6 +357,8 @@ int sprintf_internal(char *buffer, char *format, va_list valist)
         int tmp = num;
         int n = 0;
 
+        if(tmp == 0) n = 1; //set n to 1 if tmp == 0.
+
         while (tmp)  // while tmp is nonzero...
         {
           n++;             // add one to the length...
@@ -417,6 +419,8 @@ int sprintf_internal(char *buffer, char *format, va_list valist)
         int num = va_arg(valist, int);
         int tmp = num;
         int n = 0;
+
+        if(tmp == 0) n = 1; //set n to 1 if tmp == 0.
 
         while (tmp)  // while tmp is nonzero...
         {
