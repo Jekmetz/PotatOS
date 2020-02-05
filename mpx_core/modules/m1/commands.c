@@ -196,7 +196,7 @@ int cmd_help(char* params) {
 
   chk = set_flags(params, &flag, 2,
     'f',"full",
-    'c',"command"
+    'c',"cmd"
     );
 
   if (chk != SUCCESS) {

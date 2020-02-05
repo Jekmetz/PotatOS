@@ -13,21 +13,21 @@
         "Version 1.0\n"\
         "Module one\n"\
         "Developers:\n"\
-        "\tHasan Ibraheem\n"\
-        "\tHenry Vos\n"\
-        "\tJay Kmetz\n"\
-        "\tNicholas Fryer"\
+          "\tHasan Ibraheem\n"\
+          "\tHenry Vos\n"\
+          "\tJay Kmetz\n"\
+          "\tNicholas Fryer"\
 );
 
 // Below are all the help outputs
 #define HELP puts(\
       "You can request a help page for the following commands"\
-      " using help <cmd name>\n"\
-      "\thelp\n"\
-      "\tversion\n"\
-      "\tshutdown\n"\
-      "\tdate\n"\
-      "\ttime"\
+      " using help [-c | --cmd] <cmd name>\n"\
+        "\thelp\n"\
+        "\tversion\n"\
+        "\tshutdown\n"\
+        "\tdate\n"\
+        "\ttime"\
 );
 
 #define HELP_HELP puts(\
@@ -37,12 +37,12 @@
 
 #define HELP_HELP_FULL puts(\
           "Usage:\n"\
-          "\thelp [-c | --command] <command> [-f | --full]\n"\
+            "\thelp [-c | --cmd] <command> [-f | --full]\n"\
           "\n"\
           "Flags:\n"\
-          "\t[-c | --command] - Show the help page for a certain command\n"\
-          "\t[-f | --full] - Show implementation and flags for each command\n"\
-          "\t\twith explanations"\
+            "\t[-c | --cmd] - Show the help page for a certain command\n"\
+            "\t[-f | --full] - Show implementation and flags for each command\n"\
+            "\t\twith explanations"\
 );
 
 #define HELP_VERSION puts(\
@@ -52,14 +52,14 @@
 
 #define HELP_VERSION_FULL puts(\
         "Usage:\n"\
-        "\tversion [-f | --full]\n"\
+          "\tversion [-f | --full]\n"\
         "Flags:\n"\
-        "\t[-f | --full] - Show entire verion"\
+          "\t[-f | --full] - Show entire verion"\
 );
 
 #define HELP_SHUTDOWN puts(\
       "Shutdown the POS System."\
-      "Use flag [-f | --full] for more information"\
+      " Use flag [-f | --full] for more information"\
 );
 
 #define HELP_SHUTDOWN_FULL puts(\
@@ -73,7 +73,7 @@
 
 #define HELP_DATE puts(\
       "Display date."\
-      "Use flag [-f | --full] for more information"\
+      " Use flag [-f | --full] for more information"\
 );
 
 #define HELP_DATE_FULL puts(\
@@ -89,16 +89,16 @@
 
 #define HELP_TIME puts(\
       "Display time."\
-      "Use flag [-f | --full] for more information"\
+      " Use flag [-f | --full] for more information"\
 );
 
 #define HELP_TIME_FULL puts(\
         "Usage:\n"\
-        "\tdate [-s | --set]\n"\
+          "\tdate [-s | --set]\n"\
         "Flags:\n"\
-        "\t[-s | --set] - Set the time in HH:MM:SS\n"\
-        "\t\tWhere all values are integers and using 24 hour time\n"\
+          "\t[-s | --set] - Set the time in HH:MM:SS\n"\
+          "\t\tWhere all values are integers and using 24 hour time\n"\
         "Example:\n"\
-        "\ttime -s 12:24:32\n"\
-        "\ttime --set 16:02:00"\
+          "\ttime -s 12:24:32\n"\
+          "\ttime --set 16:02:00"\
 );
