@@ -1,3 +1,9 @@
+/**
+* @file string.c
+*
+* @brief This is a test of adding files outside modules folder
+*/
+
 #include <string.h>
 #include <stdarg.h>
 
