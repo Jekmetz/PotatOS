@@ -1,7 +1,7 @@
 /**
 * @file string.c
 *
-* @brief This is a test of adding files outside modules folder
+* @brief Holds all utility functions used to modify strings
 */
 
 #include <string.h>
@@ -204,19 +204,24 @@ char* strtok(char* s1, const char* s2) {
 
 ////////////////////self added
 
-/*
-  Procedure..: isdigit
-  Description..: returns 1 if digit, else 0
-  Params..: c-character to test
+/**
+* @brief Checks if char c is a digit
+*
+* @param c character to check
+*
+* @return is digit: 1; is not digit: 0;
 */
 int isdigit(char c) {
   return (c >= '0' && c <= '9');
 }
 
-/*
-  Procedure..: reverse
-  Description..: reverse a string from 0 to j
-  Params..: str-string to reverse, j-index to reverse to
+/**
+* @brief reverse a string from 0 to j
+*
+* @param str string to reverse
+* @param j index to reverse str to
+*
+* @return pointer to str
 */
 char* reverse(char* str, int j) {
   int i = 0;
@@ -229,11 +234,14 @@ char* reverse(char* str, int j) {
   return str;
 }
 
-/*
-  Procedure..: itoa
-  Description..: converts integer to string
-  Params..: num-number to convert to string, str-string to store it in,
-  base-base of the number to convert
+/**
+* @brief Converts integer to string
+*
+* @param num number to convert
+* @param str string to store result in
+* @param base base to convert to
+*
+* @return pointer to str
 */
 char* itoa(int num, char* str, int base) {
   int idx = 0;
@@ -266,12 +274,16 @@ char* itoa(int num, char* str, int base) {
   return str;
 }
 
-/*
-  Procedure: buffer = sprintf_pad_helper
-  Description: adds spaces where needed for the sprintf function
-  Params: buffer-char* to store spaces to,
-    fNum-format number, n-length of string that has been/will be
-    added, doAction-boolean on whether or not to add the spaces
+/**
+* @brief adds spaces where needed for the sprintf function
+*
+* @param buffer character pointer to store spaces to
+* @param pad what character to pad with
+* @param fNum format number from sprintf
+* @param n length of string that has been/will be added
+* @param doAction boolean on whether or not to add the spaces
+*
+* @return pointer to buffer
 */
 char* sprintf_pad_helper(char* buffer, char pad, int fNum, int n, BYTE doAction) {
   if (doAction)  // if we are to add the spaces...
@@ -287,8 +299,24 @@ char* sprintf_pad_helper(char* buffer, char pad, int fNum, int n, BYTE doAction)
   return buffer;
 }
 
-/*
-  Procedure: buffer = sprintf_internal
+/**
+* @brief Main implementation of the sprintf function
+*
+* %c - charachter
+* %d/%i - decimal integer
+* %x - hexadecimal integer
+* %s - string
+* %% - percent sign
+* Numbers can be included before the format specifier to declare
+* alignment. i.e. %-10c = "c         "
+* A pad with 0s can also be added using a '0' directly after the percent
+* i.e. %03c = "00c"
+*
+* @param buffer character pointer to store spaces to
+* @param format format string with format specifiers
+* @param valist variadic list with parameters matching the format
+*
+* @return pointer to buffer
 */
 int sprintf_internal(char *buffer, char *format, va_list valist)
 {
@@ -309,12 +337,16 @@ int sprintf_internal(char *buffer, char *format, va_list valist)
     // if we need to evaluate a format...
 
     flag = 0;
+
+    //Handle 0
+    if(*format == '0')
+    {
+      flag |= F_ZERO;
+      format++;
+    }
+
     switch (*format)  // switch through the first character
     {
-      case '0':
-        flag |= F_ZERO;
-        format++;
-        break;
       case '+':
         flag |= F_PLUS;
         format++;
@@ -469,12 +501,24 @@ int sprintf_internal(char *buffer, char *format, va_list valist)
   return ret;
 }
 
-/*
-  Procedure: sprintf
-  Description: brings a lot of parameters into buffer based off of the format
-    Format works for: %s, %d, %i, %c, and %x
-  Params: buffer-char* to write to, format-format string, ...- parameters to
-  match format
+/**
+* @brief Visible representation of the sprintf function
+*
+* %c - charachter
+* %d/%i - decimal integer
+* %x - hexadecimal integer
+* %s - string
+* %% - percent sign
+* Numbers can be included before the format specifier to declare
+* alignment. i.e. %-10c = "c         "
+* A pad with 0s can also be added using a '0' directly after the percent
+* i.e. %03c = "00c"
+*
+* @param buffer character pointer to store spaces to
+* @param format format string with format specifiers
+* @param valist variadic list with parameters matching the format
+*
+* @return pointer to buffer
 */
 int sprintf(char* buffer, char* format, ...) {
   va_list valist;
@@ -484,18 +528,24 @@ int sprintf(char* buffer, char* format, ...) {
   return ret;
 }
 
-/*Procedure: tolower
-  Description: takes in a character and converts it
-               to lower if necessary
+/**
+* @brief Returns the lowercase representation of a charachter
+*
+* @param c character to return the lowercase representation of
+*
+* @return lowercase representation of c in ASCII
 */
 int tolower(int c)
 {
   return ( ('A' <= c && c <= 'Z') ? c + ('a' - 'A') : c);
 }
 
-/*Procedure: toupper
-  Description: takes in a character and converts it
-               to upper if necessary
+/**
+* @brief Returns the uppercase representation of a charachter
+*
+* @param c character to return the uppercase representation of
+*
+* @return uppercase representation of c in ASCII
 */
 int toupper(int c)
 {

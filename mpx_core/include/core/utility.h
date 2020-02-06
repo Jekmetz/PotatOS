@@ -1,6 +1,9 @@
-/******************************************************************
-* This file will hold utility function prototypes for this project
-*******************************************************************/
+/**
+* @file utility.c
+*
+* @brief Holds utility function prototypes for this project
+*/
+
 /**
 * @brief Determines if a passed character is a null or space
 *

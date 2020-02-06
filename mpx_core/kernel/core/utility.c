@@ -1,6 +1,8 @@
-/********************************************************
-* This file will hold utility functions for this project
-*********************************************************/
+/**
+* @file utility.c
+*
+* @brief Holds utility function implementations for this project
+*/
 #include <string.h>
 
 /**
