@@ -1,14 +1,25 @@
-#pragma once
-#include <core/stdio.h>
+/**
+* @file help.h
+*
+* @brief The header file that contains all the macros for the help and version commands
+*/
+
 // This files serves as a central repository of the printable
 // blocks of commands.c
 
+#pragma once
+#include <core/stdio.h>
 
-// Below is the verions information
+/**
+* @brief Macro to print the short version
+*/
 #define VERSION puts(\
       "Version 1.0"\
 );
 
+/**
+* @brief Macro to print the full version
+*/
 #define VERSION_FULL puts(\
         "Version 1.0\n"\
         "Module one\n"\
@@ -19,7 +30,9 @@
           "\tNicholas Fryer"\
 );
 
-// Below are all the help outputs
+/**
+* @brief Macro to print the list of commands that have help pages
+*/
 #define HELP puts(\
       "You can request a help page for the following commands"\
       " using help [-c | --cmd] <cmd name>\n"\
@@ -30,11 +43,17 @@
         "\ttime"\
 );
 
+/**
+* @brief Macro to print the shortned help page for comamnd help
+*/
 #define HELP_HELP puts(\
   "View help pages for individual commands."\
   " Use flag [-f | --full] for more information"\
 );
 
+/**
+* @brief Macro to print the full help page for command help
+*/
 #define HELP_HELP_FULL puts(\
           "Usage:\n"\
             "\thelp [-c | --cmd] <command> [-f | --full]\n"\
@@ -45,11 +64,17 @@
             "\t\twith explanations"\
 );
 
+/**
+* @brief Macro to print the shortned help page for command version
+*/
 #define HELP_VERSION puts(\
       "Display version information."\
       "Use flag [-f | --full] for more information"\
 );
 
+/**
+* @brief Macro to print the full help page for command version
+*/
 #define HELP_VERSION_FULL puts(\
         "Usage:\n"\
           "\tversion [-f | --full]\n"\
@@ -57,11 +82,17 @@
           "\t[-f | --full] - Show entire verion"\
 );
 
+/**
+* @brief Macro to print the shortned help page for command shutdown
+*/
 #define HELP_SHUTDOWN puts(\
       "Shutdown the POS System."\
       " Use flag [-f | --full] for more information"\
 );
 
+/**
+* @brief Macro to print the full help page for command shutdown
+*/
 #define HELP_SHUTDOWN_FULL puts(\
         "Usage:\n"\
         "\tshutdown\n"\
@@ -71,11 +102,17 @@
         "\tMust confirm with Yes before shutdown"\
 );
 
+/**
+* @brief Macro to print the shortened help page for command date
+*/
 #define HELP_DATE puts(\
       "Display date."\
       " Use flag [-f | --full] for more information"\
 );
 
+/**
+* @brief Macro to print the full help page for command date
+*/
 #define HELP_DATE_FULL puts(\
         "Usage:\n"\
         "\tdate [-s | --set]\n"\
@@ -87,11 +124,17 @@
         "\tdate --set 01/01/2019"\
 );
 
+/**
+* @brief Macro to print the shortned help page for command time
+*/
 #define HELP_TIME puts(\
       "Display time."\
       " Use flag [-f | --full] for more information"\
 );
 
+/**
+* @brief Macro to print the full help page for command time
+*/
 #define HELP_TIME_FULL puts(\
         "Usage:\n"\
           "\tdate [-s | --set]\n"\

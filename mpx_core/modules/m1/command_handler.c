@@ -1,5 +1,7 @@
-/*  Procedure:commandHandler()
-    Description: handles commands typed by the user
+/**
+* @file command_handler.c
+*
+* @brief The primary command handler for the Operating System
 */
 #include <string.h>
 #include <core/stdio.h>
@@ -9,34 +11,27 @@
 #include "commands.h"
 #include "poll_input.h"
 
-// TODO
 /**
-* @brief Enter a brief description of the element below
+* @brief The command input buffer
 *
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* This a macro to store the command input buffer. Here we can change
+* the ammount of characters we allow to be entered into the command
+* handler at once. We currently allow 100 characters.
 */
 #define CMDSIZE 100
 
-// Prototypes
+// Function stubs
 int search_commands(char*);
 
+/**
+* @brief A struct to hold commands
+*
+* The COMMAND Struct is a custom struct that is designed to hold custom
+* commands.
+*
+* @param str A string type to hold the name of the command
+* @param CommandPointer A pointer to a command so that we can pass commands
+*/
 typedef struct {
   char* str;
   int (*func)(char*);
@@ -51,9 +46,7 @@ COMMAND commands[] = {
   {"date",&cmd_date},
   {"time", &cmd_time},
   {"clear", &cmd_clear},
-
-  // leave NULL at the end for searching reasons
-  {NULL, NULL}
+  {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/

@@ -1,3 +1,9 @@
+/**
+* @file time.h
+*
+* @brief The header file for the date and time functions
+*/
+
 #pragma once
 
 // Indexable locations of the RTC
@@ -31,6 +37,12 @@ enum MONTH
 
 // Struct containing all the information about any one time
 // from the RTC.
+/**
+* @brief A struct to all the time and date elements
+*
+* The time Struct is a custom struct that is designed to hold all the
+* elements necessary for time and date.
+*/
 struct time
 {
   int seconds;

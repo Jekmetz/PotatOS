@@ -1,9 +1,16 @@
+/**
+* @file poll_input.c
+*
+* @brief The polling input file that allows user input
+*/
+
 #include "poll_input.h"
 
 #include <core/io.h>
 #include <core/serial.h>
 #include <string.h>
 #include <system.h>
+
 
 #define BUFFER_LEN 100
 

@@ -1,11 +1,14 @@
-/*This file will serve as  the prototype list
-for commands.c*/
+/**
+* @file commands.h
+*
+* @brief The header file for commands.c
+*/
+
+/**
+* @brief Macro to return a 0 on success
+*/
 #define SUCCESS 0
 
-/*
-  Procedure: cmd_help
-  Params: params-will serve as the params for each of these things
-*/
 int cmd_help(char* params);
 
 int cmd_version(char* params);

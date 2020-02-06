@@ -1,3 +1,9 @@
+/**
+* @file commands.c
+*
+* @brief This file contains all the commands that will be used by the command handler
+*/
+
 /*************************************************************
 *	This C file contains all of the commands that will be used
 *  by the command handler. All of the commands in this file
@@ -15,35 +21,26 @@
 #include "time.h"
 #include "../mpx_supt.h"
 
-// TODO
 /**
-* @file commands.c
+* @brief The command input buffer
 *
-* @brief Enter a brief description of the element below
-*
-* Enter a detailed description of the of the element below
-*
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* This a macro to store the command input buffer. Here we can change
+* the ammount of characters we allow to be entered into the command
+* handler at once. We currently allow 100 characters.
 */
 #define CMDSIZE 100
 
+/**
+* @brief Macro to return a 0 on success
+*/
 #define SUCCESS 0
+/**
+* @brief Macro to return a -1 on failure
+*/
 #define FAILURE -1
+/**
+* @brief The maximum parameters allowed per command
+*/
 #define MAXPARAMCOUNT 10
 
 /** cmd_help flags */
@@ -101,8 +98,24 @@
 #define Z_FLAG (1 << 25)
 /** A flag binary bit shift macro */
 
+/**
+* @brief A helper macro that will take a letter and return its integer equivelent
+*
+* This is a helper macro that is used in set_flags and get_gparams. It takes in
+* character and return the integer equivalent of that character.
+*
+* @param c The character to be returned as an int
+*/
 #define alphanum(c) (('a' <= c && c <= 'z') ? c - 'a' : c - 'A')
 
+/**
+* @brief A struct to hold command aliases
+*
+* The ALIAS Struct is a custom struct that is designed to hold aliases for commands
+*
+* @param c A string that will hold the initial command name
+* @param val A string pointer that will point to the original command name
+*/
 typedef struct {
   char c;
   char* val;
@@ -110,9 +123,7 @@ typedef struct {
 
 
 /**
-* @file commands.c
-*
-* @brief sets flags based on param string, flags and num aliases
+* @brief Sets flags based on param string, flags and num aliases
 *
 * Usage:
 *    set_flags(paramstr,&flag,5,
@@ -134,8 +145,6 @@ typedef struct {
 int set_flags(char* paramstr, int* flag, int num_aliases, ...);
 
 /**
-* @file commands.c
-*
 * @brief Gets value of specific flag
 *
 * Usage: get_pvalue('a');
@@ -147,8 +156,6 @@ int set_flags(char* paramstr, int* flag, int num_aliases, ...);
 char* get_pvalue(char c);
 
 /**
-* @file commands.c
-*
 * @brief Used as a helper function for set_flags
 *
 * @param alias alias to search for in aliases
@@ -160,35 +167,27 @@ char* get_pvalue(char c);
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
 
 
-// Global variables
-char gparamstr[CMDSIZE];
-char* gparams[26];  // will hold all of the parameters
-// private function prototypes
-
-// TODO
 /**
-* @file commands.c
+* @brief A string to hold the command input up to the max command size
+*/
+char gparamstr[CMDSIZE];
+/**
+* @brief Will hold all the string pointers
+*/
+char* gparams[26];  // will hold all of the parameters
+
+
+/**
+* @brief The help command will show a page to assist users with commands
 *
-* @brief Enter a brief description of the element below
+* The help command can be called to do one of two things
+*   List all the commands that have help pages
+*   Request a help page for a certain command
 *
-* Enter a detailed description of the of the element below
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @param params param string typed by user
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return A help page
 */
 int cmd_help(char* params) {
   // Init vars
@@ -280,30 +279,17 @@ int cmd_help(char* params) {
     return SUCCESS;  // successful response
   }
 
-// TODO
 /**
-* @file commands.c
+* @brief The version command will show the version information
 *
-* @brief Enter a brief description of the element below
+* The version command can be called to display the version information.
+* The shortned return will just show the short version.
+* The long return will include the current module, the version, and the
+* contributing developers
 *
-* Enter a detailed description of the of the element below
+* @param params param string typed by user
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
-*
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @return A version page
 */
 int cmd_version(char* params) {
   // Init vars
@@ -333,30 +319,20 @@ int cmd_version(char* params) {
   return SUCCESS;
 }
 
-// TODO
 /**
-* @file commands.c
+* @brief The date command will do one of two things.
+*   Show the current system date
+*   Set a new system date
 *
-* @brief Enter a brief description of the element below
+* The date command can be used to query the systems RTC to display the current
+* date. It can also be used to set the systems RTC to a desired date. There is
+* code to check for illegal dates such as Feb 30 on a non leap year.
 *
-* Enter a detailed description of the of the element below
+* @param params param string typed by user
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @return The current system date
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @warning The RTC only allows dates between 1700-2999
 */
 int cmd_date(char* params) {
   // Init vars
@@ -399,30 +375,21 @@ int cmd_date(char* params) {
   return SUCCESS;
 }
 
-// TODO
+
 /**
-* @file commands.c
+* @brief The time command will do one of two things.
+*   Show the current system time
+*   Set a new system time
 *
-* @brief Enter a brief description of the element below
+* The time command can be used to query the systems RTC to display the current
+* time. It can also be used to set the systems RTC to a desired time. There is
+* code to check for illegal times.
 *
-* Enter a detailed description of the of the element below
+* @param params param string typed by user
 *
-* @param param1 Description of param1
-* @param param2 Description of param2
+* @return The current system time
 *
-* @return Description of return
-*
-* @code
-* include code here if you wish
-* as many lines as you like
-* if(name = nick){
-*   look = sexy
-* }
-* @endcode
-*
-* @note Something to note
-*
-* @warning A warning
+* @note The time is kept in 24 hour time
 */
 int cmd_time(char* params) {
   // Init vars

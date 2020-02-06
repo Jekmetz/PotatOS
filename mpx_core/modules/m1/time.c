@@ -1,3 +1,8 @@
+/**
+* @file time.c
+*
+* @brief The file that contains all the date and time system functions
+*/
 #include <string.h>
 #include <core/io.h>
 #include <core/utility.h>
@@ -8,8 +13,8 @@
 /**
 * @brief Macro aquires data from a RTC register and converts the output from BCD to decimal.
 *
-* This macro is used by the get_time function to aquire the RTC value and convert it into a usable decimal. 
-* The data at the location that is specified is written to the given vlaue. The function outb is used to 
+* This macro is used by the get_time function to aquire the RTC value and convert it into a usable decimal.
+* The data at the location that is specified is written to the given vlaue. The function outb is used to
 * select the type of information that is going to be written to the value, this is years, months, etc..
 * The bcd to base 2 conversion happens within the bcd_to_decimal macro.
 *
@@ -17,7 +22,7 @@
 * @param loc Type of data being requested, this is using the macros specifed in time.h as YEAR_REG, MONTH_REG, etc.
 *
 * @return void
-* 
+*
 * @warning Do not use values that are not specifed as 'locations' as the loc field.
 */
 #define pull_data(val, loc) \
@@ -145,7 +150,7 @@ time_h get_current_time()
 * @return If the operation was successful in boolean format (1 = true, 0 = false).
 *
 * @note This function also ensures that the date will be set in the correct order within the RTC.
-* @note Setting a value in the input struct to a '-1' will skip the value in setting the time. Essentially, 
+* @note Setting a value in the input struct to a '-1' will skip the value in setting the time. Essentially,
 *		keeping the value as it was before. This is demonstrated in the commands.c file.
 */
 int set_current_time(time_h time)
@@ -198,11 +203,11 @@ int set_current_time(time_h time)
 		// FEBRUARY
 		// Even months have 30 days
 		// no month has more than 31 days
-		if (time.day_of_month == 0 || 
-		(curr.month == 2 && is_leap && time.day_of_month > 29) || 
+		if (time.day_of_month == 0 ||
+		(curr.month == 2 && is_leap && time.day_of_month > 29) ||
 		(curr.month == 2 && !is_leap && time.day_of_month > 28) ||
-		(curr.month % 2 == 0 && time.day_of_month > 30) || 
-		(time.day_of_month > 31)) 
+		(curr.month % 2 == 0 && time.day_of_month > 30) ||
+		(time.day_of_month > 31))
 		{
 			printf("\033[31mTIME ERROR: The day %d is not valid.\033[0m\n", time.day_of_month);
 			return 0;
@@ -244,5 +249,5 @@ int set_current_time(time_h time)
 	// reallowing interrupts
 	cli();
 	// Successful exit
-	return 1; 
+	return 1;
 }
