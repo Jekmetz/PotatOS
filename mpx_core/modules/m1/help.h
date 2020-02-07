@@ -44,7 +44,7 @@
 );
 
 /**
-* @brief Macro to print the shortned help page for comamnd help
+* @brief Macro to print the shortened help page for command help
 */
 #define HELP_HELP puts(\
   "View help pages for individual commands."\
@@ -57,7 +57,7 @@
 #define HELP_HELP_FULL puts(\
           "Usage:\n"\
             "\thelp [-c | --cmd] <command> [-f | --full]\n"\
-          "\n"\
+            "\n"\
           "Flags:\n"\
             "\t[-c | --cmd] - Show the help page for a certain command\n"\
             "\t[-f | --full] - Show implementation and flags for each command\n"\
@@ -65,11 +65,11 @@
 );
 
 /**
-* @brief Macro to print the shortned help page for command version
+* @brief Macro to print the shortened help page for command version
 */
 #define HELP_VERSION puts(\
       "Display version information."\
-      "Use flag [-f | --full] for more information"\
+      " Use flag [-f | --full] for more information"\
 );
 
 /**
@@ -78,12 +78,13 @@
 #define HELP_VERSION_FULL puts(\
         "Usage:\n"\
           "\tversion [-f | --full]\n"\
+          "\n"\
         "Flags:\n"\
           "\t[-f | --full] - Show entire verion"\
 );
 
 /**
-* @brief Macro to print the shortned help page for command shutdown
+* @brief Macro to print the shortened help page for command shutdown
 */
 #define HELP_SHUTDOWN puts(\
       "Shutdown the POS System."\
@@ -95,11 +96,13 @@
 */
 #define HELP_SHUTDOWN_FULL puts(\
         "Usage:\n"\
-        "\tshutdown\n"\
+          "\tshutdown\n"\
+          "\n"\
         "Flags:\n"\
-        "\tNone\n"\
+          "\tNone\n"\
+          "\n"\
         "Notes:\n"\
-        "\tMust confirm with Yes before shutdown"\
+          "\tMust confirm with Yes before shutdown"\
 );
 
 /**
@@ -115,17 +118,19 @@
 */
 #define HELP_DATE_FULL puts(\
         "Usage:\n"\
-        "\tdate [-s | --set]\n"\
+          "\tdate [-s | --set]\n"\
+          "\n"\
         "Flags:\n"\
-        "\t[-s | --set] - Set the date in DD/MM/YYYY\n"\
-        "\t\tWhere all values are integers\n"\
+          "\t[-s | --set] - Set the date in DD/MM/YYYY\n"\
+          "\t\tWhere all values are integers\n"\
+          "\n"\
         "Example:\n"\
-        "\tdate -s 08/24/1994\n"\
-        "\tdate --set 01/01/2019"\
+          "\tdate -s 08/24/1994\n"\
+          "\tdate --set 01/01/2019"\
 );
 
 /**
-* @brief Macro to print the shortned help page for command time
+* @brief Macro to print the shortened help page for command time
 */
 #define HELP_TIME puts(\
       "Display time."\
@@ -137,10 +142,12 @@
 */
 #define HELP_TIME_FULL puts(\
         "Usage:\n"\
-          "\tdate [-s | --set]\n"\
+          "\ttime [-s | --set]\n"\
+          "\n"\
         "Flags:\n"\
           "\t[-s | --set] - Set the time in HH:MM:SS\n"\
           "\t\tWhere all values are integers and using 24 hour time\n"\
+          "\n"\
         "Example:\n"\
           "\ttime -s 12:24:32\n"\
           "\ttime --set 16:02:00"\

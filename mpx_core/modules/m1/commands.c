@@ -25,7 +25,7 @@
 * @brief The command input buffer
 *
 * This a macro to store the command input buffer. Here we can change
-* the ammount of characters we allow to be entered into the command
+* the amount of characters we allow to be entered into the command
 * handler at once. We currently allow 100 characters.
 */
 #define CMDSIZE 100
@@ -99,7 +99,7 @@
 /** A flag binary bit shift macro */
 
 /**
-* @brief A helper macro that will take a letter and return its integer equivelent
+* @brief A helper macro that will take a letter and return its integer equivalent
 *
 * This is a helper macro that is used in set_flags and get_gparams. It takes in
 * character and return the integer equivalent of that character.
@@ -162,7 +162,7 @@ char* get_pvalue(char c);
 * @param num_aliases number of aliases in aliases
 * @param aliases array of ALIASes to search through
 *
-* @return charachter of flag that it found
+* @return character of flag that it found
 */
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
 
@@ -210,6 +210,7 @@ int cmd_help(char* params) {
   if( !(flag&C_FLAG) ){
     // Help without arguments
     HELP;
+    return SUCCESS;
   }
 
   // Help page for help
@@ -276,6 +277,10 @@ int cmd_help(char* params) {
     }
   }
 
+  else {
+    puts("\033[31mNo help available for that command.\033[0m");
+  }
+
     return SUCCESS;  // successful response
   }
 
@@ -283,7 +288,7 @@ int cmd_help(char* params) {
 * @brief The version command will show the version information
 *
 * The version command can be called to display the version information.
-* The shortned return will just show the short version.
+* The shortened return will just show the short version.
 * The long return will include the current module, the version, and the
 * contributing developers
 *
