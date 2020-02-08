@@ -17,7 +17,7 @@
 #include <system.h>
 
 #include "modules/mpx_supt.h"
-#include "modules/m1/command_handler.h"
+#include "modules/cmdinput/command_handler.h"
 
 void kmain(void) {
   extern uint32_t magic;

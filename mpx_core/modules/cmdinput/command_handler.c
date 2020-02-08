@@ -8,7 +8,7 @@
 #include <core/utility.h>
 
 #include "../mpx_supt.h"
-#include "commands.h"
+#include "../commands/commands.h"
 #include "poll_input.h"
 
 /**

@@ -12,10 +12,12 @@ ASFLAGS = -f elf32 -g
 # I'll start you off with just mpx_supt.o
 OBJFILES =\
 mpx_supt.o\
-m1/command_handler.o\
-m1/poll_input.o\
-m1/commands.o\
-m1/time.o
+cmdinput/command_handler.o\
+cmdinput/poll_input.o\
+commands/commands.o\
+commands/cmdhelp.o\
+commands/commandUtils.o\
+commands/time.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
