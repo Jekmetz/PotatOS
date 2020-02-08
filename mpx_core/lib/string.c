@@ -2,7 +2,7 @@
 * @file string.c
 *
 * @brief Holds all utility functions used to modify strings
-*/
+*/ 
 
 #include <string.h>
 #include <stdarg.h>
@@ -11,6 +11,7 @@
 #define F_PLUS (1 << 1)
 #define F_PERCENT (1 << 2)
 #define F_ZERO (1 << 3)
+
 
 typedef unsigned char BYTE;
 
@@ -57,7 +58,7 @@ char* strcpy(char* s1, const char* s2) {
   Procedure..: atoi
   Description..: Convert an ASCII string to an integer
   Params..: const char *s -- String
-*/
+*/ 
 int atoi(const char* s) {
   int res = 0;
   int charVal = 0;
@@ -550,4 +551,38 @@ int tolower(int c)
 int toupper(int c)
 {
   return ( ('a' <= c && c <= 'z') ? c - ('a' - 'A') : c);
+}
+
+/**
+* @brief Returns a string with the begining and ending whitespaces removed
+*
+* @param str the string to have white spaces removed from
+*
+* @return a sting with the begining and ending whitespaces removed
+*/
+char* trim(char * str){
+  // Character pointer to the end of the string str  
+  char* end;
+
+  // Zero length string case
+  if(strlen(str) == 0){
+    return str;
+  }
+
+  // Trimming whitespace at beginning
+  while(isspace(str)){
+    str++;
+  }
+
+  // Trimming whitespace at end
+  end = str + strlen(str) - 1;
+  while(end > str && isspace(end)){
+    end--;
+  }
+
+  // Capping string with null char
+  end[1] = '\0';
+
+  // Returning the altered string str
+  return str;
 }

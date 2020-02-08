@@ -10,11 +10,32 @@
 #include <core/io.h>
 #include <stdarg.h>
 
-#include "help.h"
 #include "commands.h"
 #include "time.h"
 #include "../mpx_supt.h"
 #include "commandUtils.h"
+
+/**
+* @brief Macro to hold the short version
+*/
+#define VERSION \
+"\
+Version 1.0\
+"
+
+/**
+* @brief Macro to hold the full version
+*/
+#define VERSION_FULL \
+"\
+Version 1.0\n\
+Module one\n\
+Developers:\n\
+  Hasan Ibraheem\n\
+  Henry Vos\n\
+  Jay Kmetz\n\
+  Nicholas Fryer\
+"
 
 /**
 * @brief The version command will show the version information
@@ -46,11 +67,11 @@ int cmd_version(char* params) {
   //get flag values
   // If no full flag set
   if( !(flag & F_FLAG)){
-	   VERSION;
+	   printf(VERSION);
   }
   // If full flag used
   else{
-    VERSION_FULL;
+    printf(VERSION_FULL);
   }
 
   return SUCCESS;

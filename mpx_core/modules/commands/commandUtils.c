@@ -4,7 +4,6 @@
 #include <core/io.h>
 #include <stdarg.h>
 
-#include "help.h"
 #include "commands.h"
 #include "commandUtils.h"
 #include "time.h"

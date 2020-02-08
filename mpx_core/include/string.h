@@ -157,4 +157,13 @@ int tolower(int c);
 */
 int toupper(int c);
 
+/**
+* @brief Returns a string with the begining and ending whitespaces removed
+*
+* @param str the string to have white spaces removed from
+*
+* @return a sting with the begining and ending whitespaces removed
+*/
+char* trim(char * str);
+
 #endif

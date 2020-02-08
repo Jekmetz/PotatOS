@@ -10,7 +10,6 @@
 #include <core/io.h>
 #include <stdarg.h>
 
-#include "help.h"
 #include "commands.h"
 #include "time.h"
 #include "../mpx_supt.h"

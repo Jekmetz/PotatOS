@@ -10,20 +10,135 @@
 #include <core/io.h>
 #include <stdarg.h>
 
-#include "help.h"
 #include "commands.h"
 #include "commandUtils.h"
 #include "time.h"
 #include "../mpx_supt.h"
 
+// Note on the macro help pages: You can literal tab to insert tabs, newlines must use \n,
+// all lines must end with \ due to macro requirments
+
 /**
-* @brief A string to hold the command input up to the max command size
+* @brief Macro to hold the list of commands that have help pages
 */
-extern char gparamstr[CMDSIZE];
+#define HELP_MENU \
+"\
+You can request a help page for the following commands \
+using help <cmd name>\n\
+  help\n\
+  version\n\
+  shutdown\n\
+  date\n\
+  time\
+"
+
 /**
-* @brief Will hold all the string pointers
+* @brief Macro to hold the help page for command help
 */
-extern char* gparams[26];  // will hold all of the parameters
+#define HELP \
+"\
+Description:\n\
+  Request a help page for a command\n\n\
+Usage:\n\
+  help <command>\n\n\
+Flags:\n\
+  None\n\n\
+Example:\n\
+  help time\n\
+  help version\
+"
+
+/**
+* @brief Macro to hold the help page for command version
+*/
+#define VERSION \
+"\
+Description:\n\
+  View the version information of the current PotatOS\n\n\
+Usage:\n\
+  version [-f | --full]\n\n\
+Flags:\n\
+  [-f | --full] - Show entire verion\n\n\
+Example:\n\
+  version\n\
+  version --full\
+"
+
+/**
+* @brief Macro to holdf the help page for command shutdown
+*/
+#define SHUTDOWN \
+"\
+Description:\n\
+  Shutdown the PotatOS\n\n\
+Usage:\n\
+  shutdown\n\n\
+Flags:\n\
+  None\n\n\
+Notes:\n\
+  Must confirm with Yes before shutdown\
+"
+
+/**
+* @brief Macro to hold the help page for command date
+*/
+#define DATE \
+"\
+Description:\n\
+  See/set the system date\n\n\
+Usage:\n\
+  date [-s | --set]\n\n\
+Flags:\n\
+  [-s | --set] - Set the date in DD/MM/YYYY\n\
+    Where all values are integers\n\n\
+Example:\n\
+  date -s 08/24/1994\n\
+  date --set 01/01/2019\
+"
+
+/**
+* @brief Macro to hold the help page for command time
+*/
+#define TIME \
+"\
+Description\n\
+  See/set the system time\n\n\
+Usage:\n\
+  time [-s | --set]\n\n\
+Flags:\n\
+  [-s | --set] - Set the time in HH:MM:SS\n\
+    Where all values are integers and using 24 hour time\n\n\
+Example:\n\
+  time -s 12:24:32\n\
+  time --set 16:02:00\
+"
+
+/**
+* @brief A struct to hold help outputs
+*
+* The COMMAND Struct is a custom struct that is designed to hold custom
+* commands 
+*
+* @param str A string type to hold the name of the command
+* @param command_help_page A string that holds the actual help page
+*/
+typedef struct {
+  char* command_name;
+  char* command_help_page;
+} HELP_PAGES;
+
+
+/**
+* @brief Array of COMMANDS that are supported
+*/
+HELP_PAGES help_pages[] = {
+  {"help", HELP},
+  {"version", VERSION},
+  {"shutdown", SHUTDOWN},
+  {"date", DATE},
+  {"time", TIME},
+  {NULL, NULL} // leave NULL at the end for searching reasons
+};
 
 /**
 * @brief The help command will show a page to assist users with commands
@@ -39,95 +154,55 @@ extern char* gparams[26];  // will hold all of the parameters
 */
 int cmd_help(char* params) {
   // Init vars
-  int flag = 0, chk;
+  char* cmdStart;
+  char* request_help_page;
+  int i, check;
+  char buf[100];
 
-  chk = set_flags(params, &flag, 2,
-    'f',"full",
-    'c',"cmd"
-    );
+  // Triming the command
+  sprintf(buf,"%s",trim(params));
 
-  if (chk != SUCCESS) {
-    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
-    return FAILURE;
+  // The start of the help command
+  cmdStart = buf;
+
+  // Jumping forward 4 spaces
+  cmdStart = cmdStart + 4;
+
+  // If its just help without any other arguments
+  if(*cmdStart++ == NULL)
+  {
+    printf(HELP_MENU);
   }
+  // If there is a requested command
+  else
+  {
+    // Skipping white space between "help" and requested command
+    while(isspace(cmdStart)){
+      cmdStart++;
+    }
 
-  //get flag values
-  char* cmd = get_pvalue('c');
+    // request_help_page will have the requested help page after help
+    request_help_page = cmdStart;
 
-  // lists all the commands that have help pages, help without pararms
-  if( !(flag&C_FLAG) ){
-    // Help without arguments
-    HELP;
-    return SUCCESS;
-  }
+    i = 0; // Setting counter to zero
+    check = 0; // Setting check to zero, false
+    while(help_pages[i].command_name != NULL){
+      // If the command is found
+      if(strcmp(help_pages[i].command_name,request_help_page) == 0){
+        // Printing the help page
+        printf(help_pages[i].command_help_page);
+        // Setting check, or found, to one, true
+        check = 1;
+      }
+      // Incrementing the counter
+      i++;
+    }
 
-  // Help page for help
-  if (strcmp(cmd, "help") == 0) {
-    // If no full flag used
-    if( !(flag&F_FLAG) ){
-     HELP_HELP;
-    }
-    //If full flag was used
-    else
-    {
-     HELP_HELP_FULL;
-    }
-  }
-
-  // Help page for version
-  else if (strcmp(cmd, "version") == 0) {
-    // If no flag set
-    if( !(flag&F_FLAG) ){
-      HELP_VERSION;
-    }
-    // If full flag was used
-    else
-    {
-      HELP_VERSION_FULL;
-    }
-  }
-  // Help page for shutdown
-  else if (strcmp(cmd, "shutdown") == 0) {
-    // If no flag is set
-    if( !(flag&F_FLAG) ){
-      HELP_SHUTDOWN;
-    }
-    // If full flag is set
-    else
-    {
-      HELP_SHUTDOWN_FULL;
+    // If check was not found
+    if (check == 0){
+      printf("Command \"%s\" not found.",request_help_page);
     }
   }
 
-  // Help page for date
-  else if (strcmp(cmd, "date") == 0) {
-    // If no flag is set
-    if( !(flag&F_FLAG) ){
-      HELP_DATE;
-    }
-    // If full flag was used
-    else
-    {
-      HELP_DATE_FULL;
-    }
-  }
-
-  // Help page for time
-  else if (strcmp(cmd, "time") == 0) {
-    // If not flag is set
-    if( !(flag&F_FLAG) ){
-      HELP_TIME;
-    }
-    // If full flag was used
-    else
-    {
-      HELP_TIME_FULL;
-    }
-  }
-
-  else {
-    puts("\033[31mNo help available for that command.\033[0m");
-  }
-
-    return SUCCESS;  // successful response
+  return SUCCESS;  // successful response
   }
