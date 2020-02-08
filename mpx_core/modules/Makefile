@@ -14,10 +14,13 @@ OBJFILES =\
 mpx_supt.o\
 cmdinput/command_handler.o\
 cmdinput/poll_input.o\
-commands/commands.o\
 commands/cmdhelp.o\
 commands/commandUtils.o\
-commands/time.o
+commands/time.o\
+commands/cmdClear.o\
+commands/cmdDate.o\
+commands/cmdTime.o\
+commands/cmdVersion.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

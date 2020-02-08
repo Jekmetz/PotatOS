@@ -1,3 +1,9 @@
+/**
+* @file cmdhelp.c
+*
+* @brief Help command
+*/
+
 #include <string.h>
 #include <core/stdio.h>
 #include <core/utility.h>
@@ -9,8 +15,6 @@
 #include "commandUtils.h"
 #include "time.h"
 #include "../mpx_supt.h"
-
-#define CMDSIZE 100
 
 /**
 * @brief A string to hold the command input up to the max command size
