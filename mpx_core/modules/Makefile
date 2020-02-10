@@ -20,7 +20,8 @@ commands/time.o\
 commands/cmdClear.o\
 commands/cmdDate.o\
 commands/cmdTime.o\
-commands/cmdVersion.o
+commands/cmdVersion.o\
+pcb/pcb_queue.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
