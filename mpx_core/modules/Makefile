@@ -21,7 +21,8 @@ commands/cmdClear.o\
 commands/cmdDate.o\
 commands/cmdTime.o\
 commands/cmdVersion.o\
-pcb/pcb_queue.o
+pcb/pcb_queue.o\
+commands/cmdTestPCB.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

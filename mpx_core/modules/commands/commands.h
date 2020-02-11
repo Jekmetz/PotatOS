@@ -9,6 +9,14 @@
 */
 #define SUCCESS 0
 
+
+/////////////////////////////////////////////////
+/**
+ *  FIXME: Remove this
+ */
+int cmd_test_pcb(char *params);
+/////////////////////////////////////////////////
+
 int cmd_help(char* params);
 
 int cmd_version(char* params);

@@ -62,7 +62,6 @@ typedef struct queue queue_t;
  *  Appends an element onto the tail of the given queue
  * 
  *  This also allocates memory for a node
- *  Note that the data should also be allocated dynamically
  */
 void enqueue(queue_t *que, pcb_t *data);
 

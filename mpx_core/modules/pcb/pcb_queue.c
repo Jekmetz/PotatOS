@@ -18,6 +18,7 @@ void enqueue(queue_t *que, pcb_t *data)
     nnode->next = NULL;
 
     // appending new node to tail
+    que->tail->next = nnode;
     que->tail = nnode;
 
     // checking for edge case of no data in queue
@@ -69,7 +70,6 @@ void destruct_queue(queue_t *queue)
     {
         // destroying data
         curr = curr->next;
-        sys_free_mem(((struct node *)curr->prev)->data);
         sys_free_mem(curr->prev);
         queue->size--;
     }
@@ -92,7 +92,6 @@ int remove_pcb(queue_t *que, char *name)
             // destroying the process
             ((struct node *)curr->prev)->next = curr->next;
             ((struct node *)curr->next)->prev = curr->prev;
-            sys_free_mem(curr->data);
             sys_free_mem(curr);
             que->size--;
             return SUCCESS;

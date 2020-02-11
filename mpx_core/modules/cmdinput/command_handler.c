@@ -46,6 +46,7 @@ COMMAND commands[] = {
   {"date",&cmd_date},
   {"time", &cmd_time},
   {"clear", &cmd_clear},
+  {"quet", &cmd_test_pcb},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
