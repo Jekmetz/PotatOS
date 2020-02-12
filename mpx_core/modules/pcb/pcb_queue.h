@@ -18,7 +18,9 @@ enum PROCESS_STATE
 {
     READY,
     RUNNING,
-    BLOCKED
+    BLOCKED,
+    SUSPENDED_READY,
+    SUSPENDED_BLOCKED
 };
 
 /**
