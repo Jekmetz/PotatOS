@@ -22,7 +22,9 @@ commands/cmdDate.o\
 commands/cmdTime.o\
 commands/cmdVersion.o\
 pcb/pcb_queue.o\
-commands/cmdTestPCB.o
+commands/cmdTestPCB.o\
+pcb/pcb_wrangler.o\
+pcb/pcb_utils.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

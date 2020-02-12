@@ -18,6 +18,7 @@
 
 #include "modules/mpx_supt.h"
 #include "modules/cmdinput/command_handler.h"
+#include "modules/pcb/pcb_wrangler.h"
 
 void kmain(void) {
   extern uint32_t magic;
@@ -57,6 +58,9 @@ void kmain(void) {
   sti();
 
   init_paging();
+
+  klogv("Initializing process queues");
+  init_process_queues();
 
   // 5) Call YOUR command handler -  interface method
   klogv("Transferring control to commhand...");
