@@ -15,19 +15,13 @@
 void chek_state(queue_t* que) {
   printf("(HEAD) %s ", que->head->data->process_name);
 
-  if (que->size <= 1)
-  {
-    printf("(TAIL)\n");
-    return;
-  }
-
   struct node *curr = que->head->next;
-  while (curr != NULL && curr != que->tail)
+  while (curr != NULL)
   {
     printf("-> %s ", curr->data->process_name);
     curr = curr->next;
   }
-  printf("-> %s (TAIL)\n", que->tail->data->process_name);
+  puts("");
 }
 
 int cmd_test_pcb(char* params) {
@@ -44,7 +38,7 @@ int cmd_test_pcb(char* params) {
   queue_t* que = construct_queue();
 
   // Test printed circuit boards //////////////////////////////////////////////
-  pcb_t pcb[4];
+  pcb_t pcb[10];
 
   for (int i = 0; i < (int)(sizeof(pcb) / sizeof(pcb_t)); i++) {
     pcb[i].priority = i + 3;
@@ -53,18 +47,12 @@ int cmd_test_pcb(char* params) {
     sprintf(pcb[i].process_name, "PROC:%02d", i);
     printf("Creating process : %s\n", pcb[i].process_name);
     pcb[i].state = READY;
+
+    enqueue(que, &pcb[i]);
+    printf("Enqued %d\n", i);
+    chek_state(que);
   }
   /////////////////////////////////////////////////////////////////////////////
-
-  enqueue(que, &(pcb[0]));
-  puts("Enqueued pcb 0");
-  chek_state(que);
-  enqueue(que, &(pcb[3]));
-  puts("Enqueued pcb 3");
-  chek_state(que);
-  enqueue(que, &(pcb[2]));
-  puts("Enqueued pcb 2");
-  chek_state(que);
 
   pcb_t* deq = dequeue(que);
   if (deq == &(pcb[0])) {

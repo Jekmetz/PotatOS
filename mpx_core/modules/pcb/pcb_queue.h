@@ -54,7 +54,6 @@ struct queue
 {
     int size;
     struct node *head;
-    struct node *tail;  
 };
 typedef struct queue queue_t;
 
