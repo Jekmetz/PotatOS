@@ -23,10 +23,15 @@ int setup_pcb(char*, PROCESS_CLASS, int priority);
 // Frees a pcb
 int free_pcb(pcb_t*);
 
-// TODO
 /**
-*
-*/
+ * @brief Finds a PCB in all queues.
+ * 
+ * Searches through all the system PCB queues to find a PCB with the specified
+ * process name given by pname.
+ * 
+ * @param pname The name of the process you want to find the PCB of.
+ * @return A pointer to the pcb with the specified name or 'NULL' for not found.
+ */
 pcb_t* find_pcb(char* pname);
 
 // TODO
@@ -35,11 +40,15 @@ pcb_t* find_pcb(char* pname);
 */
 int insert_pcb(pcb_t*);
 
-// TODO
 /**
-*
-*/
-int remove_pcb(char*);
+ * @brief Removes a PCB by process name.
+ * 
+ * Searches through all system queues to find the PCB with the given name.
+ * 
+ * @param pname Name of the process you want to remove.
+ * @return Success condition (boolean).
+ */
+int remove_pcb(char* pname);
 
 // TODO
 /**

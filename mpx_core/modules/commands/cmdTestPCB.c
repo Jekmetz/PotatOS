@@ -38,7 +38,7 @@ int cmd_test_pcb(char* params) {
   queue_t* que = construct_queue();
 
   // Test printed circuit boards //////////////////////////////////////////////
-  pcb_t pcb[10];
+  pcb_t pcb[5];
 
   for (int i = 0; i < (int)(sizeof(pcb) / sizeof(pcb_t)); i++) {
     pcb[i].priority = i + 3;
