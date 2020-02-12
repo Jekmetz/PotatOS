@@ -21,6 +21,17 @@ commands/cmdClear.o\
 commands/cmdDate.o\
 commands/cmdTime.o\
 commands/cmdVersion.o\
+commands/cmdBlockPCB.o\
+commands/cmdCreatePCB.o\
+commands/cmdDeletePCB.o\
+commands/cmdResume.o\
+commands/cmdSetPriority.o\
+commands/cmdShowAllProcesses.o\
+commands/cmdShowBlockedProcesses.o\
+commands/cmdShowPCB.o\
+commands/cmdShowReadyProcesses.o\
+commands/cmdSuspend.o\
+commands/cmdUnblockPCB.o\
 pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\

@@ -10,11 +10,11 @@
 /**
 * @brief Macro to return a 0 on success
 */
-#define SUCCESS 0
+#define SUCCESS 1
 /**
 * @brief Macro to return a -1 on failure
 */
-#define FAILURE -1
+#define FAILURE 0
 /**
 * @brief The maximum parameters allowed per command
 */

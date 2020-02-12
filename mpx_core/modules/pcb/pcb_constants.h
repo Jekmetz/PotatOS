@@ -1,5 +1,4 @@
-
-
+#pragma once
 
  /**
  *  Contains all possible process classes
@@ -10,7 +9,7 @@ typedef enum
 {
     SYSTEM,
     APPLICATION
-}PROCESS_CLASS;
+} PROCESS_CLASS;
 
 /**
  *  Contains all possible process states
@@ -20,20 +19,19 @@ typedef enum
     READY,
     RUNNING,
     BLOCKED
-}PROCESS_STATE;
+} PROCESS_STATE;
 
 /**
  *  Struct that contains all information related to a pcb
  */
-struct pcb
+typedef struct pcb
 {
     char *process_name;
     unsigned int process_class;
     unsigned int priority;
     unsigned int state;
     char stack[1024];
-};
-typedef struct pcb pcb_t;
+} pcb_t;
 
 /**
  *  One element within the pcb queue
@@ -51,10 +49,9 @@ struct node
 /**
  *  Contains all the data needed to use/modify a queue
  */
-struct queue
+typedef struct queue
 {
     int size;
     struct node *head;
     struct node *tail;  
-};
-typedef struct queue queue_t;
+} queue_t;

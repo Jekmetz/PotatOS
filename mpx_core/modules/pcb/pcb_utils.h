@@ -39,7 +39,7 @@ int insert_pcb(pcb_t*);
 /**
 *
 */
-int remove_pcb(pcb_t*);
+int remove_pcb(char*);
 
 // TODO
 /**

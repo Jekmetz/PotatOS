@@ -87,24 +87,3 @@ void destruct_queue(queue_t* queue) {
   // freeing queue
   sys_free_mem(queue);
 }
-
-/**
- *  FIXME: This is not merciless enough
- */
-int remove_pcb(queue_t* que, char* name) {
-  // setting the moving pointer to start at head
-  struct node* curr = que->head;
-  while (curr != NULL) {
-    // checking if the process is the correct one
-    if (strcmp(curr->data->process_name, name) == 0) {
-      // destroying the process
-      ((struct node*)curr->prev)->next = curr->next;
-      ((struct node*)curr->next)->prev = curr->prev;
-      sys_free_mem(curr);
-      que->size--;
-      return SUCCESS;
-    }
-    curr = curr->next;
-  }
-  return FAILURE;
-}
