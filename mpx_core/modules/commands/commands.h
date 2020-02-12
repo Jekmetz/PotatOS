@@ -7,8 +7,6 @@
 /**
 * @brief Macro to return a 0 on success
 */
-#define SUCCESS 0
-
 
 /////////////////////////////////////////////////
 /**

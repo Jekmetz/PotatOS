@@ -62,11 +62,11 @@ int cmd_test_pcb(char* params) {
   }
   chek_state(que);
 
-  if (remove_pcb(que, "PROC:02")) {
+  /*if (remove_pcb("PROC:02")) {
     puts("Removed proc 2");
   } else {
     puts("did not remove 2");
-  }
+  }*/
   chek_state(que);
 
   enqueue(que, &(pcb[1]));
