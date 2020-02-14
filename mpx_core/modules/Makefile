@@ -14,7 +14,7 @@ OBJFILES =\
 mpx_supt.o\
 cmdinput/command_handler.o\
 cmdinput/poll_input.o\
-commands/cmdhelp.o\
+commands/cmdHelp.o\
 commands/commandUtils.o\
 commands/time.o\
 commands/cmdClear.o\
