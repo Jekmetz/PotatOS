@@ -1,11 +1,11 @@
 #include "pcb_queue.h"
 #include "pcb_constants.h"
 
-// TODO
 /**
+* @brief simply allocates space for a pcb and returns that pointer
 *
+* @return pointer to allocated pcb
 */
-// Just allocates ips a pcb and returns the pointer to that pcb
 pcb_t* allocate_pcb();
 
 // TODO
@@ -18,7 +18,9 @@ pcb_t *setup_pcb(char*, PROCESS_CLASS, int priority);
 
 // TODO
 /**
+* @brief frees the space for a pcb
 *
+* @return Success or failure
 */
 // Frees a pcb
 int free_pcb(pcb_t*);
