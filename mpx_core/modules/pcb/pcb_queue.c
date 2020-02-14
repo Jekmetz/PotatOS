@@ -7,7 +7,33 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-void enqueue(queue_t* cue, pcb_t* data) {
+void enqueue(queue_t *cue, pcb_t *data)
+{
+  struct node* nnode = sys_alloc_mem(sizeof(struct node));
+
+  // setting node data
+  nnode->data = data;
+  nnode->prev = NULL;
+  nnode->next = NULL;
+
+  if (cue->head == NULL)
+  {
+    cue->head = nnode;
+  }
+  else
+  {
+    struct node *curr = cue->head;
+    while (curr->next != NULL)
+    {
+      curr = curr->next;
+    }
+
+    curr->next = nnode;
+    nnode->prev = curr;
+  }
+}
+
+void priority_enqueue(queue_t* cue, pcb_t* data) {
   // allocating node space
   struct node* nnode = sys_alloc_mem(sizeof(struct node));
 

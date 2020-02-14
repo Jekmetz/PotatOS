@@ -2,6 +2,9 @@
 
 #include "pcb_constants.h"
 
+
+void enqueue(queue_t *que, pcb_t *data);
+
 /**
  *  @brief Appends an element onto the tail of the given queue
  * 
@@ -13,7 +16,7 @@
  * 
  *  @note The data must point to a pcb with a valid priority.
  */
-void enqueue(queue_t *que, pcb_t *data);
+void priority_enqueue(queue_t *cue, pcb_t* data);
 
 /** 
  *  @brief Takes the PCB off of the head of the queue and moves head

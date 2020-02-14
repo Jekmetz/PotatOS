@@ -22,29 +22,28 @@ void init_queue() {
 
 int insert_pcb(pcb_t *proc)
 {
-  if (running == NULL)
-  {
-
-  }
-
   switch (proc->state)
   {
     case RUNNING:
-      
+      priority_enqueue(ready_queue, running);
+      running = proc;
       break;
     case READY:
-
+      priority_enqueue(ready_queue, proc);
       break;
     case BLOCKED:
-
+      enqueue(blocked_queue, proc);
       break;
     case SUSPENDED_READY:
-
+      priority_enqueue(suspended_r_queue, proc);
       break;
     case SUSPENDED_BLOCKED:
-
+      enqueue(suspended_b_queue, proc);
       break;
+    default:
+      return 0;
   }
+  return 1;
 }
 
 /**
