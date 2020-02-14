@@ -16,9 +16,11 @@ typedef enum
  */
 typedef enum
 {
-    READY,
     RUNNING,
-    BLOCKED
+    READY,
+    BLOCKED,
+    SUSPENDED_READY,
+    SUSPENDED_BLOCKED
 } PROCESS_STATE;
 
 /**
