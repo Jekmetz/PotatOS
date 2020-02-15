@@ -29,7 +29,8 @@ using help <cmd name>\n\
   version\n\
   shutdown\n\
   date\n\
-  time\
+  time\n\
+  blockPCB\
 "
 
 /**
@@ -114,6 +115,20 @@ Example:\n\
 "
 
 /**
+* @brief Macro to hold the help page for command blockPCB
+*/
+#define BLOCKPCB \
+"\
+Description\n\
+  Block a process by name\n\n\
+Usage:\n\
+  blockPCB [-p | --pname] <proccess_name>\n\n\
+Example:\n\
+  blockPCB -p PROC1\n\
+  blockPCB --pname PROC2\
+"
+
+/**
 * @brief A struct to hold help outputs
 *
 * The COMMAND Struct is a custom struct that is designed to hold custom
@@ -137,6 +152,7 @@ HELP_PAGES help_pages[] = {
   {"shutdown", SHUTDOWN},
   {"date", DATE},
   {"time", TIME},
+  {"blockPCB", BLOCKPCB},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
