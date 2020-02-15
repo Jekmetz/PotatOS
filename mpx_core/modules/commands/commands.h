@@ -40,4 +40,23 @@ int cmd_create_pcb(char *params);
 
 int cmd_unblock_pcb(char *params);
 
+/**
+* @brief command to block PCB by name
+*
+* @returns Success or Failure
+*/
 int cmd_blockPCB(char* params);
+
+/**
+* @brief Resume PCB command
+*
+* @return SUCCESS or FAILURE
+*/
+int cmd_resume(char* params);
+
+/**
+* @brief Suspend PCB command
+*
+* @return SUCCESS or FAILURE
+*/
+int cmd_suspend(char* params);

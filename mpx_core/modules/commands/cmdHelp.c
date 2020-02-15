@@ -129,6 +129,34 @@ Example:\n\
 "
 
 /**
+* @brief Macro to hold the help page for command blockPCB
+*/
+#define RESUMEPCB \
+"\
+Description\n\
+  Resume a process by name\n\n\
+Usage:\n\
+  blockPCB [-p | --pname] <proccess_name>\n\n\
+Example:\n\
+  resumePCB -p PROC1\n\
+  resumePCB --pname PROC2\
+"
+
+/**
+* @brief Macro to hold the help page for command blockPCB
+*/
+#define SUSPENDPCB \
+"\
+Description\n\
+  Suspend a process by name\n\n\
+Usage:\n\
+  blockPCB [-p | --pname] <proccess_name>\n\n\
+Example:\n\
+  suspendPCB -p PROC1\n\
+  suspendPCB --pname PROC2\
+"
+
+/**
 * @brief A struct to hold help outputs
 *
 * The COMMAND Struct is a custom struct that is designed to hold custom
@@ -153,6 +181,8 @@ HELP_PAGES help_pages[] = {
   {"date", DATE},
   {"time", TIME},
   {"blockPCB", BLOCKPCB},
+  {"resumePCB", RESUMEPCB},
+  {"suspendPCB", SUSPENDPCB},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
