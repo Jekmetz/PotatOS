@@ -16,7 +16,7 @@ char gparamstr[CMDSIZE];
 /**
 * @brief Will hold all the string pointers
 */
-char* gparams[26];  // will hold all of the parameters
+char* gparams[27];  // will hold all of the parameters
 
 /**
 * @file commands.c
@@ -62,7 +62,8 @@ char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[])
 */
 char* get_pvalue(char c)
 {
-  return gparams[alphanum(c)];
+  if(c == '\0') return gparams[26];
+  else return gparams[alphanum(c)];
 }
 
 /**
@@ -115,6 +116,31 @@ int set_flags(char* paramstr, int* flag, int num_aliases, ...)
 
   //end dynamic vars
   va_end(valist);
+
+  //Handle NO_FLAG case specifically
+  while( (loc < paramstrlen) && !isspace(gparamstr + loc) ) {loc++;}
+  //Now we are at the first space...
+  //until we hit our first non-space... advance loc
+  while( (loc < paramstrlen) && isspace(gparamstr + loc)) {loc++;}
+  //Now we are at the first character past the spaces
+  if((loc < paramstrlen) && *(gparamstr + loc) != '-')
+  {
+    //set hold to the beginning
+    hold = (gparamstr + loc);
+    //We should handle the no flag case now
+    while( (loc < paramstrlen) && (*(gparamstr + loc) != '-') ) {loc++;}
+    //now we are at the next dash
+
+    //if the end is not actually the end... make an end.
+    if(*(gparamstr + loc) != '\0')
+    {
+      *(gparamstr + loc - 1) = '\0';
+    }
+    //now loc is at the first -'
+
+    *flag |= NO_FLAG;
+    gparams[26] = hold;
+  }
 
   //until we hit a '-' or hit the end of the string...
   while( (loc < paramstrlen) && (*(gparamstr + loc) != '-') ) {loc++;}

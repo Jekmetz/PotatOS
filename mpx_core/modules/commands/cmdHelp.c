@@ -30,7 +30,9 @@ using help <cmd name>\n\
   shutdown\n\
   date\n\
   time\n\
-  blockPCB\
+  blockPCB\n\
+  suspendPCB\n\
+  resumePCB\n\
 "
 
 /**
@@ -136,7 +138,7 @@ Example:\n\
 Description\n\
   Resume a process by name\n\n\
 Usage:\n\
-  blockPCB [-p | --pname] <proccess_name>\n\n\
+  resumePCB [-p | --pname] <proccess_name>\n\n\
 Example:\n\
   resumePCB -p PROC1\n\
   resumePCB --pname PROC2\
@@ -150,7 +152,7 @@ Example:\n\
 Description\n\
   Suspend a process by name\n\n\
 Usage:\n\
-  blockPCB [-p | --pname] <proccess_name>\n\n\
+  suspendPCB [-p | --pname] <proccess_name>\n\n\
 Example:\n\
   suspendPCB -p PROC1\n\
   suspendPCB --pname PROC2\
@@ -200,55 +202,47 @@ HELP_PAGES help_pages[] = {
 */
 int cmd_help(char* params) {
   // Init vars
-  char* cmdStart;
-  char* request_help_page;
-  int i, check;
+  int flag = 0, chk, check,i;
+  char *cmd;
   char buf[100];
 
-  // Triming the command
+  // Trimming the command
   sprintf(buf,"%s",trim(params));
 
-  // The start of the help command
-  cmdStart = buf;
+  chk = set_flags(buf,&flag,0);
 
-  // Jumping forward 4 spaces
-  cmdStart = cmdStart + 4;
+  if(chk != SUCCESS)
+  {
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
+    return FAILURE; 
+  }
 
-  // If its just help without any other arguments
-  if(*cmdStart++ == NULL)
+  //if there was nothing specified...
+  if(!(flag & NO_FLAG))
   {
     printf(HELP_MENU);
+    return SUCCESS;
   }
-  // If there is a requested command
-  else
-  {
-    // Skipping white space between "help" and requested command
-    while(isspace(cmdStart)){
-      cmdStart++;
-    }
+  // If there is a requested command, get it from the NO_VALUE using \0
+  cmd = get_pvalue('\0');
 
-    // request_help_page will have the requested help page after help
-    request_help_page = cmdStart;
-
-    i = 0; // Setting counter to zero
-    check = 0; // Setting check to zero, false
-    while(help_pages[i].command_name != NULL){
-      // If the command is found
-      if(strcmp(help_pages[i].command_name,request_help_page) == 0){
-        // Printing the help page
-        printf(help_pages[i].command_help_page);
-        // Setting check, or found, to one, true
-        check = 1;
-      }
-      // Incrementing the counter
-      i++;
+  i = 0; // Setting counter to zero
+  check = 0; // Setting check to zero, false
+  while(help_pages[i].command_name != NULL){
+    // If the command is found
+    if(strcmp(help_pages[i].command_name,cmd) == 0){
+      // Printing the help page
+      printf(help_pages[i].command_help_page);
+      // Setting check, or found, to one, true
+      check = 1;
     }
-
-    // If check was not found
-    if (check == 0){
-      printf("Command \"%s\" not found.",request_help_page);
-    }
+    // Incrementing the counter
+    i++;
   }
+  // If check was not found
+  if (check == 0){
+    printf("\033[31mCommand \"%s\" not found.\033[0m",cmd);
+ }
 
   return SUCCESS;  // successful response
-  }
+}

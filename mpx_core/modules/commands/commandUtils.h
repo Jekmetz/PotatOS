@@ -73,6 +73,8 @@
 #define X_FLAG (1 << 24)
 /** Z flag binary bit shift macro */
 #define Z_FLAG (1 << 25)
+/** NO flag binary bit shift macro */
+#define NO_FLAG (1<<26)
 /** A flag binary bit shift macro */
 
 /**
@@ -82,7 +84,7 @@ extern char gparamstr[CMDSIZE];
 /**
 * @brief Will hold all the string pointers
 */
-extern char* gparams[26];  // will hold all of the parameters
+extern char* gparams[27];  // will hold all of the parameters
 
 /**
 * @brief A helper macro that will take a letter and return its integer equivalent

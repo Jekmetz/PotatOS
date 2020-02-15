@@ -18,7 +18,7 @@ int cmd_blockPCB(char* params)
 {
   int flag = 0, chk;
   char* pname;
-  pcb_t* p;
+  pcb_t* p = NULL;
 
   chk = set_flags(params, &flag, 1,
     'p',"pname"

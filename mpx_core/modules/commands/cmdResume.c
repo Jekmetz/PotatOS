@@ -19,10 +19,10 @@ int cmd_resume(char* params)
   //INIT VARS
   int flag,chk;
   char* pname;
-  pcb_t* p;
+  pcb_t* p = NULL;
 
   chk = set_flags(params, &flag, 1,
-    'p','pname');
+    'p',"pname");
 
   if(chk != SUCCESS)
   {
@@ -46,10 +46,10 @@ int cmd_resume(char* params)
   }
 
   //If we have a valid process at this point...
-  if(p->state == PROCESS_STATE.SUSPENDED_BLOCKED)
-  	p->state = PROCESS_STATE.BLOCKED;
-  else if (p->state == PROCESS_STATE.SUSPENDED_READY)
-  	p->state = PROCESS_STATE.READY;
+  if(p->state == SUSPENDED_BLOCKED)
+  	p->state = BLOCKED;
+  else if (p->state == SUSPENDED_READY)
+  	p->state = READY;
 
   insert_pcb(p);
   return SUCCESS;
