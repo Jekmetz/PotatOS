@@ -1,5 +1,5 @@
 /**
-* @file cmdhelp.c
+* @file cmdHelp.c
 *
 * @brief Help command
 */
