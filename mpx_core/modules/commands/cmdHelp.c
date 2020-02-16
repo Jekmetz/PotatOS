@@ -162,7 +162,7 @@ Example:\n\
 * @brief A struct to hold help outputs
 *
 * The COMMAND Struct is a custom struct that is designed to hold custom
-* commands 
+* commands
 *
 * @param str A string type to hold the name of the command
 * @param command_help_page A string that holds the actual help page
@@ -204,17 +204,14 @@ int cmd_help(char* params) {
   // Init vars
   int flag = 0, chk, check,i;
   char *cmd;
-  char buf[100];
 
-  // Trimming the command
-  sprintf(buf,"%s",trim(params));
-
-  chk = set_flags(buf,&flag,0);
+  // trim and set flags
+  chk = set_flags(trim(params),&flag,0);
 
   if(chk != SUCCESS)
   {
     puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
-    return FAILURE; 
+    return FAILURE;
   }
 
   //if there was nothing specified...
