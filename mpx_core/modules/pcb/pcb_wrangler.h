@@ -1,1 +1,3 @@
- void init_process_queues();
+#pragma once
+
+void init_process_queues();

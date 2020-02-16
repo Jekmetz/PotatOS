@@ -4,6 +4,8 @@
 * @brief The header file for commands.c
 */
 
+#pragma once
+
 /**
 * @brief Macro to return a 0 on success
 */

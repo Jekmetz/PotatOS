@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pcb_queue.h"
 #include "pcb_constants.h"
 
