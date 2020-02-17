@@ -26,10 +26,10 @@ commands/cmdCreatePCB.o\
 commands/cmdDeletePCB.o\
 commands/cmdResume.o\
 commands/cmdSetPriority.o\
-commands/cmdShowAllProcesses.o\
-commands/cmdShowBlockedProcesses.o\
+commands/cmdShowAllPCBs.o\
+commands/cmdShowBlockedPCBs.o\
 commands/cmdShowPCB.o\
-commands/cmdShowReadyProcesses.o\
+commands/cmdShowReadyPCBs.o\
 commands/cmdSuspend.o\
 commands/cmdUnblockPCB.o\
 pcb/pcb_queue.o\
