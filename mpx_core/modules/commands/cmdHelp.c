@@ -174,6 +174,17 @@ Example:\n\
 "
 
 /**
+* @brief Macro to hold the help page for command showAllPCBs
+*/
+#define SHOWALLPCBS \
+"\
+Description\n\
+  Show all the processes\n\n\
+Usage:\n\
+  showAllPCBs\n\n\
+"
+
+/**
 * @brief A struct to hold help outputs
 *
 * The COMMAND Struct is a custom struct that is designed to hold custom
@@ -201,6 +212,7 @@ HELP_PAGES help_pages[] = {
   {"resumePCB", RESUMEPCB},
   {"suspendPCB", SUSPENDPCB},
   {"showPCB", SHOWPCB},
+  {"showAllPCBs", SHOWALLPCBS},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
