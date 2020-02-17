@@ -61,6 +61,34 @@ pcb_t *remove_pcb(char* pname);
 void init_queue();
 
 /**
+* @brief Getter function for the ready queue
+*
+* @return A pointer to the ready queue
+*/
+queue_t* get_ready_queue();
+
+/**
+* @brief Getter function for the blocked queue
+*
+* @return A pointer to the blocked queue
+*/
+queue_t* get_blocked_queue();
+
+/**
+* @brief Getter function for the suspended ready queue
+*
+* @return A pointer to the suspended ready queue
+*/
+queue_t* get_suspended_ready_queue();
+
+/**
+* @brief Getter function for the suspended blocked queue
+*
+* @return A pointer to the suspended blocked queue
+*/
+queue_t* get_suspended_blocked_queue();
+
+/**
 * @brief Prints the passed pcb's info in a stylized manner
 *
 * Example output

@@ -145,6 +145,22 @@ pcb_t *remove_pcb(char* name) {
   return NULL;
 }
 
+queue_t* get_ready_queue() {
+  return ready_queue;
+}
+
+queue_t* get_blocked_queue() {
+  return blocked_queue;
+}
+
+queue_t* get_suspended_ready_queue() {
+  return suspended_r_queue;
+}
+
+queue_t* get_suspended_blocked_queue() {
+  return suspended_b_queue;
+}
+
 void print_pcb_info(pcb_t* pcb) {
   // TODO: possible make a boolean to string function
   char* suspended;
