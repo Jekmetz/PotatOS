@@ -99,7 +99,7 @@ queue_t* get_suspended_blocked_queue();
 * Priority: 1
 * Suspended: true
 */
-void print_pcb_info(pcb_t* pcb);
+void print_pcb_info(const pcb_t* pcb);
 
 /**
 * @brief Returns a string corresponding to the process class enum
@@ -107,7 +107,7 @@ void print_pcb_info(pcb_t* pcb);
 * @param process_class An enumeration variant of the PROCESS_CLASS enum
 * @return A char pointer that is the enumeration name
 */
-char* get_process_class_string(PROCESS_CLASS process_class);
+const char* get_process_class_string(PROCESS_CLASS process_class);
 
 /**
 * @brief Returns a string corresponding to the process state enum
@@ -115,4 +115,4 @@ char* get_process_class_string(PROCESS_CLASS process_class);
 * @param process_state An enumeration variant of the PROCESS_STATE enum
 * @return A char pointer that is the enumeration name
 */
-char* get_process_state_string(PROCESS_STATE process_state);
+const char* get_process_state_string(PROCESS_STATE process_state);
