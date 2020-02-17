@@ -14,7 +14,7 @@ pcb_t* allocate_pcb();
 */
 // Setups a pcb and enques the pcb
 // pointer to pcb, name of the process, ...
-int setup_pcb(char*, PROCESS_CLASS, int priority);
+pcb_t *setup_pcb(char*, PROCESS_CLASS, int priority);
 
 // TODO
 /**
@@ -48,7 +48,7 @@ int insert_pcb(pcb_t*);
  * @param pname Name of the process you want to remove.
  * @return Success condition (boolean).
  */
-int remove_pcb(char* pname);
+pcb_t *remove_pcb(char* pname);
 
 // TODO
 /**

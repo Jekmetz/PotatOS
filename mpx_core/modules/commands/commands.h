@@ -35,3 +35,7 @@ int cmd_test(char* params);
 * @return SUCCESS or FAILURE
 */
 int cmd_clear(char* params);
+
+int cmd_create_pcb(char *params);
+
+int cmd_unblock_pcb(char *params);
