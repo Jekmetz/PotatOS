@@ -61,4 +61,10 @@ int cmd_resume(char* params);
 *
 * @return SUCCESS or FAILURE
 */
+
 int cmd_suspend(char* params);
+
+/**
+* @brief Show PCB command
+*/
+int cmd_show_pcb(char* params);

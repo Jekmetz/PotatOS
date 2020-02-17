@@ -50,6 +50,7 @@ COMMAND commands[] = {
   {"blockpcb", &cmd_blockPCB},
   {"resumepcb", &cmd_resume},
   {"suspendpcb", &cmd_suspend},
+  {"showPCB", &cmd_show_pcb},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

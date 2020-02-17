@@ -60,3 +60,14 @@ pcb_t *remove_pcb(char* pname);
 */
 void init_queue();
 
+// TODO
+/**
+*
+*/
+char* get_process_class_string(unsigned int process_class);
+
+// TODO
+/**
+*
+*/
+char* get_process_state_string(unsigned int process_state);

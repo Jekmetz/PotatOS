@@ -139,5 +139,35 @@ pcb_t *remove_pcb(char* name) {
       curr = curr->next;
     }
   }
+
   return NULL;
+}
+
+char* get_process_class_string(unsigned int process_class) {
+  switch (process_class) {
+    case SYSTEM:
+      return "system";
+
+    case APPLICATION:
+      return "application";
+
+    default:
+      return "UNKNOWN CLASS";
+  }
+}
+
+char* get_process_state_string(unsigned int process_state) {
+  switch (process_state) {
+    case READY:
+      return "ready";
+
+    case RUNNING:
+      return "running";
+
+    case BLOCKED:
+      return "blocked";
+
+    default:
+      return "UNKNOWN STATE";
+  }
 }
