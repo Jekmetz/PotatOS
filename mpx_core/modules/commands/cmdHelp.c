@@ -34,6 +34,7 @@ using help <cmd name>\n\
   suspendPCB\n\
   resumePCB\n\
   showPCB\n\
+  showAllProcesses\n\
 "
 
 /**

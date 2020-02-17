@@ -41,13 +41,13 @@ typedef struct pcb
  * 
  *  This allows us to abbreviate code elsewhere... probably
  */
-struct node
+typedef struct node
 {
     pcb_t *data;
     
     void *next;
     void *prev;
-};
+} node_t;
 
 /**
  *  Contains all the data needed to use/modify a queue

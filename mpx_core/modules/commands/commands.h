@@ -68,3 +68,8 @@ int cmd_suspend(char* params);
 * @brief Show PCB command
 */
 int cmd_show_pcb(char* params);
+
+/**
+* @brief Show all PCBs command
+*/
+int cmd_show_all_processes(char* params);
