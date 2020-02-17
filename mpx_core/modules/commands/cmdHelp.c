@@ -35,6 +35,8 @@ using help <cmd name>\n\
   resumePCB\n\
   showPCB\n\
   showAllPCBs\n\
+  showReadyPCBs\n\
+  showBlockedPCBs\n\
 "
 
 /**
@@ -166,7 +168,7 @@ Example:\n\
 #define SHOWPCB \
 "\
 Description\n\
-  Show a process by name\n\n\
+  Show a PCB by name\n\n\
 Usage:\n\
   showPCB <proccess_name>\n\n\
 Example:\n\
@@ -179,9 +181,31 @@ Example:\n\
 #define SHOWALLPCBS \
 "\
 Description\n\
-  Show all the processes\n\n\
+  Show all the PCBs\n\n\
 Usage:\n\
   showAllPCBs\n\n\
+"
+
+/**
+* @brief Macro to hold the help page for command showReadyPCBs
+*/
+#define SHOWREADYPCBS \
+"\
+Description\n\
+  Show all the ready PCBs\n\n\
+Usage:\n\
+  showReadyPCBs\n\n\
+"
+
+/**
+* @brief Macro to hold the help page for command showBlockedPCBs
+*/
+#define SHOWBLOCKEDPCBS \
+"\
+Description\n\
+  Show all the blocked processes\n\n\
+Usage:\n\
+  showBlockedPCBs\n\n\
 "
 
 /**
@@ -213,6 +237,8 @@ HELP_PAGES help_pages[] = {
   {"suspendPCB", SUSPENDPCB},
   {"showPCB", SHOWPCB},
   {"showAllPCBs", SHOWALLPCBS},
+  {"showReadyPCBs", SHOWREADYPCBS},
+  {"showBlockedPCBs", SHOWBLOCKEDPCBS},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

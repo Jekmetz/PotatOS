@@ -52,6 +52,8 @@ COMMAND commands[] = {
   {"suspendpcb", &cmd_suspend},
   {"showPCB", &cmd_show_pcb},
   {"showAllPCBs", &cmd_show_all_pcbs},
+  {"showReadyPCBs", &cmd_show_ready_pcbs},
+  {"showBlockedPCBs", &cmd_show_blocked_pcbs},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
