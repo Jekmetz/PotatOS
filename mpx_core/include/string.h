@@ -146,7 +146,7 @@ int sprintf_internal(char *buffer, char *format, va_list valist);
 *
 * @return lowercase representation of c in ASCII
 */
-int tolower(int c);
+char tolower(char c);
 
 /**
 * @brief Returns the uppercase representation of a charachter
@@ -155,7 +155,7 @@ int tolower(int c);
 *
 * @return uppercase representation of c in ASCII
 */
-int toupper(int c);
+char toupper(char c);
 
 /**
 * @brief Returns a string with the begining and ending whitespaces removed

@@ -536,7 +536,7 @@ int sprintf(char* buffer, char* format, ...) {
 *
 * @return lowercase representation of c in ASCII
 */
-int tolower(int c)
+char tolower(char c)
 {
   return ( ('A' <= c && c <= 'Z') ? c + ('a' - 'A') : c);
 }
@@ -548,7 +548,7 @@ int tolower(int c)
 *
 * @return uppercase representation of c in ASCII
 */
-int toupper(int c)
+char toupper(char c)
 {
   return ( ('a' <= c && c <= 'z') ? c - ('a' - 'A') : c);
 }
