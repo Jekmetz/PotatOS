@@ -72,4 +72,4 @@ int cmd_show_pcb(char* params);
 /**
 * @brief Show all PCBs command
 */
-int cmd_show_all_processes(char* params);
+int cmd_show_all_pcbs(char* params);

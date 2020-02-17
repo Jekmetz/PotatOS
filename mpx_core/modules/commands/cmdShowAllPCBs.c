@@ -22,7 +22,7 @@ pcb_t test_pcb1 = {
     .stack = {0},
 };
 
-int cmd_show_all_processes(char* params) {
+int cmd_show_all_pcbs(char* params) {
   if (params) {
     // Ignore unused parameter warning
   }
