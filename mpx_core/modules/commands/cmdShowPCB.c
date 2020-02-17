@@ -19,6 +19,7 @@ pcb_t test_pcb = {
     .process_class = SYSTEM,
     .priority = 1,
     .state = READY,
+    .suspended = 0,
     .stack = {0},
 };
 
@@ -35,7 +36,7 @@ int cmd_show_pcb(char* params) {
 
   // We didn't have a "no flag" argument. Meaning they didn't pass us the pcb name
   if (!(flag & NO_FLAG)) {
-    puts("\033[31mError: No PCB name given. Ex. showPCB test_pcb_name\033[0m");
+    puts("\033[31mError: No PCB name given. Ex. showPCB PROC0\033[0m");
     return FAILURE;
   }
 
@@ -51,20 +52,7 @@ int cmd_show_pcb(char* params) {
     return SUCCESS;
   }
 
-  printf(
-    "Process Name: %s\n"
-    "Process Class: %s\n"
-    "State: %s\n"
-    "Priority: %i\n"
-    "Suspended: %i\n",
-
-    found_pcb->process_name,
-    get_process_class_string(found_pcb->process_class),
-    get_process_state_string(found_pcb->state),
-    found_pcb->priority,
-    // TODO: Add a suspended field to pcb_t
-    0
-  );
+  print_pcb_info(found_pcb);
 
   return SUCCESS;  // successful response
 }

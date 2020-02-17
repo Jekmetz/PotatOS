@@ -60,14 +60,31 @@ pcb_t *remove_pcb(char* pname);
 */
 void init_queue();
 
-// TODO
 /**
+* @brief Prints the passed pcb's info in a stylized manner
 *
+* Example output
+*
+* Process Name: PROC1
+* Process Class: system
+* State: ready
+* Priority: 1
+* Suspended: true
 */
-char* get_process_class_string(unsigned int process_class);
+void print_pcb_info(pcb_t* pcb);
 
-// TODO
 /**
+* @brief Returns a string corresponding to the process class enum
 *
+* @param process_class An enumeration variant of the PROCESS_CLASS enum
+* @return A char pointer that is the enumeration name
 */
-char* get_process_state_string(unsigned int process_state);
+char* get_process_class_string(PROCESS_CLASS process_class);
+
+/**
+* @brief Returns a string corresponding to the process state enum
+*
+* @param process_state An enumeration variant of the PROCESS_STATE enum
+* @return A char pointer that is the enumeration name
+*/
+char* get_process_state_string(PROCESS_STATE process_state);

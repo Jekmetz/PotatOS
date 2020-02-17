@@ -1,7 +1,9 @@
 #include "../mpx_supt.h"
 #include "pcb_constants.h"
 #include "pcb_queue.h"
+#include "pcb_utils.h"
 #include <string.h>
+#include <core/stdio.h>
 
 queue_t *ready_queue, *blocked_queue, *suspended_r_queue, *suspended_b_queue;
 pcb_t *running;
@@ -143,7 +145,32 @@ pcb_t *remove_pcb(char* name) {
   return NULL;
 }
 
-char* get_process_class_string(unsigned int process_class) {
+void print_pcb_info(pcb_t* pcb) {
+  // TODO: possible make a boolean to string function
+  char* suspended;
+
+  if (pcb->suspended) {
+    suspended = "true";
+  } else {
+    suspended = "false";
+  }
+
+  printf(
+      "Name: \033[32m%s\033[37m\n"
+      "Process Class: \033[32m%s\033[37m\n"
+      "State: \033[32m%s\033[37m\n"
+      "Priority: \033[32m%i\033[37m\n"
+      "Suspended: \033[32m%s\033[37m\n",
+
+      pcb->process_name,
+      get_process_class_string(pcb->process_class),
+      get_process_state_string(pcb->state),
+      pcb->priority,
+      suspended
+  );
+}
+
+char* get_process_class_string(PROCESS_CLASS process_class) {
   switch (process_class) {
     case SYSTEM:
       return "system";
@@ -156,7 +183,7 @@ char* get_process_class_string(unsigned int process_class) {
   }
 }
 
-char* get_process_state_string(unsigned int process_state) {
+char* get_process_state_string(PROCESS_STATE process_state) {
   switch (process_state) {
     case READY:
       return "ready";

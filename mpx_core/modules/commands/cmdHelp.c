@@ -33,6 +33,7 @@ using help <cmd name>\n\
   blockPCB\n\
   suspendPCB\n\
   resumePCB\n\
+  showPCB\n\
 "
 
 /**
@@ -159,6 +160,19 @@ Example:\n\
 "
 
 /**
+* @brief Macro to hold the help page for command showPCB
+*/
+#define SHOWPCB \
+"\
+Description\n\
+  Show a process by name\n\n\
+Usage:\n\
+  showPCB <proccess_name>\n\n\
+Example:\n\
+  showPCB PROC1\n\
+"
+
+/**
 * @brief A struct to hold help outputs
 *
 * The COMMAND Struct is a custom struct that is designed to hold custom
@@ -185,6 +199,7 @@ HELP_PAGES help_pages[] = {
   {"blockPCB", BLOCKPCB},
   {"resumePCB", RESUMEPCB},
   {"suspendPCB", SUSPENDPCB},
+  {"showPCB", SHOWPCB},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
