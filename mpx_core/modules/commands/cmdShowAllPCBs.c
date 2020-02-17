@@ -1,14 +1,13 @@
 /**
- * @file cmdShowAllProcesses.c
+ * @file cmdShowAllPCBs.c
  *
  * @brief Show All PCBs command
  */
 
 #include <core/stdio.h>
-#include <string.h>
+#include <system.h>
 
-#include "../mpx_supt.h"
-#include "../pcb/pcb_queue.h"
+#include "../pcb/pcb_constants.h"
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
 #include "commands.h"
