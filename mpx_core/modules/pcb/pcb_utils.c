@@ -80,7 +80,7 @@ pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int* priority){
   pcb->process_name = pname;
   pcb->process_class = pclass;
   pcb->priority = priority;
-  pcb->state = PROCESS_STATE.READY;
+  pcb->state = READY;
 
   // Inserting new pcb
   insert_pcb(pcb);
