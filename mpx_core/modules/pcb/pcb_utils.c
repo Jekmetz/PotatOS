@@ -13,6 +13,7 @@ void init_queue() {
   suspended_b_queue = construct_queue();
 }
 
+
 /**
 * @brief simply allocates space for a pcb and returns that pointer
 *
@@ -58,6 +59,33 @@ int insert_pcb(pcb_t *proc)
       return 0;
   }
   return 1;
+}
+
+/**
+* @brief command to setup new PCB
+*
+* @returns Success if the PCB was created, failure for anything else
+*/
+pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int* priority){
+  // Allocating new PCB
+  pcb_t* pcb = allocate_pcb();
+
+  // If allocate fails, returns null
+  if(pcb == NULL){
+    printf("\033[31Process: '%s' failed to setup!\033[0m",process_name);
+    return FAILURE;
+  }
+
+  // Setting values in pcb
+  pcb->process_name = pname;
+  pcb->process_class = pclass;
+  pcb->priority = priority;
+  pcb->state = PROCESS_STATE.READY;
+
+  // Inserting new pcb
+  insert_pcb(pcb);
+
+  return SUCCESS;
 }
 
 /**
