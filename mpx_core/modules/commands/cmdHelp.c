@@ -41,124 +41,121 @@ version\n\
 * @brief Macro to hold the help page for command help
 */
 #define HELP \
-  "\
-  Description:\n\
-    Request a help page for a command\n\n\
-  Usage:\n\
-    help <command>\n\n\
-  Flags:\n\
-    None\n\n\
-  Example:\n\
-    help time\n\
-    help version\n\
-  "
+"\
+Description:\n\
+  Request a help page for a command\n\n\
+Usage:\n\
+  help <command>\n\n\
+Flags:\n\
+  None\n\n\
+Example:\n\
+  help time\n\
+  help version\n\
+"
 
 /**
 * @brief Macro to hold the help page for command version
 */
 #define VERSION \
-  "\
-  Description:\n\
-    View the version information of the current PotatOS\n\n\
-  Usage:\n\
-    version [-f | --full]\n\n\
-  Flags:\n\
-    [-f | --full] - Show entire verion\n\n\
-  Example:\n\
-    version\n\
-    version --full\n\
-  "
+"\
+Description:\n\
+  View the version information of the current PotatOS\n\n\
+Usage:\n\
+  version [-f | --full]\n\n\
+Flags:\n\
+  [-f | --full] - Show entire verion\n\n\
+Example:\n\
+  version\n\
+  version --full\n\
+"
 
 /**
 * @brief Macro to holdf the help page for command shutdown
 */
 #define SHUTDOWN \
-  "\
-  Description:\n\
-    Shutdown the PotatOS\n\n\
-  Usage:\n\
-    shutdown\n\n\
-  Flags:\n\
-    None\n\n\
-  Notes:\n\
-    Must confirm with Yes before shutdown\n\
-  "
+"\
+Description:\n\
+  Shutdown the PotatOS\n\n\
+Usage:\n\
+  shutdown\n\n\
+Flags:\n\
+  None\n\n\
+Notes:\n\
+  Must confirm with Yes before shutdown\n\
+"
 
 /**
 * @brief Macro to hold the help page for command date
 */
 #define DATE \
-  "\
-  Description:\n\
-    See/set the system date\n\n\
-  Usage:\n\
-    date [-s | --set]\n\n\
-  Flags:\n\
-    [-s | --set] - Set the date in DD/MM/YYYY\n\
-      Where all values are integers\n\n\
-  Example:\n\
-    date -s 08/24/1994\n\
-    date --set 01/01/2019\n\
-  "
+"\
+Description:\n\
+  See/set the system date\n\n\
+Usage:\n\
+  date [-s | --set]\n\n\
+Flags:\n\
+  [-s | --set] - Set the date in DD/MM/YYYY\n\
+    Where all values are integers\n\n\
+Example:\n\
+  date -s 08/24/1994\n\
+  date --set 01/01/2019\n\
+"
 
 /**
 * @brief Macro to hold the help page for command time
 */
 #define TIME \
-  "\
-  Description\n\
-    See/set the system time\n\n\
-  Usage:\n\
-    time [-s | --set]\n\n\
-  Flags:\n\
-    [-s | --set] - Set the time in HH:MM:SS\n\
-      Where all values are integers and using 24 hour time\n\n\
-  Example:\n\
-    time -s 12:24:32\n\
-    time --set 16:02:00\n\
-  "
+"\
+Description\n\
+  See/set the system time\n\n\
+Usage:\n\
+  time [-s | --set]\n\n\
+Flags:\n\
+  [-s | --set] - Set the time in HH:MM:SS\n\
+    Where all values are integers and using 24 hour time\n\n\
+Example:\n\
+  time -s 12:24:32\n\
+  time --set 16:02:00\n\
+"
 
 /**
 * @brief Macro to hold the help page for command blockPCB
 */
 #define BLOCKPCB \
-  "\
-  Description:\n\
-    Block a process by name\n\n\
-  Usage:\n\
-    blockPCB <proccess_name>\n\n\
-  Example:\n\
-    blockPCB PROC1\n\
-    blockPCB PROC2\n\
-  "
+"\
+Description\n\
+  Block a process by name\n\n\
+Usage:\n\
+  blockPCB <proccess_name>\n\n\
+Example:\n\
+  blockPCB PROC1\n\
+"
 
 /**
 * @brief Macro to hold the help page for command blockPCB
 */
 #define RESUMEPCB \
-  "\
-  Description:\n\
-    Resume a process by name\n\n\
-  Usage:\n\
-    resumePCB <proccess_name>\n\n\
-  Example:\n\
-    resumePCB PROC1\n\
-    resumePCB PROC2\n\
-  "
+"\
+Description\n\
+  Resume a process by name\n\n\
+Usage:\n\
+  resumePCB <proccess_name>\n\n\
+Example:\n\
+  resumePCB PROC1\n\
+"
 
 /**
 * @brief Macro to hold the help page for command blockPCB
 */
 #define SUSPENDPCB \
-  "\
-  Description:\n\
-    Suspend a process by name\n\n\
-  Usage:\n\
-    suspendPCB <proccess_name>\n\n\
-  Example:\n\
-    suspendPCB PROC1\n\
-    suspendPCB PROC2\n\
-  "
+"\
+Description\n\
+  Suspend a process by name\n\n\
+Usage:\n\
+  suspendPCB <proccess_name>\n\n\
+Example:\n\
+  suspendPCB PROC1\n\
+"
 
 /**
 * @brief Macro to hold the help page for command showPCB
@@ -177,76 +174,76 @@ version\n\
 * @brief Macro to hold the help page for command showAllPCBs
 */
 #define SHOWALLPCBS \
-  "\
-  Description:\n\
-    Show all the PCBs\n\n\
-  Usage:\n\
-    showAllPCBs\n\
-  "
+"\
+Description\n\
+  Show all the PCBs\n\n\
+Usage:\n\
+  showAllPCBs\n\
+"
 
 /**
 * @brief Macro to hold the help page for command showReadyPCBs
 */
 #define SHOWREADYPCBS \
-  "\
-  Description:\n\
-    Show all the ready PCBs\n\n\
-  Usage:\n\
-    showReadyPCBs\n\
-  "
+"\
+Description\n\
+  Show all the ready PCBs\n\n\
+Usage:\n\
+  showReadyPCBs\n\
+"
 
 /**
 * @brief Macro to hold the help page for command showBlockedPCBs
 */
 #define SHOWBLOCKEDPCBS \
-  "\
-  Description:\n\
-    Show all the blocked processes\n\n\
-  Usage:\n\
-    showBlockedPCBs\n\
-  "
+"\
+Description\n\
+  Show all the blocked processes\n\n\
+Usage:\n\
+  showBlockedPCBs\n\
+"
 
 #define CREATEPCB \
-  "\
-  Description:\n\
-    Creates a PCB and adds it to queue\n\n\
-  Usage:\n\
-    createPCB [-n | --name] <process_name> {[-p | --priority] <integer_priority=BIG_PI>} {[-c | --class][app | sys]}\n\n\
-  Examples:\n\
-    createPCB -n abc\n\
-    createPCB --name def -p 4\n\
-    createPCB -n ghi --class sys\n\
-  "
+"\
+Description:\n\
+  Creates a PCB and adds it to queue\n\n\
+Usage:\n\
+  createPCB [-n | --name] <process_name> {[-p | --priority] <integer_priority=BIG_PI>} {[-c | --class][app | sys]}\n\n\
+Examples:\n\
+  createPCB -n abc\n\
+  createPCB --name def -p 4\n\
+  createPCB -n ghi --class sys\n\
+"
 
 #define UNBLOCKPCB \
-  "\
-  Description:\n\
-    Moves a PCB from blocked to an unblocked state\n\n\
-  Usage:\n\
-    unblockPCB <process_name>\n\n\
-  Example:\n\
-    unblockPCB abc\n\
-  "
+"\
+Description:\n\
+  Moves a PCB from blocked to an unblocked state\n\n\
+Usage:\n\
+  unblockPCB <process_name>\n\n\
+Example:\n\
+  unblockPCB abc\n\
+"
 
 #define SETPRIORITYPCB \
-  "\
-  Description:\n\
-    Changes an existing PCB's priority to a new priority\n\n\
-  Usage:\n\
-    setPriorityPCB <process_name> [-p | --priority] <new priority>\n\n\
-  Example:\n\
-    setPriorityPCB testPCB -p 7\n\
-  "
+"\
+Description:\n\
+  Changes an existing PCB's priority to a new priority\n\n\
+Usage:\n\
+  setPriorityPCB <process_name> [-p | --priority] <new priority>\n\n\
+Example:\n\
+  setPriorityPCB testPCB -p 7\n\
+"
 
 #define DELETEPCB \
-  "\
-  Description:\n\
-    Delete an existing PCB\n\n\
-  Usage:\n\
-    deletePCB <process_name>\n\n\
-  Example:\n\
-    deletePCB testPCB\n\
-  "
+"\
+Description:\n\
+  Delete an existing PCB\n\n\
+Usage:\n\
+  deletePCB <process_name>\n\n\
+Example:\n\
+  deletePCB testPCB\n\
+"
 
 /**
 * @brief A struct to hold help outputs

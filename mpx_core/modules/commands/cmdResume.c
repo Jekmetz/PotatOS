@@ -15,13 +15,13 @@ int cmd_resume(char* params)
 
   if(chk != SUCCESS)
   {
-    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m\n");
     return FAILURE; 
   }
 
   if(!(flag&NO_FLAG))
   {
-    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m\n");
     return FAILURE;
   }
 
@@ -30,13 +30,13 @@ int cmd_resume(char* params)
 
   if(p == NULL)
   {
-    printf("\033[31mProcess: '%s' not found!\033[0m",pname);
+    printf("\033[31mProcess: '%s' not found!\033[0m\n",pname);
     return FAILURE;
   }
 
   if(p->state == BLOCKED || p->state == READY || p->state == RUNNING)
   {
-    printf("\033[31mProcess: '%s' is not suspended!\033[0m", pname);
+    printf("\033[31mProcess: '%s' is not suspended!\033[0m\n", pname);
     return FAILURE;
   }
 
@@ -51,7 +51,7 @@ int cmd_resume(char* params)
   }
 
   insert_pcb(p);
-  puts("\033[32mProcess successfully resumed!\033[0m");
+  puts("\033[32mProcess successfully resumed!\033[0m\n");
 
   return SUCCESS;
 }

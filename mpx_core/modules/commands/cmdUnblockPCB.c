@@ -16,13 +16,13 @@ int cmd_unblock_pcb(char* params) {
 
   if(!(flag&NO_FLAG))
   {
-    puts("\033[31mNo process Included!\033[0m");
+    puts("\033[31mNo process Included!\033[0m\n");
     return FAILURE;
   }
 
 
   if (chk != SUCCESS) {
-    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m\n");
     return FAILURE;
   }
 
@@ -31,13 +31,13 @@ int cmd_unblock_pcb(char* params) {
   
   if(p == NULL)
   {
-    printf("\033[31mProcess: '%s' not found!\033[0m",pname);
+    printf("\033[31mProcess: '%s' not found!\033[0m\n",pname);
     return FAILURE;
   }
 
   if(p->state == READY || p->state == SUSPENDED_READY)
   {
-    printf("\033[31mProcess: '%s' not blocked!\033[0m", pname);
+    printf("\033[31mProcess: '%s' not blocked!\033[0m\n", pname);
     return FAILURE;
   }
 
@@ -45,7 +45,7 @@ int cmd_unblock_pcb(char* params) {
 
   if(p == NULL)
   {
-    printf("\033[31mProcess: '%s' not found!\033[0m",pname);
+    printf("\033[31mProcess: '%s' not found!\033[0m\n",pname);
     return FAILURE;
   }
   
@@ -57,7 +57,7 @@ int cmd_unblock_pcb(char* params) {
     p->state = SUSPENDED_READY;
   }
   insert_pcb(p);
-  puts("\033[32mProcess successfully unblocked!\033[0m");
+  puts("\033[32mProcess successfully unblocked!\033[0m\n");
 
   return SUCCESS;
 }
