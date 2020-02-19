@@ -23,7 +23,7 @@ int cmd_create_pcb(char* params) {
   }
 
   char* prior_c = get_pvalue('p');
-  unsigned int pri = (unsigned int)3141567926;
+  unsigned int pri = (unsigned int)314156792;
   if (flag & P_FLAG) {
     if (prior_c != NULL) {
       pri = atoi(prior_c);

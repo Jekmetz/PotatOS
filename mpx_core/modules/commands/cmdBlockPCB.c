@@ -44,7 +44,7 @@ int cmd_blockPCB(char* params)
 
   if(p->state == BLOCKED || p->state == SUSPENDED_BLOCKED)
   {
-    printf("\033[31mProcess: '%s' not blocked!\033[0m", pname);
+    printf("\033[31mProcess: '%s' already blocked!\033[0m", pname);
     return FAILURE;
   }
 

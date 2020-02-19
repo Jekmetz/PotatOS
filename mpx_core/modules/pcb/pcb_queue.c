@@ -2,6 +2,7 @@
 #include "../mpx_supt.h"
 
 #include <string.h>
+#include <core/stdio.h>
 
 // definitions of success and failure for true/false returns
 #define SUCCESS 1

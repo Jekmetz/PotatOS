@@ -127,11 +127,12 @@ pcb_t *remove_pcb(char* name) {
                        suspended_b_queue};
   for (int i = 0; i < NUMQUEUES; i++) {
     //Handle edge case of the first boi
-    if(strcmp(currs[i]->head->data->process_name,name) == 0)
+    if(currs[i]->head != NULL && strcmp(currs[i]->head->data->process_name,name) == 0)
     {
       pcb_t *ret = currs[i]->head->data;
       currs[i]->head = currs[i]->head->next;
       currs[i]->head->prev = NULL;
+      (currs[i]->size)--;
       return ret;
     }
 
@@ -146,6 +147,7 @@ pcb_t *remove_pcb(char* name) {
         ((struct node*)curr->next)->prev = curr->prev;
         pcb_t *ret = curr->data;
         sys_free_mem(curr);
+        (currs[i]->size)--;
         return ret;
       }
       curr = curr->next;

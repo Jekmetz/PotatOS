@@ -21,8 +21,7 @@ int cmd_resume(char* params)
   char* pname;
   pcb_t* p = NULL;
 
-  chk = set_flags(params, &flag, 1,
-    'p',"pname");
+  chk = set_flags(params, &flag, 0);
 
   if(chk != SUCCESS)
   {
@@ -30,27 +29,39 @@ int cmd_resume(char* params)
     return FAILURE; 
   }
 
-  if(!(flag & P_FLAG))
+  if(!(flag&NO_FLAG))
   {
-  	puts("\033[31mNo Process name specified! Use [-p | --pname] <proc_name> to specify process!\033[0m");
-  	return FAILURE;
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
+    return FAILURE;
   }
 
-  pname = get_pvalue('p');
-  p = remove_pcb(pname);
+  pname = get_pvalue('\0');
+  p = find_pcb(pname);
 
   if(p == NULL)
   {
-  	printf("\033[31mNo proccess found with name: '%s'\033[0m",pname);
-  	return FAILURE;
+    printf("\033[31mProcess: '%s' not found!\033[0m",pname);
+    return FAILURE;
   }
 
-  //If we have a valid process at this point...
-  if(p->state == SUSPENDED_BLOCKED)
-  	p->state = BLOCKED;
-  else if (p->state == SUSPENDED_READY)
-  	p->state = READY;
+  if(p->state == BLOCKED || p->state == READY || p->state == RUNNING)
+  {
+    printf("\033[31mProcess: '%s' is not suspended!\033[0m", pname);
+    return FAILURE;
+  }
+
+  p = remove_pcb(pname);
+
+  if(p->state == SUSPENDED_READY)
+  {
+    p->state = READY;
+  } else if (p->state == SUSPENDED_BLOCKED)
+  {
+    p->state = BLOCKED;
+  }
 
   insert_pcb(p);
+  puts("\033[32mProcess successfully resumed!\033[0m");
+
   return SUCCESS;
 }
