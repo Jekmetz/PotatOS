@@ -25,18 +25,20 @@
 "\
 You can request a help page for the following commands \
 using help <cmd name>\n\
-  help\n\
-  version\n\
-  shutdown\n\
-  date\n\
-  time\n\
   blockPCB\n\
-  suspendPCB\n\
+  createPCB\n\
+  date\n\
+  help\n\
   resumePCB\n\
-  showPCB\n\
   showAllPCBs\n\
-  showReadyPCBs\n\
   showBlockedPCBs\n\
+  showPCB\n\
+  showReadyPCBs\n\
+  shutdown\n\
+  suspendPCB\n\
+  time\n\
+  unblockPCB\n\
+  version\n\
 "
 
 /**
@@ -208,6 +210,28 @@ Usage:\n\
   showBlockedPCBs\n\n\
 "
 
+#define CREATEPCB \
+"\
+Description:\n\
+  Creates a PCB and adds it to queue\n\
+Usage:\n\
+  createPCB [-n | --name] <process_name> {[-p | --priority] <integer_priority=BIG_PI>} {[-c | --class][app | sys]}\n\
+Examples:\n\
+  createPCB -n abc\n\
+  createPCB --name def -p 4\n\
+  createPCB -n ghi --class sys\n\
+"
+
+#define UNBLOCKPCB \
+"\
+Description\n\
+  Moves a PCB from blocked to an unblocked state\n\
+Usage:\n\
+  unblockPCB [-n | --nmae] <process_name\n\
+Example:\n\
+  unblockPCB -n abc\n\
+"
+
 /**
 * @brief A struct to hold help outputs
 *
@@ -239,6 +263,8 @@ HELP_PAGES help_pages[] = {
   {"showAllPCBs", SHOWALLPCBS},
   {"showReadyPCBs", SHOWREADYPCBS},
   {"showBlockedPCBs", SHOWBLOCKEDPCBS},
+  {"createPCB", CREATEPCB},
+  {"unblockPCB", UNBLOCKPCB},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

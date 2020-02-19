@@ -20,6 +20,7 @@ int cmd_unblock_pcb(char* params) {
     return FAILURE;
   }
 
+
   if (chk != SUCCESS) {
     puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
@@ -47,7 +48,7 @@ int cmd_unblock_pcb(char* params) {
     printf("\033[31mProcess: '%s' not found!\033[0m",pname);
     return FAILURE;
   }
-
+  
   if(p->state == BLOCKED)
   {
     p->state = READY;
