@@ -48,8 +48,8 @@ int cmd_suspend(char* params)
   //If we have a valid process at this point...
  if(p->state == BLOCKED)
   	p->state = SUSPENDED_BLOCKED;
-  else if (p->state == SUSPENDED_READY)
-  	p->state = READY;
+  else if (p->state == READY)
+  	p->state = SUSPENDED_READY;
 
   insert_pcb(p);
   return SUCCESS;

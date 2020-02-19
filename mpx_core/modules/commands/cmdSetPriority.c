@@ -1,5 +1,6 @@
 #include <core/stdio.h>
 #include <system.h>
+#include <string.h>
 #include "../pcb/pcb_constants.h"
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
@@ -9,17 +10,17 @@
 *
 * @returns Success if the PCB priority was updated, failure for anything else
 */
-int cmd_SetPriority(char* params, int* priority){
+int cmd_set_priority_pcb(char* params){
   // Variables
   int flag = 0, chk;
   char* process_name;
-  int* process_priority;
+  int process_priority;
   pcb_t* p = NULL;
 
   // Calling set flags
-  chk = set_flags(params, &flag, 1,
+  chk = set_flags(params, &flag, 2,
     'p',"pname",
-    'r','priority'
+    'r',"priority"
     );
 
   // If set flags fails
@@ -45,13 +46,13 @@ int cmd_SetPriority(char* params, int* priority){
   // Getting the proccess name
   process_name = get_pvalue('p');
   // Getting the proces priority
-  process_priority = get_pvalue('r');
+  process_priority = atoi(get_pvalue('r'));
   // Attempting to remove the proces, remove_pcb() handles sys_free_mem for us
-  process = remove_pcb(process_name);
+  p = remove_pcb(process_name);
 
   // If process equals NULL, it did not return anything therefor that process
   // does not exist
-  if(process == NULL)
+  if(p == NULL)
   {
     printf("\033[31Process: '%s' not found!\033[0m",process_name);
     return FAILURE;
@@ -60,7 +61,7 @@ int cmd_SetPriority(char* params, int* priority){
   // If we made it here, the process return and we can change the priority
   p->priority = process_priority;
   // Inserting the pcb back, insert handles insertion per priority
-  insert_pcb(process);
+  insert_pcb(p);
 
   printf("Process %s priority succesfully changed to %d", process_name, process_priority);
 

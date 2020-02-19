@@ -47,13 +47,17 @@ COMMAND commands[] = {
   {"time", &cmd_time},
   {"clear", &cmd_clear},
   {"quet", &cmd_test_pcb},
-  {"blockpcb", &cmd_blockPCB},
-  {"resumepcb", &cmd_resume},
-  {"suspendpcb", &cmd_suspend},
+  {"blockPCB", &cmd_blockPCB},
+  {"resumePCB", &cmd_resume},
+  {"suspendPCB", &cmd_suspend},
   {"showPCB", &cmd_show_pcb},
   {"showAllPCBs", &cmd_show_all_pcbs},
   {"showReadyPCBs", &cmd_show_ready_pcbs},
   {"showBlockedPCBs", &cmd_show_blocked_pcbs},
+  {"unblockPCB", &cmd_unblock_pcb},
+  {"createPCB", &cmd_create_pcb},
+  {"deletePCB", &cmd_delete_pcb},
+  {"setPriorityPCB", &cmd_set_priority_pcb},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

@@ -9,7 +9,7 @@
 *
 * @returns Success if the PCB was removed, failure for anything else
 */
-int cmd_DeletePCB(char* params){
+int cmd_delete_pcb(char* params){
   // Variables
   int flag = 0, chk;
   char* process_name;
@@ -36,11 +36,11 @@ int cmd_DeletePCB(char* params){
   // Getting the proccess name from the pvalue
   process_name = get_pvalue('p');
   // Attempting to remove the proces, remove_pcb() handles sys_free_mem for us
-  process = remove_pcb(process_name);
+  p = remove_pcb(process_name);
 
   // If process equals NULL, it did not return anything therefor that process
   // does not exist
-  if(process == NULL)
+  if(p == NULL)
   {
     printf("\033[31Process: '%s' not found!\033[0m",process_name);
     return FAILURE;

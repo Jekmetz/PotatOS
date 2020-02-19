@@ -83,3 +83,12 @@ int cmd_show_ready_pcbs(char* params);
 * @brief Show blocked PCBs command
 */
 int cmd_show_blocked_pcbs(char* params);
+
+/**
+* @brief command to delete PCB by name
+*
+* @returns Success if the PCB was removed, failure for anything else
+*/
+int cmd_delete_pcb(char* params);
+
+int cmd_set_priority_pcb(char* params);

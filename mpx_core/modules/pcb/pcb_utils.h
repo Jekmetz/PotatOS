@@ -16,7 +16,7 @@ pcb_t* allocate_pcb();
 */
 // Setups a pcb and enques the pcb
 // pointer to pcb, name of the process, ...
-pcb_t *setup_pcb(char*, PROCESS_CLASS, int priority);
+pcb_t* setup_pcb(char*, PROCESS_CLASS, int priority);
 
 // TODO
 /**

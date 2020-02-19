@@ -31,6 +31,7 @@ int cmd_show_ready_pcbs(char* params) {
       print_pcb_info(curr->data);
       puts("");
       curr = curr->next;
+      total_printed++;
     }
   }
 

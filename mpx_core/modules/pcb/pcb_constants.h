@@ -33,7 +33,7 @@ typedef struct pcb
     unsigned int priority;
     unsigned int state;
     unsigned int suspended;
-    char stack[1024];
+    char stack[2048];
 } pcb_t;
 
 /**

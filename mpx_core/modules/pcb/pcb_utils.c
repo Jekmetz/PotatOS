@@ -5,6 +5,8 @@
 #include <string.h>
 #include <core/stdio.h>
 
+#define NUMQUEUES 4
+
 queue_t *ready_queue, *blocked_queue, *suspended_r_queue, *suspended_b_queue;
 pcb_t *running;
 
@@ -68,14 +70,14 @@ int insert_pcb(pcb_t *proc)
 *
 * @returns Success if the PCB was created, failure for anything else
 */
-pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int* priority){
+pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int priority){
   // Allocating new PCB
   pcb_t* pcb = allocate_pcb();
 
   // If allocate fails, returns null
   if(pcb == NULL){
-    printf("\033[31Process: '%s' failed to setup!\033[0m",process_name);
-    return FAILURE;
+    printf("\033[31Process: '%s' failed to setup!\033[0m",pname);
+    return NULL;
   }
 
   // Setting values in pcb
@@ -84,10 +86,7 @@ pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int* priority){
   pcb->priority = priority;
   pcb->state = READY;
 
-  // Inserting new pcb
-  insert_pcb(pcb);
-
-  return SUCCESS;
+  return pcb;
 }
 
 /**
@@ -100,9 +99,9 @@ pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int* priority){
  * @return A pointer to the pcb with the specified name or 'NULL' for not found.
  */
 pcb_t* find_pcb(char* name) {
-  queue_t* currs[4] = {ready_queue, blocked_queue, suspended_r_queue,
+  queue_t* currs[NUMQUEUES] = {ready_queue, blocked_queue, suspended_r_queue,
                        suspended_b_queue};
-  for (int i = 0; i < (int)(sizeof(currs) / sizeof(queue_t)); i++) {
+  for (int i = 0; i < NUMQUEUES; i++) {
     struct node* curr = currs[i]->head;
     while (curr != NULL) {
       // checking if the process is the correct one
@@ -124,10 +123,21 @@ pcb_t* find_pcb(char* name) {
  * @return Success condition (boolean).
  */
 pcb_t *remove_pcb(char* name) {
-  queue_t* currs[4] = {ready_queue, blocked_queue, suspended_r_queue,
+  queue_t* currs[NUMQUEUES] = {ready_queue, blocked_queue, suspended_r_queue,
                        suspended_b_queue};
-  for (int i = 0; i < (int)(sizeof(currs) / sizeof(queue_t)); i++) {
+  for (int i = 0; i < NUMQUEUES; i++) {
+    //Handle edge case of the first boi
+    if(strcmp(currs[i]->head->data->process_name,name) == 0)
+    {
+      pcb_t *ret = currs[i]->head->data;
+      currs[i]->head = currs[i]->head->next;
+      currs[i]->head->prev = NULL;
+      return ret;
+    }
+
     struct node* curr = currs[i]->head;
+
+    //Do the rest
     while (curr != NULL) {
       // checking if the process is the correct one
       if (strcmp(curr->data->process_name, name) == 0) {
