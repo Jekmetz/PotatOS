@@ -6,7 +6,7 @@
 #include <core/stdio.h>
 #include <string.h>
 
-/**
+/*
  *  FIXME: Remove this file in the future because it is just a test
  *
  *

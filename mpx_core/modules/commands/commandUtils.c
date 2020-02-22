@@ -9,26 +9,10 @@
 #include "time.h"
 #include "../mpx_supt.h"
 
-/**
-* @brief A string to hold the command input up to the max command size
-*/
 char gparamstr[CMDSIZE];
-/**
-* @brief Will hold all the string pointers
-*/
+
 char* gparams[27];  // will hold all of the parameters
 
-/**
-* @file commands.c
-*
-* @brief Used as a helper function for set_flags
-*
-* @param alias alias to search for in aliases
-* @param num_aliases number of aliases in aliases
-* @param aliases array of ALIASes to search through
-*
-* @return charachter of flag that it found
-*/
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[])
 {
   unsigned char found = 0;
@@ -49,45 +33,12 @@ char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[])
   return ret;
 }
 
-/**
-* @file commands.c
-*
-* @brief Gets value of specific flag
-*
-* Usage: get_pvalue('a');
-*
-* @param c character of flag to get the value from
-*
-* @return value after the flag specified
-*/
 char* get_pvalue(char c)
 {
   if(c == '\0') return gparams[26];
   else return gparams[alphanum(c)];
 }
 
-/**
-* @file commands.c
-*
-* @brief sets flags based on param string, flags and num aliases
-*
-* Usage:
-*    set_flags(paramstr,&flag,5,
-*    'a',"alpha",
-*    'b',"bravo",
-*    'f',"foxtrot",
-*    'g',"golf",
-*    'r',"whiskey"
-*    )
-*
-* @param paramstr string that each command gets. Typed by the user
-* @param flag pointer to integer flag
-* @param num_aliases number of aliases specified
-*
-* @return success or failure
-*
-* @note num_aliases must be the exact number of parameters. In the example, 5
-*/
 int set_flags(char* paramstr, int* flag, int num_aliases, ...)
 {
   //Init Vars

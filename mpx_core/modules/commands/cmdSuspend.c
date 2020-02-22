@@ -1,19 +1,9 @@
-/**
-* @file cmdSuspend.c
-*
-* @brief Suspend PCB Command
-*/
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
 #include "../pcb/pcb_constants.h"
 #include <core/stdio.h>
 #include <system.h>
 
-/**
-* @brief Suspend PCB command
-*
-* @return SUCCESS or FAILURE
-*/
 int cmd_suspend(char* params)
 {
   //INIT VARS

@@ -1,9 +1,3 @@
-/**
-* @file cmdTime.c
-*
-* @brief Time Command
-*/
-
 #include <string.h>
 #include <core/stdio.h>
 #include <core/utility.h>
@@ -15,21 +9,6 @@
 #include "../mpx_supt.h"
 #include "commandUtils.h"
 
-/**
-* @brief The time command will do one of two things.
-*   Show the current system time
-*   Set a new system time
-*
-* The time command can be used to query the systems RTC to display the current
-* time. It can also be used to set the systems RTC to a desired time. There is
-* code to check for illegal times.
-*
-* @param params param string typed by user
-*
-* @return The current system time
-*
-* @note The time is kept in 24 hour time
-*/
 int cmd_time(char* params) {
   // Init vars
   int flag = 0, chk;

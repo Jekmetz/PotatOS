@@ -4,11 +4,6 @@
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
 
-/**
-* @brief command to delete PCB by name
-*
-* @returns Success if the PCB was removed, failure for anything else
-*/
 int cmd_delete_pcb(char* params){
   // Variables
   int flag = 0, chk;

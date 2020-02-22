@@ -1,9 +1,3 @@
-/**
- * @file cmdShowPCB.c
- *
- * @brief Show PCB command
- */
-
 #include <core/stdio.h>
 #include <string.h>
 #include <system.h>

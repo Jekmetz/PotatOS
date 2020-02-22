@@ -1,9 +1,3 @@
-/**
-* @file cmdHelp.c
-*
-* @brief Help command
-*/
-
 #include <string.h>
 #include <core/stdio.h>
 #include <core/utility.h>
@@ -292,18 +286,6 @@ HELP_PAGES help_pages[] = {
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
-/**
-* @brief The help command will show a page to assist users with commands
-*
-* The help command can be called to do one of two things
-*   List all the commands that have help pages
-*   Request a help page for a certain command
-*
-*
-* @param params param string typed by user
-*
-* @return A help page
-*/
 int cmd_help(char* params) {
   // Init vars
   int flag = 0, chk, check,i;

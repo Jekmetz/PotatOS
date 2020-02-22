@@ -5,11 +5,6 @@
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h" 
 
-/**
-* @brief command to set PCB priority
-*
-* @returns Success if the PCB priority was updated, failure for anything else
-*/
 int cmd_set_priority_pcb(char* params){
   // Variables
   int flag = 0, chk;

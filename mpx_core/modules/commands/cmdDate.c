@@ -1,9 +1,3 @@
-/**
-* @file cmdDate.c
-*
-* @brief Date Command
-*/
-
 #include <string.h>
 #include <core/stdio.h>
 #include <core/utility.h>
@@ -15,21 +9,6 @@
 #include "../mpx_supt.h"
 #include "commandUtils.h"
 
-/**
-* @brief The date command will do one of two things.
-*   Show the current system date
-*   Set a new system date
-*
-* The date command can be used to query the systems RTC to display the current
-* date. It can also be used to set the systems RTC to a desired date. There is
-* code to check for illegal dates such as Feb 30 on a non leap year.
-*
-* @param params param string typed by user
-*
-* @return The current system date
-*
-* @warning The RTC only allows dates between 1700-2999
-*/
 int cmd_date(char* params) {
   // Init vars
   int flag = 0, chk;

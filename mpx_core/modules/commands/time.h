@@ -54,14 +54,54 @@ struct time
 };
 typedef struct time time_h;
 
-// see cpp
+/**
+* @brief Generates a string with a standard format of time.
+*
+* Generates a string that contains all the data contained in a time_h. This
+* form shows all data from largest timescale to smallest timescale.
+*
+* @param dest Pointer to a string that is large enough to contain the output string
+* @param time Pointer to the time to write into the destination string.
+*
+* @return Return is through the 'dest' pointer.
+*
+* @note This is merely a convienience, as it is only an sprintf call.
+*/
 void format_time(char *dest, time_h *t);
 
-// see cpp
+/**
+* @brief Retrieves the current time in the Real Time Clock(RTC).
+*
+* Aquires data from the RTC, packaging the data into a time_h struct for ease of use.
+*
+* @return Returns the current time represented as 6 values in a time_h struct.
+*/
 time_h get_current_time();
 
-// see cpp
+/**
+* @brief Sets the current time in the RTC.
+*
+* Uses a time_h struct to set the data members of the RTC. This function also does error
+* checking on valid times, including leap-years, valid days of months, etc., to ensure the given
+* time is valid.
+*
+* @param time A time_h struct containing the new time, as defined by the user.
+*
+* @return If the operation was successful in boolean format (1 = true, 0 = false).
+*
+* @note This function also ensures that the date will be set in the correct order within the RTC.
+* @note Setting a value in the input struct to a '-1' will skip the value in setting the time. Essentially,
+*   keeping the value as it was before. This is demonstrated in the commands.c file.
+*/
 int set_current_time(time_h time);
 
-// see cpp
+/**
+* @brief Converts BCD values into decimal.
+*
+* This function converts BCD values, to be a more code friendly decimal value.
+*
+* @param bcd Value that is in BCD that needs to be a normal decimal value.
+*
+* @return The value of the BCD as an integer.
+*/
 int bcd_to_decimal(int bcd);

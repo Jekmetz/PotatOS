@@ -1,9 +1,3 @@
-/**
- * @file cmdShowReadyPCBs.c
- *
- * @brief Show ready PCBs command
- */
-
 #include <core/stdio.h>
 #include <system.h>
 

@@ -1,9 +1,3 @@
-/**
- * @file cmdShowBlockedPCBs.c
- *
- * @brief Show blocked PCBs command
- */
-
 #include <core/stdio.h>
 #include <system.h>
 

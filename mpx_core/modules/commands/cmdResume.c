@@ -1,19 +1,9 @@
-/**
-* @file cmdResume.c
-*
-* @brief Resume PCB Command
-*/
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
 #include "../pcb/pcb_constants.h"
 #include <core/stdio.h>
 #include <system.h>
 
-/**
-* @brief Resume PCB command
-*
-* @return SUCCESS or FAILURE
-*/
 int cmd_resume(char* params)
 {
   //INIT VARS
