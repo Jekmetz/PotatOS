@@ -1,19 +1,9 @@
-/**
-* @file cmdBlockPCB.c
-*
-* @brief Block PCB Command
-*/
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
 #include "../pcb/pcb_constants.h"
 #include <core/stdio.h>
 #include <system.h>
 
-/**
-* @brief command to block PCB by name
-*
-* @returns Success or Failure
-*/
 int cmd_blockPCB(char* params)
 {
   int flag = 0, chk;

@@ -3,7 +3,7 @@
 #include <string.h>
 #include "../pcb/pcb_constants.h"
 #include "../pcb/pcb_utils.h"
-#include "commandUtils.h"
+#include "commandUtils.h" 
 
 /**
 * @brief command to set PCB priority
@@ -18,10 +18,16 @@ int cmd_set_priority_pcb(char* params){
   pcb_t* p = NULL;
 
   // Calling set flags
-  chk = set_flags(params, &flag, 2,
-    'p',"pname",
-    'r',"priority"
+  chk = set_flags(params, &flag, 1,
+    'p',"priority"
     );
+
+  // If they did not use no flag to declare process
+  if(!(flag&NO_FLAG))
+  {
+    puts("\033[31mNo process Included!\033[0m");
+    return FAILURE;
+  }
 
   // If set flags fails
   if (chk != SUCCESS) {
@@ -32,21 +38,24 @@ int cmd_set_priority_pcb(char* params){
   // If p flag not used
   if(!(flag & P_FLAG))
   {
+    // TODO: 
     puts("\033[31mNo process name specified! Please use '[-p|--pname] <process name>' to specify a process name!\033[0m");
     return FAILURE;
   }
 
-  // If r flag not used
-  if(!(flag & R_FLAG))
+  // If P flag not used
+  if(!(flag & P_FLAG))
   {
-    puts("\033[31mNo process priority specified! Please use '[-r|--priority] <priority>' to specify a process priority!\033[0m");
+    puts("\033[31mNo process priority specified! Please use '[-p|--priority] <priority>' to specify a process priority!\033[0m");
     return FAILURE;
   }
 
   // Getting the proccess name
-  process_name = get_pvalue('p');
+  process_name = get_pvalue('\0');
+
   // Getting the proces priority
-  process_priority = atoi(get_pvalue('r'));
+  process_priority = atoi(get_pvalue('p'));
+
   // Attempting to remove the proces, remove_pcb() handles sys_free_mem for us
   p = remove_pcb(process_name);
 
@@ -60,6 +69,7 @@ int cmd_set_priority_pcb(char* params){
 
   // If we made it here, the process return and we can change the priority
   p->priority = process_priority;
+  
   // Inserting the pcb back, insert handles insertion per priority
   insert_pcb(p);
 

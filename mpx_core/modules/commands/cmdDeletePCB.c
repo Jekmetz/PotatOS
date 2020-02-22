@@ -16,9 +16,7 @@ int cmd_delete_pcb(char* params){
   pcb_t* p = NULL;
 
   // Calling set flags
-  chk = set_flags(params, &flag, 1,
-    'p',"pname"
-    );
+  chk = set_flags(params, &flag, 0);
 
   // If set flags fails
   if (chk != SUCCESS) {
@@ -34,7 +32,7 @@ int cmd_delete_pcb(char* params){
   }
 
   // Getting the proccess name from the pvalue
-  process_name = get_pvalue('p');
+  process_name = get_pvalue('\0');
   // Attempting to remove the proces, remove_pcb() handles sys_free_mem for us
   p = remove_pcb(process_name);
 
@@ -46,6 +44,7 @@ int cmd_delete_pcb(char* params){
     return FAILURE;
   }
 
+  printf("PCB %s succesfully removed\n",process_name);
   // If we made it here, the process return and we can return success
   return SUCCESS;
 }
