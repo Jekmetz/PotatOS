@@ -177,7 +177,7 @@ void print_pcb_info(const pcb_t* pcb) {
   // TODO: possible make a boolean to string function
   char* suspended;
 
-  if (pcb->suspended) {
+  if (pcb->state == SUSPENDED_BLOCKED || pcb->state == SUSPENDED_READY) {
     suspended = "true";
   } else {
     suspended = "false";
@@ -214,12 +214,14 @@ const char* get_process_class_string(PROCESS_CLASS process_class) {
 const char* get_process_state_string(PROCESS_STATE process_state) {
   switch (process_state) {
     case READY:
+    case SUSPENDED_READY:
       return "ready";
 
     case RUNNING:
       return "running";
 
     case BLOCKED:
+    case SUSPENDED_BLOCKED:
       return "blocked";
 
     default:

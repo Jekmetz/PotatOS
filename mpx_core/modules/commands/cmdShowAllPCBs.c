@@ -29,7 +29,6 @@ int cmd_show_all_pcbs(char* params) {
       curr = curr->next;
       total_printed++;
     }
-    puts("NQ");
   }
 
   printf("Total printed: %i\n", total_printed);
