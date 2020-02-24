@@ -115,7 +115,7 @@ int command_handler() {
 
     // if they have typed in exit    (in the future maybe make a more elegant
     // space-killing solution)
-    if ((strcmp(cmd, "exit") == 0) | (strcmp(cmd, "shutdown") == 0))
+    if ((strcmp(trim(cmd), "exit") == 0) | (strcmp(trim(cmd), "shutdown") == 0))
     {
       char shutdownCmd[10];
       int shutdownBufSize = 10;
