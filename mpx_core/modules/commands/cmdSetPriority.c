@@ -58,7 +58,7 @@ int cmd_set_priority_pcb(char* params){
   // does not exist
   if(p == NULL)
   {
-    printf("\033[31Process: '%s' not found!\033[0m",process_name);
+    printf("\033[31Process: '%s' not found!\033[0m\n",process_name);
     return FAILURE;
   }
 
@@ -68,7 +68,7 @@ int cmd_set_priority_pcb(char* params){
   // Inserting the pcb back, insert handles insertion per priority
   insert_pcb(p);
 
-  printf("Process %s priority succesfully changed to %d", process_name, process_priority);
+  printf("Process %s priority successfully changed to %d\n", process_name, process_priority);
 
   return SUCCESS;
 }

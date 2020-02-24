@@ -321,7 +321,7 @@ int cmd_help(char* params) {
   }
   // If check was not found
   if (check == 0){
-    printf("\033[31mCommand \"%s\" not found.\033[0m",cmd);
+    printf("\033[31mCommand \"%s\" not found.\033[0m\n",cmd);
  }
 
   return SUCCESS;  // successful response

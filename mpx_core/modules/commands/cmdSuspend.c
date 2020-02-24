@@ -15,13 +15,13 @@ int cmd_suspend(char* params)
 
   if(chk != SUCCESS)
   {
-    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m\n");
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE; 
   }
 
   if(!(flag&NO_FLAG))
   {
-    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m\n");
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
   }
 
@@ -51,7 +51,7 @@ int cmd_suspend(char* params)
   }
 
   insert_pcb(p);
-  puts("\033[32mProcess successfully suspended!\033[0m\n");
+  puts("\033[32mProcess successfully suspended!\033[0m");
 
   return SUCCESS;
 }

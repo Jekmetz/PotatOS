@@ -14,7 +14,7 @@
 */
 #define VERSION \
 "\
-Version 1.0\
+Version 1.0\n\
 "
 
 /**
@@ -28,7 +28,7 @@ Developers:\n\
   Hasan Ibraheem\n\
   Henry Vos\n\
   Jay Kmetz\n\
-  Nicholas Fryer\
+  Nicholas Fryer\n\
 "
 
 int cmd_version(char* params) {

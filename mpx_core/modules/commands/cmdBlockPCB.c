@@ -49,7 +49,7 @@ int cmd_blockPCB(char* params)
   }
 
   insert_pcb(p);
-  puts("\033[32mProcess successfully blocked!\033[0m\n");
+  puts("\033[32mProcess successfully blocked!\033[0m");
 
   return SUCCESS;
 }
