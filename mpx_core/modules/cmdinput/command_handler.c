@@ -47,7 +47,6 @@ COMMAND commands[] = {
   {"date",&cmd_date},
   {"time", &cmd_time},
   {"clear", &cmd_clear},
-  {"quet", &cmd_test_pcb},
   {"blockPCB", &cmd_blockPCB},
   {"resumePCB", &cmd_resume},
   {"suspendPCB", &cmd_suspend},
