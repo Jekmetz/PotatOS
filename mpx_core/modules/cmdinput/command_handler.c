@@ -76,6 +76,8 @@ int command_handler() {
 
   sys_set_read(&poll_input);
 
+  puts("\n\"When a process \033[1;31mends\033[0m, it says 'I'm done... \033[3;31mKill me.\033[0m'\" - Alexander Wilson, 2020\n");
+
   draw_splash();
 
   puts("\nType \033[33;1m\"help\"\033[0m for a list of commands\n");
