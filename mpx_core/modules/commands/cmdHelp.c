@@ -208,7 +208,7 @@ Usage:\n\
 Description:\n\
   Creates a PCB and adds it to queue\n\n\
 Usage:\n\
-  createPCB [-n | --name] <process_name> {[-p | --priority] <integer_priority=BIG_PI>} {[-c | --class][app | sys]}\n\n\
+  createPCB <process_name> {[-p | --priority] <integer_priority=BIG_PI>} {[-c | --class][app | sys]}\n\n\
 Examples:\n\
   createPCB -n abc\n\
   createPCB --name def -p 4\n\
