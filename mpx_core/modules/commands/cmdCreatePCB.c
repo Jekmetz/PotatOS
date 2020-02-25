@@ -20,6 +20,7 @@ int cmd_create_pcb(char* params) {
     return FAILURE;
   }
 
+  // looking for name of new PCB
   char* tmp = get_pvalue('\0');
   char* name = (char*)sys_alloc_mem(sizeof(char) * (strlen(tmp) + 1));
   name = strcpy(name, tmp);
@@ -29,12 +30,15 @@ int cmd_create_pcb(char* params) {
     return FAILURE;
   }
 
+  // checking for priority
   char* prior_c = get_pvalue('p');
-  int pri = 314156792;
+  // default priority
+  int pri = 314159265;
   if (flag & P_FLAG) {
+    // if there is a priority check to make sure it is valid
     if (prior_c != NULL) {
       pri = atoi(prior_c);
-      if (pri > 314156792) {
+      if (pri > 314159265) {
         printf("\033[31mThe priority \"%d\" is too large.\033[0m\n", pri);
         return FAILURE;
       } else if (pri < 0) {
@@ -50,8 +54,10 @@ int cmd_create_pcb(char* params) {
     }
   }
 
+  // default process class
   PROCESS_CLASS clazz = APPLICATION;
   if (flag & C_FLAG) {
+    // checking validity of process class
     char* clas = get_pvalue('c');
     if (strcmp(clas, "app") == 0) {
       clazz = APPLICATION;

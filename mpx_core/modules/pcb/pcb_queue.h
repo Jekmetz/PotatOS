@@ -2,7 +2,15 @@
 
 #include "pcb_constants.h"
 
-
+/**
+ * @brief Appends an element to the end of the queue
+ * 
+ * This function searches for the end of the queue and, adds the specified pcb to
+ * the end of the list.
+ * 
+ * @param que A pointer to a queue that the PCB will be inserted into.
+ * @param data A pointer to the PCB to insert into the queue.
+ */
 void enqueue(queue_t *que, pcb_t *data);
 
 /**
