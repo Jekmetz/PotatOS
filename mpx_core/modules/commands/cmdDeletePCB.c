@@ -20,7 +20,7 @@ int cmd_delete_pcb(char* params){
   }
 
   // If p flag not used
-  if(!(flag & P_FLAG))
+  if(!(flag & NO_FLAG))
   {
     puts("\033[31mNo process name specified! Please use '[-p|--pname] <process name>' to specify a process name!\033[0m");
     return FAILURE;
