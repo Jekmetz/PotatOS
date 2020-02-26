@@ -1,3 +1,8 @@
+/**
+* @file commandUtils.h
+*
+* @brief Utilites that apply to all command files
+*/
 #pragma once 
 
 /**
@@ -98,11 +103,6 @@ extern char* gparams[27];  // will hold all of the parameters
 */
 #define alphanum(c) (('a' <= c && c <= 'z') ? c - 'a' : c - 'A')
 
-typedef struct {
-  char c;
-  char* val;
-} ALIAS;
-
 /**
 * @brief A struct to hold command aliases
 *
@@ -111,6 +111,10 @@ typedef struct {
 * @param c A string that will hold the initial command name
 * @param val A string pointer that will point to the original command name
 */
+typedef struct {
+  char c;
+  char* val;
+} ALIAS;
 
 /**
 * @brief Sets flags based on param string, flags and num aliases

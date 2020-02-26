@@ -1,9 +1,14 @@
+/**
+* @file pcb_constants.h
+*
+* @brief Contains all shared resources amongst all PCBs
+*/
+
 #pragma once
 
  /**
- *  Contains all possible process classes
+ *  @brief Contains all possible process classes
  * 
- *  TODO: there may be more
  */
 typedef enum
 {
@@ -12,7 +17,7 @@ typedef enum
 } PROCESS_CLASS;
 
 /**
- *  Contains all possible process states
+ *  @brief Contains all possible process states
  */
 typedef enum
 {
@@ -24,7 +29,7 @@ typedef enum
 } PROCESS_STATE;
 
 /**
- *  Struct that contains all information related to a pcb
+ *  @brief Struct that contains all information related to a pcb
  */
 typedef struct pcb
 {
@@ -36,7 +41,7 @@ typedef struct pcb
 } pcb_t;
 
 /**
- *  One element within the pcb queue
+ *  @brief One element within the pcb queue
  * 
  *  This allows us to abbreviate code elsewhere... probably
  */
@@ -49,7 +54,7 @@ typedef struct node
 } node_t;
 
 /**
- *  Contains all the data needed to use/modify a queue
+ *  @brief Contains all the data needed to use/modify a queue
  */
 typedef struct queue
 {

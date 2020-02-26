@@ -811,7 +811,15 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                =
+EXCLUDE                = ./mpx_core/include/core/asm.h \
+						./mpx_core/include/mem/heap.h \
+						./mpx_core/modules/mpx_supt.h \
+						./mpx_core/include/core/interrupts.h \
+						./mpx_core/include/core/io.h \
+						./mpx_core/include/mem/paging.h \
+						./mpx_core/include/core/serial.h \
+						./mpx_core/include/system.h \
+						./mpx_core/include/core/tables.h 
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

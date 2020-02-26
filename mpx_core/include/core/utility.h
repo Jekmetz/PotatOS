@@ -1,5 +1,5 @@
 /**
-* @file utility.c
+* @file utility.h
 *
 * @brief Holds utility function prototypes for this project
 */

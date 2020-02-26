@@ -1,3 +1,8 @@
+/**
+* @file pcb_queue.h
+*
+* @brief File to hold all queue functions
+*/
 #pragma once
 
 #include "pcb_constants.h"

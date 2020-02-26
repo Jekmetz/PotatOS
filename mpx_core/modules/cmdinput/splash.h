@@ -1,3 +1,8 @@
+/**
+* @file splash.h
+*
+* @brief File to hold the splash screen
+*/
 #include <core/stdio.h>
 
 void draw_splash()

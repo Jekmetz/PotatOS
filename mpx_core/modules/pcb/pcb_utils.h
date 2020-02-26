@@ -1,3 +1,9 @@
+/**
+* @file pcb_utils.h
+*
+* @brief Utility functions for all PCBs
+*/
+
 #pragma once
 
 #include "pcb_queue.h"
