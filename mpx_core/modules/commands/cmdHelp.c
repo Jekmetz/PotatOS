@@ -210,9 +210,9 @@ Description:\n\
 Usage:\n\
   createPCB <process_name> {[-p | --priority] <integer_priority=BIG_PI>} {[-c | --class][app | sys]}\n\n\
 Examples:\n\
-  createPCB -n abc\n\
-  createPCB --name def -p 4\n\
-  createPCB -n ghi --class sys\n\
+  createPCB abc\n\
+  createPCB def -p 4\n\
+  createPCB ghi --class sys\n\
 "
 
 #define UNBLOCKPCB \
