@@ -30,14 +30,6 @@ int cmd_set_priority_pcb(char* params){
     return FAILURE;
   }
 
-  // If p flag not used
-  if(!(flag & P_FLAG))
-  {
-    // TODO: 
-    puts("\033[31mNo process name specified! Please use '[-p|--pname] <process name>' to specify a process name!\033[0m");
-    return FAILURE;
-  }
-
   // If P flag not used
   if(!(flag & P_FLAG))
   {
