@@ -10,10 +10,17 @@
 #include <core/serial.h>
 #include <mem/heap.h>
 #include <string.h>
+#include <core/stdio.h>
+#include "./pcb/pcb_utils.h"
+#include "./pcb/pcb_queue.h"
+#include "./pcb/pcb_constants.h"
 
 // global variable containing parameter used when making
 // system calls via sys_req
 param params;
+
+// global variable containing context of the currently running process
+context_t* gcontext;
 
 // global for the current module
 int current_module = -1;
@@ -23,6 +30,9 @@ static int mem_module_active = 0;
 // If a student created heap manager is implemented this
 // is a pointer to the student's "malloc" operation.
 u32int (*student_malloc)(u32int);
+
+//Function to save the context from the source to the dest
+void save_context(context_t* dest, context_t* source);
 
 // if a student created heap manager is implemented this
 // is a pointer to the student's "free" operation.
@@ -90,6 +100,41 @@ int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr)
 
   return return_code;
 }  // end of sys_req
+
+u32int* sys_call(context_t* registers)
+{
+  printf("Here in sys_call! p: %x\n", registers);
+  pcb_t* cop = get_running_process();
+  queue_t* ready_queue = get_ready_queue();
+
+  if(cop == NULL) //if sys_call has not been called...
+  {
+    //save global context
+    gcontext = registers;
+  } else //if sys_call has been called
+  {
+    if(params.op_code == IDLE)
+    {
+      cop->stacktop = (int*)registers;
+      cop->state = READY;
+      insert_pcb(cop);
+    } else if (params.op_code == EXIT)
+    {
+      //kill it with fire
+      free_pcb(remove_pcb(cop->process_name));
+      cop = NULL;
+    }
+  }
+
+  if(ready_queue->size > 0) //if we have a ready process...
+  {
+    cop = dequeue(ready_queue);
+    cop->state = RUNNING;
+    return (u32int*)cop->stacktop;
+  }
+
+  return (u32int*)gcontext;
+}
 
 /*
   Procedure..: mpx_init

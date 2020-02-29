@@ -95,6 +95,13 @@ queue_t* get_suspended_ready_queue();
 queue_t* get_suspended_blocked_queue();
 
 /**
+* @brief Getter function for the running process
+*
+* @return A pointer to the running process
+*/
+pcb_t* get_running_process();
+
+/**
 * @brief Prints the passed pcb's info in a stylized manner
 *
 * Example output

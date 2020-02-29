@@ -39,6 +39,7 @@ int cmd_delete_pcb(char* params){
     return FAILURE;
   }
 
+  free_pcb(p);
   printf("PCB %s succesfully removed\n",process_name);
   // If we made it here, the process return and we can return success
   return SUCCESS;

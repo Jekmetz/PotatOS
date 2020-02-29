@@ -233,6 +233,16 @@ Example:\n\
   potat\n\
 "
 
+#define LOADR3 \
+"\
+Description:\n\
+  Load R3\n\n\
+Usage:\n\
+  loadr3\n\n\
+Example:\n\
+  loadr3\n\
+"
+
 /**
 * @brief A struct to hold help outputs
 *
@@ -269,6 +279,7 @@ HELP_PAGES help_pages[] = {
   {"setPriorityPCB", SETPRIORITYPCB},
   {"deletePCB", DELETEPCB},
   {"potat", POTAT},
+  {"loadr3", LOADR3},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

@@ -33,7 +33,11 @@ commands/cmdShowPCB.o\
 commands/cmdShowReadyPCBs.o\
 commands/cmdSuspend.o\
 commands/cmdUnblockPCB.o\
+<<<<<<< 35ef94729bff7a1ae0a72caa0413e7067e2c6f6d
 commands/cmdPotat.o\
+=======
+commands/cmdLoadr3.o\
+>>>>>>> get basic m3 architecture done! also realize what depression is
 pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\

@@ -35,12 +35,25 @@ typedef struct {
   int* count_ptr;
 } param;
 
+typedef struct {
+  u32int gs, fs, es, ds;
+  u32int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+  u32int eip, cs, eflags;
+} context_t;
+
 /*
   Procedure..: sys_req
   Description..: Generate interrupt 60H
   Params..: int op_code one of (IDLE, EXIT, READ, WRITE)
 */
 int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr);
+
+/**
+* @brief performs a context switch to the next running process
+*
+* @returns pointer to the context of the decided pcb
+*/
+u32int* sys_call(context_t* registers);
 
 /*
   Procedure..: mpx_init

@@ -1,3 +1,4 @@
+#include "../mpx_supt.h"
 /**
 * @file pcb_constants.h
 *
@@ -38,6 +39,7 @@ typedef struct pcb
     unsigned int priority;
     unsigned int state;
     char stack[2048];
+    int *stacktop;
 } pcb_t;
 
 /**

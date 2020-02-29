@@ -170,3 +170,10 @@ int cmd_set_priority_pcb(char* params);
 * @brief command to draw the potat
 */
 int cmd_potat(char* params);
+
+/**
+* @brief command to load r3 procs
+*
+* @returns SUCCESS
+*/
+int cmd_loadr3(char* params);
