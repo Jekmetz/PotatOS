@@ -86,7 +86,7 @@ void init_irq(void) {
   }
   // Ignore interrupts from the real time clock
   idt_set_gate(0x08, (u32int)rtc_isr, 0x08, 0x8e);
-  idt_set_gate(60, (u32int)sys_call_isr, 0x80, 0x8e);
+  idt_set_gate(60, (u32int)sys_call_isr, 0x08, 0x8e);
 }
 
 /*
@@ -167,8 +167,4 @@ void do_reserved() {
 }
 void do_coprocessor() {
   kpanic("Coprocessor error");
-}
-
-void ptest() {
-  serial_println("switching context");
 }

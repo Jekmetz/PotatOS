@@ -21,6 +21,7 @@ param params;
 
 // global variable containing context of the currently running process
 context_t* gcontext;
+pcb_t* cop = NULL;
 
 // global for the current module
 int current_module = -1;
@@ -103,8 +104,6 @@ int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr)
 
 u32int* sys_call(context_t* registers)
 {
-  printf("Here in sys_call! p: %x\n", registers);
-  pcb_t** cop = get_running_process();
   queue_t* ready_queue = get_ready_queue();
 
   if(cop == NULL) //if sys_call has not been called...
@@ -115,22 +114,21 @@ u32int* sys_call(context_t* registers)
   {
     if(params.op_code == IDLE)
     {
-      (*cop)->stacktop = (unsigned char*)registers;
-      (*cop)->state = READY;
-      insert_pcb(*cop);
+      cop->stacktop = (unsigned char*)registers;
+      cop->state = READY;
+      insert_pcb(cop);
     } else if (params.op_code == EXIT)
     {
       //kill it with fire
-      free_pcb(remove_pcb((*cop)->process_name));
-      cop = NULL;
+      free_pcb(remove_pcb(cop->process_name));
     }
   }
 
   if(ready_queue->size > 0) //if we have a ready process...
   {
-    *cop = dequeue(ready_queue);
-    (*cop)->state = RUNNING;
-    return (u32int*)(*cop)->stacktop;
+    cop = dequeue(ready_queue);
+    cop->state = RUNNING;
+    return (u32int*)cop->stacktop;
   }
 
   return (u32int*)gcontext;

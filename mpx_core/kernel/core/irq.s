@@ -124,7 +124,6 @@ coprocessor:
 ;;; access the registers. The C handler returns the address of the
 ;;; new processes stack top/pointer.
 sys_call_isr:
-	call ptest
 	pusha	;push all general purpose registers to stack
 
 	;push special registers

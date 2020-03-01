@@ -8,7 +8,6 @@
 #define NUMQUEUES 4
 
 queue_t *ready_queue, *blocked_queue, *suspended_r_queue, *suspended_b_queue;
-pcb_t *running;
 
 void init_queue() {
   ready_queue = construct_queue();
@@ -44,9 +43,6 @@ int insert_pcb(pcb_t *proc)
   switch (proc->state)
   {
     case RUNNING:
-      priority_enqueue(ready_queue, running);
-      running = proc;
-      break;
     case READY:
       priority_enqueue(ready_queue, proc);
       break;
@@ -172,10 +168,6 @@ queue_t* get_suspended_ready_queue() {
 
 queue_t* get_suspended_blocked_queue() {
   return suspended_b_queue;
-}
-
-pcb_t** get_running_process() {
-  return running == NULL ? NULL : &running;
 }
 
 void print_pcb_info(const pcb_t* pcb) {
