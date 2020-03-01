@@ -14,6 +14,7 @@ OBJFILES =\
 mpx_supt.o\
 cmdinput/command_handler.o\
 cmdinput/poll_input.o\
+cmdinput/splash.o\
 commands/cmdHelp.o\
 commands/commandUtils.o\
 commands/time.o\
@@ -32,6 +33,7 @@ commands/cmdShowPCB.o\
 commands/cmdShowReadyPCBs.o\
 commands/cmdSuspend.o\
 commands/cmdUnblockPCB.o\
+commands/cmdPotat.o\
 pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\

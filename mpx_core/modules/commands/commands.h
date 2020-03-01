@@ -165,3 +165,8 @@ int cmd_delete_pcb(char* params);
 * @returns Success if the PCB priority was updated, failure for anything else
 */
 int cmd_set_priority_pcb(char* params);
+
+/**
+* @brief command to draw the potat
+*/
+int cmd_potat(char* params);

@@ -36,29 +36,31 @@ int search_commands(char*);
 typedef struct {
   char* str;
   int (*func)(char*);
+  char* alias;
 } COMMAND;
 
 /**
 * @brief Array of COMMANDS that are supported
 */
 COMMAND commands[] = {
-  {"help", &cmd_help},
-  {"version",&cmd_version},
-  {"date",&cmd_date},
-  {"time", &cmd_time},
-  {"clear", &cmd_clear},
-  {"blockPCB", &cmd_blockPCB},
-  {"resumePCB", &cmd_resume},
-  {"suspendPCB", &cmd_suspend},
-  {"showPCB", &cmd_show_pcb},
-  {"showAllPCBs", &cmd_show_all_pcbs},
-  {"showReadyPCBs", &cmd_show_ready_pcbs},
-  {"showBlockedPCBs", &cmd_show_blocked_pcbs},
-  {"unblockPCB", &cmd_unblock_pcb},
-  {"createPCB", &cmd_create_pcb},
-  {"deletePCB", &cmd_delete_pcb},
-  {"setPriorityPCB", &cmd_set_priority_pcb},
-  {NULL, NULL} // leave NULL at the end for searching reasons
+  {"help", &cmd_help, NULL},
+  {"version",&cmd_version, NULL},
+  {"date",&cmd_date, NULL},
+  {"time", &cmd_time, NULL},
+  {"clear", &cmd_clear, NULL},
+  {"blockPCB", &cmd_blockPCB, NULL},
+  {"resumePCB", &cmd_resume, NULL},
+  {"suspendPCB", &cmd_suspend, NULL},
+  {"showPCB", &cmd_show_pcb, NULL},
+  {"showAllPCBs", &cmd_show_all_pcbs, NULL},
+  {"showReadyPCBs", &cmd_show_ready_pcbs, NULL},
+  {"showBlockedPCBs", &cmd_show_blocked_pcbs, NULL},
+  {"unblockPCB", &cmd_unblock_pcb, NULL},
+  {"createPCB", &cmd_create_pcb, NULL},
+  {"deletePCB", &cmd_delete_pcb, NULL},
+  {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
+  {"potat", &cmd_potat, NULL},
+  {NULL, NULL, NULL} // leave NULL at the end for searching reasons
 };
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
@@ -162,6 +164,7 @@ int search_commands(char* cmd) {
   unsigned char found;
   char* cmdStart;
   char* testCmd;
+  char* aliasCmd;
   // remove spaces from beginning of cmd
   while (*cmd == ' ') {
     cmd++;
@@ -176,6 +179,8 @@ int search_commands(char* cmd) {
   while (commands[cmdidx].str != NULL && !found) {
     testCmd = commands[cmdidx].str;  //*testCmd is easier than writing *commands[cmdidx] :)
 
+    /*******TEST ACTUAL COMMAND**********/
+
     // while each character matches and they are not null or space   
     while ((*testCmd == *cmd && !isnullorspace(*cmd))) {  // increment both
       testCmd++;
@@ -188,8 +193,26 @@ int search_commands(char* cmd) {
       found = 1;
     } else  // if we did not find a match   
     {
-      cmdidx++;  // increment cmdidx!
+      /**********TEST ALIAS COMMAND*************/
+      cmd = cmdStart;
+      aliasCmd = commands[cmdidx].alias;
+      if(aliasCmd != NULL) //if an alias exists...
+      {
+        //while each character matches and they are not null or space
+        while ((*aliasCmd == *cmd && !isnullorspace(*cmd))) { //increment both
+          testCmd++;
+          cmd++;
+        }
+
+        if(isnullorspace(*aliasCmd) && isnullorspace(*cmd))
+        {
+          //this means that aliasCmd matched until a space and we have ourselves a match!
+          found = 1;
+        }
+      }
     }
+
+    if(found == 0) cmdidx++;
 
     cmd = cmdStart;  // reset cmd back to the beginning
   }

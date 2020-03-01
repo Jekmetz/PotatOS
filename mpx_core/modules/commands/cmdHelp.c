@@ -3,39 +3,17 @@
 #include <core/utility.h>
 #include <core/io.h>
 #include <stdarg.h>
+#include <system.h>
 
 #include "commands.h"
 #include "commandUtils.h"
 #include "time.h"
 #include "../mpx_supt.h"
 
+void print_help_menu();
+
 // Note on the macro help pages: You can literal tab to insert tabs, newlines must use \n,
 // all lines must end with \ due to macro requirments
-
-/**
-* @brief Macro to hold the list of commands that have help pages
-*/
-#define HELP_MENU \
-"\
-You can request a help page for the following commands \
-using help <cmd name>\n\
-blockPCB\n\
-createPCB\n\
-date\n\
-deletePCB\n\
-help\n\
-resumePCB\n\
-setPriorityPCB\n\
-showAllPCBs\n\
-showBlockedPCBs\n\
-showPCB\n\
-showReadyPCBs\n\
-shutdown\n\
-suspendPCB\n\
-time\n\
-unblockPCB\n\
-version\n\
-"
 
 /**
 * @brief Macro to hold the help page for command help
@@ -245,6 +223,16 @@ Example:\n\
   deletePCB testPCB\n\
 "
 
+#define POTAT \
+"\
+Description:\n\
+  Instantly brighten your day\n\n\
+Usage:\n\
+  potat\n\n\
+Example:\n\
+  potat\n\
+"
+
 /**
 * @brief A struct to hold help outputs
 *
@@ -280,6 +268,7 @@ HELP_PAGES help_pages[] = {
   {"unblockPCB", UNBLOCKPCB},
   {"setPriorityPCB", SETPRIORITYPCB},
   {"deletePCB", DELETEPCB},
+  {"potat", POTAT},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
@@ -300,7 +289,7 @@ int cmd_help(char* params) {
   //if there was nothing specified...
   if(!(flag & NO_FLAG))
   {
-    printf(HELP_MENU);
+    print_help_menu();
     return SUCCESS;
   }
   // If there is a requested command, get it from the NO_VALUE using \0
@@ -325,4 +314,15 @@ int cmd_help(char* params) {
  }
 
   return SUCCESS;  // successful response
+}
+
+void print_help_menu()
+{
+  int idx = 0;
+  puts("You can request a help page for the following commands using help <cmd name>\n");
+  while(help_pages[idx].command_name != NULL) //while we have more to go...
+  {
+    puts(help_pages[idx].command_name);
+    idx++;
+  }
 }
