@@ -1,7 +1,7 @@
-#include "../include/system.h"
-#include "../include/core/serial.h"
+#include <system.h>
+#include <core/serial.h>
 
-#include "../modules/mpx_supt.h"
+#include "../mpx_supt.h"
 #include "procsr3.h"
 
 #define RC_1 1
@@ -66,7 +66,7 @@ void proc3()
 	{
 		for(i = 0; i < RC_3; i++){
 			sys_req(WRITE, DEFAULT_DEVICE, msg3, &msgSize);
-			sys_req(IDl, DEFAULT_DEVICE, NULL, NULL);
+			sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
 		}
 		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
 		sys_req(WRITE, DEFAULT_DEVICE, er3, &erSize);
@@ -82,7 +82,7 @@ void proc4()
 	{
 		for(i = 0; i < RC_4; i++){
 			sys_req(WRITE, DEFAULT_DEVICE, msg4, &msgSize);
-			sys_req(IDl, DEFAULT_DEVICE, NULL, NULL);
+			sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
 		}
 		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
 		sys_req(WRITE, DEFAULT_DEVICE, er4, &erSize);
@@ -98,7 +98,7 @@ void proc5()
 	{
 		for(i = 0; i < RC_5; i++){
 			sys_req(WRITE, DEFAULT_DEVICE, msg5, &msgSize);
-			sys_req(IDl, DEFAULT_DEVICE, NULL, NULL);
+			sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
 		}
 		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
 		sys_req(WRITE, DEFAULT_DEVICE, er5, &erSize);

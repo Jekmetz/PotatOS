@@ -39,7 +39,7 @@ typedef struct pcb
     unsigned int priority;
     unsigned int state;
     char stack[2048];
-    int *stacktop;
+    unsigned char *stacktop;
 } pcb_t;
 
 /**

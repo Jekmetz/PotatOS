@@ -168,3 +168,7 @@ void do_reserved() {
 void do_coprocessor() {
   kpanic("Coprocessor error");
 }
+
+void ptest() {
+  serial_println("switching context");
+}

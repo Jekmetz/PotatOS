@@ -99,7 +99,7 @@ queue_t* get_suspended_blocked_queue();
 *
 * @return A pointer to the running process
 */
-pcb_t* get_running_process();
+pcb_t** get_running_process();
 
 /**
 * @brief Prints the passed pcb's info in a stylized manner

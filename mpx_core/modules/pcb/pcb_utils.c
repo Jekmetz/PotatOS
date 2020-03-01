@@ -85,7 +85,7 @@ pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int priority){
   pcb->process_class = pclass;
   pcb->priority = priority;
   pcb->state = READY;
-  pcb->stacktop = (int*)(pcb->stack + 2048 - sizeof(context_t));
+  pcb->stacktop = (unsigned char*)(pcb->stack + 2048 - sizeof(context_t));
 
   return pcb;
 }
@@ -174,8 +174,8 @@ queue_t* get_suspended_blocked_queue() {
   return suspended_b_queue;
 }
 
-pcb_t* get_running_process() {
-  return running;
+pcb_t** get_running_process() {
+  return running == NULL ? NULL : &running;
 }
 
 void print_pcb_info(const pcb_t* pcb) {

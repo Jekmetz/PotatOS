@@ -61,6 +61,7 @@ COMMAND commands[] = {
   {"setPriorityPCB", &cmd_set_priority_pcb},
   {"loadr3", &cmd_loadr3},
   {"potat", &cmd_potat, NULL},
+  {"yield", &cmd_yield},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

@@ -177,3 +177,10 @@ int cmd_potat(char* params);
 * @returns SUCCESS
 */
 int cmd_loadr3(char* params);
+
+/**
+* @brief command to yield control from commhand
+*
+* @returns SUCCESS
+*/
+int cmd_yield(char* params);
