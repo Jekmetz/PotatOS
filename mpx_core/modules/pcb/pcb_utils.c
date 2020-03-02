@@ -128,6 +128,7 @@ pcb_t *remove_pcb(char* name) {
     {
       pcb_t *ret = currs[i]->head->data;
       currs[i]->head = currs[i]->head->next;
+      sys_free_mem(currs[i]->head->prev);
       currs[i]->head->prev = NULL;
       (currs[i]->size)--;
       return ret;
