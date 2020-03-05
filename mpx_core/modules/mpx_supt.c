@@ -103,16 +103,16 @@ u32int* sys_call(context_t* registers)
     gcontext = registers;
   } else //if sys_call has been called
   {
-    if(params.op_code == IDLE)
+    if(params.op_code == EXIT)
+    {
+      //kill it with fire
+      free_pcb(remove_pcb(cop->process_name));
+    } else
     {
       cop->stacktop = (unsigned char*)registers;
       cop->state = READY;
       cop->last_time_run = 0; // TODO: this needs to be set to now
       insert_pcb(cop);
-    } else if (params.op_code == EXIT)
-    {
-      //kill it with fire
-      free_pcb(remove_pcb(cop->process_name));
     }
   }
 
