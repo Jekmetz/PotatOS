@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define DEFAULT_PRIORITY 314159265
+
  /**
  *  @brief Contains all possible process classes
  * 

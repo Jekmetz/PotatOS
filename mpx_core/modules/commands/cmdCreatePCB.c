@@ -2,6 +2,7 @@
 #include <string.h>
 #include "../mpx_supt.h"
 #include "../pcb/pcb_utils.h"
+#include "../pcb/pcb_constants.h"
 #include "commandUtils.h"
 #include "commands.h"
 
@@ -33,12 +34,12 @@ int cmd_create_pcb(char* params) {
   // checking for priority
   char* prior_c = get_pvalue('p');
   // default priority
-  int pri = 314159265;
+  int pri = DEFAULT_PRIORITY;
   if (flag & P_FLAG) {
     // if there is a priority check to make sure it is valid
     if (prior_c != NULL) {
       pri = atoi(prior_c);
-      if (pri > 314159265) {
+      if (pri > DEFAULT_PRIORITY) {
         printf("\033[31mThe priority \"%d\" is too large.\033[0m\n", pri);
         return FAILURE;
       } else if (pri < 0) {
