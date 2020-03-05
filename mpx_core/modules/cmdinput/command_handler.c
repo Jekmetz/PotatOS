@@ -43,26 +43,26 @@ typedef struct {
 * @brief Array of COMMANDS that are supported
 */
 COMMAND commands[] = {
-  {"help", &cmd_help},
-  {"version",&cmd_version},
-  {"date",&cmd_date},
-  {"time", &cmd_time},
-  {"clear", &cmd_clear},
-  {"blockPCB", &cmd_blockPCB},
-  {"resumePCB", &cmd_resume},
-  {"suspendPCB", &cmd_suspend},
-  {"showPCB", &cmd_show_pcb},
-  {"showAllPCBs", &cmd_show_all_pcbs},
-  {"showReadyPCBs", &cmd_show_ready_pcbs},
-  {"showBlockedPCBs", &cmd_show_blocked_pcbs},
-  {"unblockPCB", &cmd_unblock_pcb},
-  {"createPCB", &cmd_create_pcb},
-  {"deletePCB", &cmd_delete_pcb},
-  {"setPriorityPCB", &cmd_set_priority_pcb},
-  {"loadr3", &cmd_loadr3},
+  {"help", &cmd_help, NULL},
+  {"version",&cmd_version, NULL},
+  {"date",&cmd_date, NULL},
+  {"time", &cmd_time, NULL},
+  {"clear", &cmd_clear, NULL},
+  {"blockPCB", &cmd_blockPCB, NULL},
+  {"resumePCB", &cmd_resume, NULL},
+  {"suspendPCB", &cmd_suspend, NULL},
+  {"showPCB", &cmd_show_pcb, NULL},
+  {"showAllPCBs", &cmd_show_all_pcbs, NULL},
+  {"showReadyPCBs", &cmd_show_ready_pcbs, NULL},
+  {"showBlockedPCBs", &cmd_show_blocked_pcbs, NULL},
+  {"unblockPCB", &cmd_unblock_pcb, NULL},
+  {"createPCB", &cmd_create_pcb, NULL},
+  {"deletePCB", &cmd_delete_pcb, NULL},
+  {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
+  {"loadr3", &cmd_loadr3, NULL},
   {"potat", &cmd_potat, NULL},
-  {"yield", &cmd_yield},
-  {NULL, NULL} // leave NULL at the end for searching reasons
+  {"yield", &cmd_yield, NULL},
+  {NULL, NULL, NULL} // leave NULL at the end for searching reasons
 };
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/

@@ -134,6 +134,24 @@ u32int* sys_call(context_t* registers)
   return (u32int*)gcontext;
 }
 
+void process_loader(char* proc_name, int priority, void (*func)(void))
+{
+  pcb_t* new_pcb = setup_pcb(proc_name, APPLICATION, priority);
+  context_t* cp = (context_t*)(new_pcb->stacktop);
+  memset(cp, 0, sizeof(context_t));
+  cp->fs=0x10;
+  cp->gs=0x10;
+  cp->ds=0x10;
+  cp->es=0x10;
+  cp->cs=0x08;
+  cp->ebp=(u32int)(new_pcb->stack);
+  cp->esp=(u32int)(new_pcb->stacktop);
+  cp->eip=(u32int)func;
+  cp->eflags=0x202;
+  new_pcb->state = READY;
+  insert_pcb(new_pcb);
+}
+
 /*
   Procedure..: mpx_init
   Description..: Initialize MPX support software, based

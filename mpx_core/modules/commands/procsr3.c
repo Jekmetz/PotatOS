@@ -19,9 +19,9 @@ int msgSize = 17;
 
 char* er1 = "proc1 ran after it was terminated";
 char* er2 = "proc2 ran after it was terminated";
-char* er3 = "proc2 ran after it was terminated";
-char* er4 = "proc2 ran after it was terminated";
-char* er5 = "proc2 ran after it was terminated";
+char* er3 = "proc3 ran after it was terminated";
+char* er4 = "proc4 ran after it was terminated";
+char* er5 = "proc5 ran after it was terminated";
 int erSize = 34;
 
 void proc1()

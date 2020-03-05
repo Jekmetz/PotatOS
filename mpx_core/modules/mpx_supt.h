@@ -55,6 +55,13 @@ int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr);
 */
 u32int* sys_call(context_t* registers);
 
+/**
+* @brief loads a process into memory
+*
+* @returns NOTHING.
+*/
+void process_loader(char* proc_name, int priority, void (*func)(void));
+
 /*
   Procedure..: mpx_init
   Description..: Initialize MPX support software

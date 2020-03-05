@@ -33,16 +33,10 @@ commands/cmdShowPCB.o\
 commands/cmdShowReadyPCBs.o\
 commands/cmdSuspend.o\
 commands/cmdUnblockPCB.o\
-<<<<<<< 35ef94729bff7a1ae0a72caa0413e7067e2c6f6d
 commands/cmdPotat.o\
-=======
 commands/cmdLoadr3.o\
-<<<<<<< 45bab2ad4b66053ec791cb1e8fc5fd515b23b789
->>>>>>> get basic m3 architecture done! also realize what depression is
-=======
 commands/cmdYield.o\
 commands/procsr3.o\
->>>>>>> Still not working. redoing on m3-doover
 pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\
