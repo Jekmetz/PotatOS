@@ -4,6 +4,7 @@
 * @brief The primary command handler for the Operating System
 */
 #include <string.h>
+#include <system.h>
 #include <core/stdio.h>
 #include <core/utility.h>
 
@@ -70,7 +71,7 @@ COMMAND commands[] = {
 /**
 * @brief Entry point for the command handler
 */
-int command_handler() {
+void command_handler() {
   // Initialize vars
   char cmd[CMDSIZE];
   int exit = 0;
@@ -149,11 +150,11 @@ int command_handler() {
     {
       (*commands[cmdidx].func)(cmd);
     }
+
+    sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
   }
 
   puts("Exiting prompt! Goodbye and have a \033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033[33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
-
-  return 0;
 }
 
 /**

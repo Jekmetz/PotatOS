@@ -6,4 +6,4 @@
 
 #pragma once
 
-int command_handler();
+void command_handler();

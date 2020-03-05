@@ -36,7 +36,7 @@ void kmain(void) {
 
   // 1) Initialize the support software by identifying the current
   //     MPX Module.  This will change with each module.
-  mpx_init(MODULE_R3);
+  mpx_init(MODULE_R4);
 
   // 2) Check that the boot was successful and correct when using grub
   // Comment this when booting the kernel directly using QEMU, etc.
@@ -62,9 +62,11 @@ void kmain(void) {
   klogv("Initializing process queues");
   init_process_queues();
 
-  // 5) Call YOUR command handler -  interface method
-  klogv("Transferring control to commhand...");
-  command_handler();
+  // 5) Add command handler and idle to ready queue
+  klogv("Adding commhand to ready queue...");
+  process_loader("commhand", 314159265, &command_handler);
+  process_loader("idle", 314159266, &idle);
+  asm volatile ("int $60");
 
   // 6) System Shutdown on return from your command handler
   klogv("Starting system shutdown procedure...");
