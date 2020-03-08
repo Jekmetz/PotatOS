@@ -184,3 +184,5 @@ int cmd_loadr3(char* params);
 * @returns SUCCESS
 */
 int cmd_yield(char* params);
+
+int cmd_alias(char* params);

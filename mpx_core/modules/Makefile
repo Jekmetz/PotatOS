@@ -40,7 +40,8 @@ commands/procsr3.o\
 pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\
-pcb/pcb_utils.o
+pcb/pcb_utils.o\
+commands/cmdAlias.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
