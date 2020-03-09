@@ -37,10 +37,10 @@ typedef enum
 typedef struct pcb
 {
     char *process_name;
-    unsigned int process_class;
-    unsigned int priority;
-    unsigned long long last_time_run;
-    unsigned int state;
+    u32int process_class;
+    u32int priority;
+    u32int last_time_run;
+    u32int state;
     char stack[2048];
     unsigned char *stacktop;
 } pcb_t;

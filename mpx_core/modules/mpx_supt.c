@@ -116,6 +116,7 @@ u32int* sys_call(context_t* registers)
     {
       cop->stacktop = (unsigned char*)registers;
       cop->state = READY;
+      cop->last_time_run = 0; // TODO: this needs to be set to now
       insert_pcb(cop);
     } else if (params.op_code == EXIT)
     {

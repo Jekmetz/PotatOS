@@ -8,7 +8,7 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-#define TIME_FLUX (1000)
+#define TIME_FLUX ((u32int) 1000)
 
 /**
  * @brief Appends an element to the end of the queue
@@ -64,14 +64,12 @@ void priority_enqueue(queue_t* cue, pcb_t* data) {
   if (cue->size == 0) {
     cue->head = nnode;
   } else {
-    unsigned int now = 0;  // TODO: Set this to be the current time in ms.
+    u32int now = 0;  // TODO: Set this to be the current time in ms.
 
     // getting the time addative for the head node
-    unsigned int head_time_piority =
-        TIME_FLUX / (now - cue->head->data->last_time_run + 1);
+    u32int head_time_piority = TIME_FLUX / (now - cue->head->data->last_time_run + 1);
     // getting the time addative for the new node
-    unsigned int node_time_piority =
-        TIME_FLUX / (now - nnode->data->last_time_run + 1);
+    u32int node_time_piority = TIME_FLUX / (now - nnode->data->last_time_run + 1);
 
     // comparing priorities of head and new node as edge case
     if (cue->head->data->priority + head_time_piority >
@@ -82,7 +80,7 @@ void priority_enqueue(queue_t* cue, pcb_t* data) {
     } else {  // if not that edge case
       // iterating through all the nodes
       struct node* curr = cue->head;
-      unsigned int curr_time_priority = head_time_piority;
+      u32int curr_time_priority = head_time_piority;
       while (curr->next != NULL &&
              curr->data->priority + curr_time_priority <=
                  nnode->data->priority + node_time_piority) {
