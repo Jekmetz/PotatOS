@@ -23,7 +23,7 @@ typedef struct
     MEMTYPE type;
 } lmcb;
 
-int init();
+void *init();
 
 void *internal_malloc(unsigned int size, pcb_t *karen);
 

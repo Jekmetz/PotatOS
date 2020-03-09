@@ -7,6 +7,9 @@ cmcb* falive;
 
 unsigned int remaining_free;
 
+#define SUCCESS 1
+#define FAILURE 0
+
 void* init() {
   // Creating heap
   fma = kmalloc(HEAP_SIZE + MCB_PADDING);
@@ -73,10 +76,19 @@ int internal_free(void* data) {
   cmcb* block = data - sizeof(cmcb);
   lmcb* end = data + block->size;
 
-  // if there is free space beforeo the block
+  // Setting variables of current block
   block->type = FREE;
   end->type = FREE;
   block->karen = NULL;
 
+  if (block == fma)
+  {
+    ffree = block;
+  }
+
+  cmcb* nblock = block + MCB_PADDING;
+  
+
   //TODO: combining free blocks
+  return SUCCESS;
 }

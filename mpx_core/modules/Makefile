@@ -46,7 +46,8 @@ pcb/pcb_utils.o\
 commands/cmdAlias.o\
 commands/cmdAlarm.o\
 alarms/alarmWrangler.o\
-commands/cmdHistory.o
+commands/cmdHistory.o\
+memory_managment/memory_wrangler.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<
