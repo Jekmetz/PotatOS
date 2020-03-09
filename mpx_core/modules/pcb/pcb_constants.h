@@ -39,6 +39,7 @@ typedef struct pcb
     char *process_name;
     unsigned int process_class;
     unsigned int priority;
+    unsigned long long last_time_run;
     unsigned int state;
     char stack[2048];
     unsigned char *stacktop;

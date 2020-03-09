@@ -8,17 +8,18 @@
 #define SUCCESS 1
 #define FAILURE 0
 
+#define TIME_FLUX 1000
+
 /**
  * @brief Appends an element to the end of the queue
- * 
- * This function searches for the end of the queue and, adds the specified pcb to
- * the end of the list.
- * 
+ *
+ * This function searches for the end of the queue and, adds the specified pcb
+ * to the end of the list.
+ *
  * @param que A pointer to a queue that the PCB will be inserted into.
  * @param data A pointer to the PCB to insert into the queue.
  */
-void enqueue(queue_t *cue, pcb_t *data)
-{
+void enqueue(queue_t* cue, pcb_t* data) {
   struct node* nnode = sys_alloc_mem(sizeof(struct node));
 
   // setting node data
@@ -26,15 +27,11 @@ void enqueue(queue_t *cue, pcb_t *data)
   nnode->prev = NULL;
   nnode->next = NULL;
 
-  if (cue->head == NULL)
-  {
+  if (cue->head == NULL) {
     cue->head = nnode;
-  }
-  else
-  {
-    struct node *curr = cue->head;
-    while (curr->next != NULL)
-    {
+  } else {
+    struct node* curr = cue->head;
+    while (curr->next != NULL) {
       curr = curr->next;
     }
 
@@ -45,13 +42,13 @@ void enqueue(queue_t *cue, pcb_t *data)
 
 /**
  *  @brief Appends an element onto the tail of the given queue
- * 
- *  This function inserts the given data (a PCB) into the queue according to 
+ *
+ *  This function inserts the given data (a PCB) into the queue according to
  *  priority.
- * 
+ *
  *  @param que A poiter to the queue to insert the data into.
  *  @param data a pointer to the PCB that is to be inserted.
- * 
+ *
  *  @note The data must point to a pcb with a valid priority.
  */
 void priority_enqueue(queue_t* cue, pcb_t* data) {
@@ -66,18 +63,36 @@ void priority_enqueue(queue_t* cue, pcb_t* data) {
   if (cue->size == 0) {
     cue->head = nnode;
   } else {
-    if (cue->head->data->priority > nnode->data->priority) {
-        cue->head->prev = nnode;
-        nnode->next = cue->head;
-        cue->head = nnode;
-    } else {
+    unsigned int now = 0;  // TODO: Set this to be the current time in ms.
+
+    // getting the time addative for the head node
+    unsigned int head_time_piority =
+        TIME_FLUX / (now - cue->head->data->last_time_run + 1);
+    // getting the time addative for the new node
+    unsigned int node_time_piority =
+        TIME_FLUX / (now - nnode->data->last_time_run + 1);
+
+    // comparing priorities of head and new node as edge case
+    if (cue->head->data->priority + head_time_piority >
+        nnode->data->priority + node_time_piority) {
+      cue->head->prev = nnode;
+      nnode->next = cue->head;
+      cue->head = nnode;
+    } else {  // if not that edge case
+      // iterating through all the nodes
       struct node* curr = cue->head;
+      unsigned int curr_time_priority = head_time_piority;
       while (curr->next != NULL &&
-             curr->data->priority <= nnode->data->priority) {
+             curr->data->priority + curr_time_priority <=
+                 nnode->data->priority + node_time_piority) {
         curr = curr->next;
+        curr_time_priority = TIME_FLUX / (now - curr->data->last_time_run + 1);
       }
 
-      if (curr->data->priority <= nnode->data->priority) {
+      // checking end edge case
+      // and inserting new node into queue
+      if (curr->data->priority + curr_time_priority <=
+          nnode->data->priority + node_time_piority) {
         curr->next = nnode;
         nnode->prev = curr;
       } else {
@@ -93,14 +108,15 @@ void priority_enqueue(queue_t* cue, pcb_t* data) {
   cue->size++;
 }
 
-/** 
+/**
  *  @brief Takes the PCB off of the head of the queue and moves head
- * 
+ *
  *  Takes care of freeing the node
  *  returns the head PCB
- * 
- *  @param queue A pointer to a queue that you want to dequeue the first element from.
- * 
+ *
+ *  @param queue A pointer to a queue that you want to dequeue the first element
+ * from.
+ *
  *  @returns A pointer to the dequed PCB
  */
 pcb_t* dequeue(queue_t* queue) {
@@ -124,9 +140,10 @@ pcb_t* dequeue(queue_t* queue) {
 
 /**
  *  @brief Creates a queue
- * 
- *  Creates and allocates a queue and sets all variables correctly for initialization.
- * 
+ *
+ *  Creates and allocates a queue and sets all variables correctly for
+ * initialization.
+ *
  *  @returns A pointer to a newly constructed queue.
  */
 queue_t* construct_queue() {
@@ -141,10 +158,10 @@ queue_t* construct_queue() {
 
 /**
  *  @brief Destructs a queue and its contents
- * 
+ *
  *  De-allocates a queue and all of the elements within it. This function
  *  exists to avoid memory leaks.
- * 
+ *
  *  @param queue A pointer to the queue you wish to deallocate.
  */
 void destruct_queue(queue_t* queue) {
