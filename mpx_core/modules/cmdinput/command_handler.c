@@ -10,6 +10,7 @@
 
 #include "../mpx_supt.h"
 #include "../commands/commands.h"
+#include "../commands/commandUtils.h"
 #include "poll_input.h"
 #include "splash.h"
 
@@ -22,50 +23,6 @@
 */
 #define CMDSIZE 100
 
-// Function stubs
-int search_commands(char*);
-
-/**
-* @brief A struct to hold commands
-*
-* The COMMAND Struct is a custom struct that is designed to hold custom
-* commands 
-*
-* @param str A string type to hold the name of the command
-* @param CommandPointer A pointer to a command so that we can pass commands
-*/
-typedef struct {
-  char* str;
-  int (*func)(char*);
-  char* alias;
-} COMMAND;
-
-/**
-* @brief Array of COMMANDS that are supported
-*/
-COMMAND commands[] = {
-  {"help", &cmd_help, NULL},
-  {"version",&cmd_version, NULL},
-  {"date",&cmd_date, NULL},
-  {"time", &cmd_time, NULL},
-  {"clear", &cmd_clear, NULL},
-  {"blockPCB", &cmd_blockPCB, NULL},
-  {"resumePCB", &cmd_resume, NULL},
-  {"suspendPCB", &cmd_suspend, NULL},
-  {"showPCB", &cmd_show_pcb, NULL},
-  {"showAllPCBs", &cmd_show_all_pcbs, NULL},
-  {"showReadyPCBs", &cmd_show_ready_pcbs, NULL},
-  {"showBlockedPCBs", &cmd_show_blocked_pcbs, NULL},
-  {"unblockPCB", &cmd_unblock_pcb, NULL},
-  {"createPCB", &cmd_create_pcb, NULL},
-  {"deletePCB", &cmd_delete_pcb, NULL},
-  {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
-  {"loadr3", &cmd_loadr3, NULL},
-  {"potat", &cmd_potat, NULL},
-  {"yield", &cmd_yield, NULL},
-  {NULL, NULL, NULL} // leave NULL at the end for searching reasons
-};
-
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
 
 /**
@@ -77,7 +34,7 @@ void command_handler() {
   int exit = 0;
   int bufSize = CMDSIZE;
   int errCode;
-  int cmdidx;
+  COMMAND* cmdPtr;
 
   sys_set_read(&poll_input);
 
@@ -139,90 +96,22 @@ void command_handler() {
       continue;	//no need to search commands if we have tried to exit
     }
 
-    cmdidx = search_commands(cmd);
+    cmdPtr = search_commands(cmd);
 
-    if (cmdidx == -1)  // if we did not find anything   
+    if (cmdPtr == NULL)  // if we did not find anything   
     {
       char ret[CMDSIZE + 18];
       sprintf(ret, "\033[31mInvalid Command: %s\033[0m\n", cmd);
       puts(ret);
     } else  // if we did find something   
     {
-      (*commands[cmdidx].func)(cmd);
+      (*cmdPtr->func)(cmd);
     }
 
     sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
   }
 
   puts("Exiting prompt! Goodbye and have a \033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033[33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
-}
 
-/**
-* @brief Finds which command in the global COMMANDS array
-*
-* @param cmd cmd typed by user
-*/
-int search_commands(char* cmd) {
-  int cmdidx;
-  unsigned char found;
-  char* cmdStart;
-  char* testCmd;
-  char* aliasCmd;
-  // remove spaces from beginning of cmd
-  while (*cmd == ' ') {
-    cmd++;
-  }
-
-  cmdStart = cmd;  // save starting position for command
-  cmdidx = 0;      // start at command 0
-  found = 0;       // we didn't find anything yet
-
-  // while we have another command ahead to process
-  // and we have not found a match yet   
-  while (commands[cmdidx].str != NULL && !found) {
-    testCmd = commands[cmdidx].str;  //*testCmd is easier than writing *commands[cmdidx] :)
-
-    /*******TEST ACTUAL COMMAND**********/
-
-    // while each character matches and they are not null or space   
-    while ((*testCmd == *cmd && !isnullorspace(*cmd))) {  // increment both
-      testCmd++;
-      cmd++;
-    }
-
-    if (isnullorspace(*testCmd) && isnullorspace(*cmd))  // if cmd is pointing to a space or a null  
-    {  // this means that testCmd matched until a space and we have ourselves a
-       // match!
-      found = 1;
-    } else  // if we did not find a match   
-    {
-      /**********TEST ALIAS COMMAND*************/
-      cmd = cmdStart;
-      aliasCmd = commands[cmdidx].alias;
-      if(aliasCmd != NULL) //if an alias exists...
-      {
-        //while each character matches and they are not null or space
-        while ((*aliasCmd == *cmd && !isnullorspace(*cmd))) { //increment both
-          testCmd++;
-          cmd++;
-        }
-
-        if(isnullorspace(*aliasCmd) && isnullorspace(*cmd))
-        {
-          //this means that aliasCmd matched until a space and we have ourselves a match!
-          found = 1;
-        }
-      }
-    }
-
-    if(found == 0) cmdidx++;
-
-    cmd = cmdStart;  // reset cmd back to the beginning
-  }
-
-  // if we did not find anything   
-  if (commands[cmdidx].str == NULL)
-    cmdidx = -1;  // set cmdidx to -1
-
-  return cmdidx;
+  return 0;
 }

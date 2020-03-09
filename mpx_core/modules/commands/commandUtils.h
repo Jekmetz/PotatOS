@@ -82,7 +82,6 @@
 #define Z_FLAG (1 << 25)
 /** NO flag binary bit shift macro */
 #define NO_FLAG (1<<26)
-/** A flag binary bit shift macro */
 
 /**
 * @brief A string to hold the command input up to the max command size
@@ -115,6 +114,22 @@ typedef struct {
   char c;
   char* val;
 } ALIAS;
+
+/**
+* @brief A struct to hold commands
+*
+* The COMMAND Struct is a custom struct that is designed to hold custom
+* commands 
+*
+* @param str A string type to hold the name of the command
+* @param CommandPointer A pointer to a command so that we can pass commands
+*/
+typedef struct {
+  char* str;
+  int (*func)(char*);
+  char* alias;
+} COMMAND;
+
 
 /**
 * @brief Sets flags based on param string, flags and num aliases
@@ -159,3 +174,11 @@ char* get_pvalue(char c);
 * @return character of flag that it found
 */
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
+
+
+/**
+* @brief search commands with a command name
+*
+* @return pointer to a COMMAND
+*/
+COMMAND *search_commands(char*);

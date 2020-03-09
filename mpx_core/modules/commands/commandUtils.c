@@ -9,6 +9,32 @@
 #include "time.h"
 #include "../mpx_supt.h"
 
+/**
+* @brief Array of COMMANDS that are supported
+*/
+COMMAND commands[] = {
+  {"help", &cmd_help, NULL},
+  {"version",&cmd_version, NULL},
+  {"date",&cmd_date, NULL},
+  {"time", &cmd_time, NULL},
+  {"clear", &cmd_clear, NULL},
+  {"blockPCB", &cmd_blockPCB, NULL},
+  {"resumePCB", &cmd_resume, NULL},
+  {"suspendPCB", &cmd_suspend, NULL},
+  {"showPCB", &cmd_show_pcb, NULL},
+  {"showAllPCBs", &cmd_show_all_pcbs, NULL},
+  {"showReadyPCBs", &cmd_show_ready_pcbs, NULL},
+  {"showBlockedPCBs", &cmd_show_blocked_pcbs, NULL},
+  {"unblockPCB", &cmd_unblock_pcb, NULL},
+  {"createPCB", &cmd_create_pcb, NULL},
+  {"deletePCB", &cmd_delete_pcb, NULL},
+  {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
+  {"loadr3", &cmd_loadr3, NULL},
+  {"potat", &cmd_potat, NULL},
+  {"yield", &cmd_yield, NULL},
+  {NULL, NULL, NULL} // leave NULL at the end for searching reasons
+};
+
 char gparamstr[CMDSIZE];
 
 char* gparams[27];  // will hold all of the parameters
@@ -157,4 +183,74 @@ int set_flags(char* paramstr, int* flag, int num_aliases, ...)
   }
 
   return SUCCESS;
+}
+
+/**
+* @brief Finds which command in the global COMMANDS array
+*
+* @param cmd cmd typed by user
+*/
+COMMAND *search_commands(char* cmd) {
+  int cmdidx;
+  unsigned char found;
+  char* cmdStart;
+  char* testCmd;
+  char* aliasCmd;
+  // remove spaces from beginning of cmd
+  while (*cmd == ' ') {
+    cmd++;
+  }
+
+  cmdStart = cmd;  // save starting position for command
+  cmdidx = 0;      // start at command 0
+  found = 0;       // we didn't find anything yet
+
+  // while we have another command ahead to process
+  // and we have not found a match yet   
+  while (commands[cmdidx].str != NULL && !found) {
+    testCmd = commands[cmdidx].str;  //*testCmd is easier than writing *commands[cmdidx] :)
+
+    /*******TEST ACTUAL COMMAND**********/
+
+    // while each character matches and they are not null or space   
+    while ((*testCmd == *cmd && !isnullorspace(*cmd))) {  // increment both
+      testCmd++;
+      cmd++;
+    }
+
+    if (isnullorspace(*testCmd) && isnullorspace(*cmd))  // if cmd is pointing to a space or a null  
+    {  // this means that testCmd matched until a space and we have ourselves a
+       // match!
+      found = 1;
+    } else  // if we did not find a match   
+    {
+      /**********TEST ALIAS COMMAND*************/
+      cmd = cmdStart;
+      aliasCmd = commands[cmdidx].alias;
+      if(aliasCmd != NULL) //if an alias exists...
+      {
+        //while each character matches and they are not null or space
+        while ((*aliasCmd == *cmd && !isnullorspace(*cmd))) { //increment both
+          testCmd++;
+          cmd++;
+        }
+
+        if(isnullorspace(*aliasCmd) && isnullorspace(*cmd))
+        {
+          //this means that aliasCmd matched until a space and we have ourselves a match!
+          found = 1;
+        }
+      }
+    }
+
+    if(found == 0) cmdidx++;
+
+    cmd = cmdStart;  // reset cmd back to the beginning
+  }
+
+  // if we did not find anything   
+  if (commands[cmdidx].str == NULL)
+    return NULL;  // set cmdidx to -1
+
+  return &(commands[cmdidx]);
 }
