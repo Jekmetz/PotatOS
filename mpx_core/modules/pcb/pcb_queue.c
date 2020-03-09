@@ -8,7 +8,7 @@
 #define SUCCESS 1
 #define FAILURE 0
 
-#define TIME_FLUX 1000
+#define TIME_FLUX (1000)
 
 /**
  * @brief Appends an element to the end of the queue
@@ -59,6 +59,7 @@ void priority_enqueue(queue_t* cue, pcb_t* data) {
   nnode->data = data;
   nnode->prev = NULL;
   nnode->next = NULL;
+  nnode->data->last_time_run = 0; // TODO: Make this 'now'
 
   if (cue->size == 0) {
     cue->head = nnode;
