@@ -123,7 +123,7 @@ int set_current_time(time_h time)
 
 		curr.year = time.year;
 	}
-	else
+	else 
 	{
 		century = -1;
 		year = -1;
@@ -207,4 +207,44 @@ struct fakelong rdtsc(void) {
   struct fakelong x;
   __asm__ volatile ("RDTSC" : "=A" (x));
   return x;
+}
+
+time_h* parseTandD(time_h* dest, char* input){
+ 	char *date = strtok(input, " ");
+ 	char *time = strtok(NULL, " ");
+
+ 	char *aday = strtok(date, "/");
+    char *amonth = strtok(NULL, "/");
+    char *ayear = strtok(NULL, "/");
+
+    dest->day_of_month = atoi(aday);
+    dest->month = atoi(amonth);
+    dest->year = atoi(ayear);
+
+	char *ahour = strtok(time, ":");
+	char *aminute = strtok(NULL, ":");
+	char *asecond = strtok(NULL, ":");
+
+	dest->seconds = atoi(asecond);
+	dest->minutes = atoi(aminute);
+	dest->hours = atoi(ahour);
+
+	return dest;
+}
+
+int compareTime(time_h timeOne, time_h timeTwo){
+	// if(timeOne-> year != timeTwo -> year) return (timeOne -> year - timeTwo -> year);
+	// if(timeOne-> month != timeTwo -> month) return (timeOne -> month - timeTwo -> month);
+	// if(timeOne-> day_of_month != timeTwo -> day_of_month) return (timeOne -> day_of_month - timeTwo -> day_of_month);
+	// if(timeOne-> hours != timeTwo -> hours) return (timeOne -> hours - timeTwo -> hours);
+	// if(timeOne-> minutes != timeTwo -> minutes) return (timeOne -> minutes - timeTwo -> minutes);
+	// else return timeOne -> seconds - timeTwo -> seconds;
+
+	if(timeOne.year != timeTwo.year) return (timeOne.year - timeTwo.year);
+	if(timeOne.month != timeTwo.month) return (timeOne.month - timeTwo.month);
+	if(timeOne.day_of_month != timeTwo.day_of_month) return (timeOne.day_of_month - timeTwo.day_of_month);
+	if(timeOne.hours != timeTwo.hours) return (timeOne.hours - timeTwo.hours);
+	if(timeOne.minutes != timeTwo.minutes) return (timeOne.minutes - timeTwo.minutes);
+	else return timeOne.seconds - timeTwo.seconds;
+
 }

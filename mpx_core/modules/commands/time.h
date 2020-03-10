@@ -52,7 +52,7 @@ struct time
   int month;
   int year;
 };
-typedef struct time time_h;
+typedef struct time time_h; 
 
 /**
 * @brief Generates a string with a standard format of time.
@@ -106,6 +106,7 @@ int set_current_time(time_h time);
 */
 int bcd_to_decimal(int bcd);
 
+<<<<<<< 7aa01fdb35e3c725b15918b520690cf60fe55e0f
 /**
  * @brief Fake 64 bit integer
  */
@@ -118,3 +119,9 @@ struct fakelong {
  * @brief return clock cycles since reset in a fake long long
  */
 struct fakelong rdtsc(void);
+=======
+
+time_h* parseTandD(time_h* dest, char* input);
+
+int compareTime();
+>>>>>>> Added alarm function.
