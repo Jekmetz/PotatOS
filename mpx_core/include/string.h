@@ -87,7 +87,7 @@ char* reverse(char* str, int j);
 int atoi(const char* s);
 
 /**
-* @brief Converts integer to string
+* @brief Converts signed integer to string
 *
 * @param num number to convert
 * @param str string to store result in
@@ -96,6 +96,17 @@ int atoi(const char* s);
 * @return pointer to str
 */
 char* itoa(int num, char* str, int base);
+
+/**
+* @brief Converts unsigned integer to string
+*
+* @param num number to convert
+* @param str string to store result in
+* @param base base to convert to
+*
+* @return pointer to str
+*/
+char* utoa(u32int num, char* str, int base);
 
 /**
 * @brief Visible representation of the sprintf function

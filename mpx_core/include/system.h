@@ -26,10 +26,15 @@
 #define GDT_DS_ID 0x02  // kernel data segment ID
 
 /* System Types */
-typedef unsigned int size_t;
-typedef unsigned char u8int;
-typedef unsigned short u16int;
-typedef unsigned long u32int;
+typedef unsigned int       size_t;
+typedef signed char        s8int;
+typedef unsigned char      u8int;
+typedef signed short       s16int;
+typedef unsigned short     u16int;
+typedef signed int         s32int;
+typedef unsigned int       u32int;
+typedef signed long long   s64int;
+typedef unsigned long long u64int;
 
 /* Time */
 typedef struct {

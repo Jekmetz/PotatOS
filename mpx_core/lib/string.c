@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <stdarg.h>
+#include <system.h>
 
 #define F_MINUS (1 << 0)
 #define F_PLUS (1 << 1)
@@ -224,19 +225,21 @@ int isdigit(char c) {
 *
 * @return pointer to str
 */
-char* reverse(char* str, int j) {
-  int i = 0;
-  while (i < j) {
-    *(str + i) ^= *(str + j);
-    *(str + j) ^= *(str + i);
-    *(str + i++) ^= *(str + j--);
+char* reverse(char* str, int end) {
+  for (int front = 0; front < end; front++) {
+    str[front] ^= str[end];
+    str[end] ^= str[front];
+    str[front] ^= str[end];
+
+    front += 1;
+    end -= 1;
   }
 
   return str;
 }
 
 /**
-* @brief Converts integer to string
+* @brief Converts signed integer to string
 *
 * @param num number to convert
 * @param str string to store result in
@@ -245,32 +248,44 @@ char* reverse(char* str, int j) {
 * @return pointer to str
 */
 char* itoa(int num, char* str, int base) {
+  if (num < 0 && base == 10) {
+    str[0] = '-';
+    utoa(-num, str + 1, base);
+  } else {
+    utoa(num, str, base);
+  }
+
+  return str;
+}
+
+/**
+* @brief Converts unsigned integer to string
+*
+* @param num number to convert
+* @param str string to store result in
+* @param base base to convert to
+*
+* @return pointer to str
+*/
+char* utoa(u32int num, char* str, int base) {
   int idx = 0;
-  int neg = 0;
 
-  if (num == 0)  // if num is 0... handle specifically
-  {
-    str[idx++] = '0';
-    str[idx] = '\0';
-    return str;
-  }
+  int digit;
 
-  if (num < 0 && base == 10)  // if num is negative and it is in base 10...
-  {
-    num = -num;
-    neg = 1;
-  }
-
-  int r;
-  while (num)  // while num is nonzero...
-  {
-    r = num % base;
-    str[idx++] = (r > 9) ? (r - 10) + 'a' : r + '0';
+  do {
+    digit = num % base;
     num = num / base;
-  }
-  if (neg)
-    str[idx++] = '-';
-  str[idx] = '\0';  // end it
+
+    if (digit > 9) {
+      str[idx] = (digit - 10) + 'a';
+    } else {
+      str[idx] = digit + '0';
+    }
+
+    idx += 1;
+  } while (num != 0);
+
+  str[idx] = '\0';
   reverse(str, idx - 1);
   return str;
 }
@@ -396,13 +411,10 @@ int sprintf_internal(char *buffer, char *format, va_list valist)
         int tmp = num;
         int n = 0;
 
-        if(tmp == 0) n = 1; //set n to 1 if tmp == 0.
-
-        while (tmp)  // while tmp is nonzero...
-        {
-          n++;             // add one to the length...
-          tmp = tmp / 10;  // divide by base 10
-        }
+        do {
+          n += 1;           // add one to the length...
+          tmp = tmp / 10;   // divide by base 10
+        } while (tmp != 0); // while tmp is nonzero...
 
         char str[n];
         itoa(num, str, 10);  // store number in str
@@ -459,13 +471,10 @@ int sprintf_internal(char *buffer, char *format, va_list valist)
         int tmp = num;
         int n = 0;
 
-        if(tmp == 0) n = 1; //set n to 1 if tmp == 0.
-
-        while (tmp)  // while tmp is nonzero...
-        {
-          n++;             // add one to the length
-          tmp = tmp / 16;  // divide by base 16
-        }
+        do {
+          n += 1;           // add one to the length...
+          tmp = tmp / 10;   // divide by base 10
+        } while (tmp != 0); // while tmp is nonzero...
 
         char str[n];
         itoa(num, str, 16);  // put number into str
