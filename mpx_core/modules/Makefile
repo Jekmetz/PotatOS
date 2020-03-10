@@ -41,7 +41,9 @@ pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\
 pcb/pcb_utils.o\
-commands/cmdAlias.o
+commands/cmdAlias.o\
+commands/cmdAlarm.o\
+alarms/alarmWrangler.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

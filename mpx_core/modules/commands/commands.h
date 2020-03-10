@@ -186,3 +186,5 @@ int cmd_loadr3(char* params);
 int cmd_yield(char* params);
 
 int cmd_alias(char* params);
+
+int cmd_alarm(char* params);

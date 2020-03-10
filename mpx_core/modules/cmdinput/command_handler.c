@@ -14,6 +14,8 @@
 #include "poll_input.h"
 #include "splash.h"
 
+#include "../commands/commandUtils.h"
+
 /**
 * @brief The command input buffer
 *
@@ -22,7 +24,6 @@
 * handler at once  We currently allow 100 characters 
 */
 #define CMDSIZE 100
-
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
 
