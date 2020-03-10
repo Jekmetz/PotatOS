@@ -59,6 +59,8 @@ int cmd_alias(char* params) {
     return FAILURE;
   }
 
+  // Using seach_commands to find
+
   // Need to implement the code to put the new command into the commands array
 
   return SUCCESS;  // successful response
