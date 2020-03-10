@@ -105,3 +105,16 @@ int set_current_time(time_h time);
 * @return The value of the BCD as an integer.
 */
 int bcd_to_decimal(int bcd);
+
+/**
+ * @brief Fake 64 bit integer
+ */
+struct fakelong {
+  unsigned long int lower;
+  unsigned long int upper;
+};
+
+/**
+ * @brief return clock cycles since reset in a fake long long
+ */
+struct fakelong rdtsc(void);

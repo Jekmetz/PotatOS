@@ -202,3 +202,9 @@ int set_current_time(time_h time)
 	// Successful exit
 	return 1;
 }
+
+struct fakelong rdtsc(void) {
+  struct fakelong x;
+  __asm__ volatile ("RDTSC" : "=A" (x));
+  return x;
+}
