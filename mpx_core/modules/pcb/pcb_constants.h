@@ -3,6 +3,8 @@
 #ifndef PCB_CONSTANTS_H
 #define PCB_CONSTANTS_H
 
+#include <system.h>
+
 /**
 * @file pcb_constants.h
 *
