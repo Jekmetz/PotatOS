@@ -28,7 +28,7 @@ int cmd_alias(char* params) {
   //if there was nothing specified...
   if(!(flag & NO_FLAG))
   {
-    printf("No flag used");
+    puts("You must include the <native name> and the <alias name>");
     return SUCCESS;
   }
 
@@ -39,9 +39,6 @@ int cmd_alias(char* params) {
   // we can call this because check flags enforces that at least one paramter is there
   char *token = strtok(cmd, " ");
   nativeCmd = token; // Assinging the split to the native command 
-
-  // Testing, remove
-  printf("First word is: %s\n",nativeCmd);
  
   // Attempting to split again, will not fail if this is not possible
   token = strtok(NULL, " ");
@@ -49,9 +46,6 @@ int cmd_alias(char* params) {
   // Checking to see if they split failed, this means that there is no new alias 
   if(strcmp(token, NULL) != 0){
     aliasCmd = token;
-
-    // Testing, remove
-    printf("Second word is: %s\n", aliasCmd);
   }
   // If it fails
   else{
@@ -60,8 +54,19 @@ int cmd_alias(char* params) {
   }
 
   // Using seach_commands to find
+  COMMAND *ret = search_commands(nativeCmd);
 
-  // Need to implement the code to put the new command into the commands array
+  if(ret == FAILURE){
+    printf("'%s' is not a valid command\n", nativeCmd);
+    return FAILURE;
+  }
+  else if(ret != FAILURE){
+    char* name = (char*)sys_alloc_mem(sizeof(char) * (strlen(aliasCmd) + 1));
+    name = strcpy(name, aliasCmd);
+    ret->alias = name;
+    //printf("'%s' is aliased as '%s'\n",nativeCmd,aliasCmd);
+    return SUCCESS;
+  }
 
   return SUCCESS;  // successful response
 }

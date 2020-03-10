@@ -182,3 +182,6 @@ char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
 * @return pointer to a COMMAND
 */
 COMMAND *search_commands(char*);
+
+// DO NOT INCLUDE WITH DOXYGEN
+int showAll();

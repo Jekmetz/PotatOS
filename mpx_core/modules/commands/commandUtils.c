@@ -32,6 +32,8 @@ COMMAND commands[] = {
   //{"loadr3", &cmd_loadr3, NULL},
   {"potat", &cmd_potat, NULL},
   //{"yield", &cmd_yield, NULL},
+  {"alias", &cmd_alias, NULL},
+  {"alarm", &cmd_alarm, NULL},
   {NULL, NULL, NULL} // leave NULL at the end for searching reasons
 };
 
@@ -231,7 +233,7 @@ COMMAND *search_commands(char* cmd) {
       {
         //while each character matches and they are not null or space
         while ((*aliasCmd == *cmd && !isnullorspace(*cmd))) { //increment both
-          testCmd++;
+          aliasCmd++;
           cmd++;
         }
 
@@ -253,4 +255,15 @@ COMMAND *search_commands(char* cmd) {
     return NULL;  // set cmdidx to -1
 
   return &(commands[cmdidx]);
+}
+
+// Testing command, remove?
+int showAll(){
+  int cmdidx = 0;
+  while (commands[cmdidx].str != NULL){
+    printf("Native is %s\tAlias is %s\n",commands[cmdidx].str, commands[cmdidx].alias );
+    cmdidx++;
+  }
+
+  return SUCCESS;
 }
