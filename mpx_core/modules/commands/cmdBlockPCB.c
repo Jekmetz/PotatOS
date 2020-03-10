@@ -1,6 +1,6 @@
+#include "../pcb/pcb_constants.h"
 #include "../pcb/pcb_utils.h"
 #include "commandUtils.h"
-#include "../pcb/pcb_constants.h"
 #include <core/stdio.h>
 #include <system.h>
 

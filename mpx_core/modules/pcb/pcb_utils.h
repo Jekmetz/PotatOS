@@ -1,10 +1,13 @@
+#pragma once
+
+#ifndef PCB_UTILS_H
+#define PCB_UTILS_H
+
 /**
 * @file pcb_utils.h
 *
 * @brief Utility functions for all PCBs
 */
-
-#pragma once
 
 #include "pcb_queue.h"
 #include "pcb_constants.h"
@@ -95,13 +98,6 @@ queue_t* get_suspended_ready_queue();
 queue_t* get_suspended_blocked_queue();
 
 /**
-* @brief Getter function for the running process
-*
-* @return A pointer to the running process
-*/
-pcb_t** get_running_process();
-
-/**
 * @brief Prints the passed pcb's info in a stylized manner
 *
 * Example output
@@ -129,3 +125,5 @@ const char* get_process_class_string(PROCESS_CLASS process_class);
 * @return A char pointer that is the enumeration name
 */
 const char* get_process_state_string(PROCESS_STATE process_state);
+
+#endif

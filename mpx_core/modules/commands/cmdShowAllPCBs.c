@@ -3,6 +3,7 @@
 
 #include "../pcb/pcb_constants.h"
 #include "../pcb/pcb_utils.h"
+#include "../mpx_supt.h"
 #include "commandUtils.h"
 #include "commands.h"
 
@@ -30,6 +31,10 @@ int cmd_show_all_pcbs(char* params) {
       total_printed++;
     }
   }
+
+  print_pcb_info(get_running_process());
+  puts("");
+  total_printed++;
 
   printf("Total printed: %i\n", total_printed);
 

@@ -1,7 +1,17 @@
-#ifndef _MPX_SUPT_H
-#define _MPX_SUPT_H
+#pragma once
+
+#ifndef MPX_SUPT_H
+#define MPX_SUPT_H
 
 #include <system.h>
+
+#include "./pcb/pcb_queue.h"
+#include "./pcb/pcb_constants.h"
+#include <core/serial.h>
+#include <mem/heap.h>
+#include <string.h>
+#include <core/stdio.h>
+#include "./pcb/pcb_utils.h"
 
 #define EXIT 0
 #define IDLE 1
@@ -60,7 +70,7 @@ u32int* sys_call(context_t* registers);
 *
 * @returns NOTHING.
 */
-void process_loader(char* proc_name, int priority, void (*func)(void));
+void process_loader(char* proc_name, int priority, int class, void (*func)(void));
 
 /*
   Procedure..: mpx_init
@@ -112,5 +122,11 @@ int sys_free_mem(void* ptr);
   Params..: None
 */
 void idle();
+
+/**
+ * @brief Gets the currently running process
+ * @return A pointer to the currently running process
+ */
+const pcb_t* get_running_process();
 
 #endif

@@ -19,6 +19,7 @@
 #include "modules/mpx_supt.h"
 #include "modules/cmdinput/command_handler.h"
 #include "modules/pcb/pcb_wrangler.h"
+#include "modules/pcb/pcb_constants.h"
 
 void kmain(void) {
   extern uint32_t magic;
@@ -64,8 +65,8 @@ void kmain(void) {
 
   // 5) Add command handler and idle to ready queue
   klogv("Adding commhand to ready queue...");
-  process_loader("commhand", 314159265, &command_handler);
-  process_loader("idle", 314159266, &idle);
+  process_loader("commhand", 314159265, SYSTEM, &command_handler);
+  process_loader("idle", 314159266, SYSTEM, &idle);
   asm volatile ("int $60");
 
   // 6) System Shutdown on return from your command handler

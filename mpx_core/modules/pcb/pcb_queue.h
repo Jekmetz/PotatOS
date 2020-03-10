@@ -1,9 +1,13 @@
+#pragma once
+
+#ifndef PCB_QUEUE_H
+#define PCB_QUEUE_H
+
 /**
 * @file pcb_queue.h
 *
 * @brief File to hold all queue functions
 */
-#pragma once
 
 #include "pcb_constants.h"
 
@@ -61,3 +65,5 @@ queue_t *construct_queue();
  *  @param queue A pointer to the queue you wish to deallocate.
  */
 void destruct_queue(queue_t * queue);
+
+#endif

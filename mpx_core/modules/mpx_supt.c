@@ -7,14 +7,6 @@
  **************************************************************/
 #include "mpx_supt.h"
 
-#include <core/serial.h>
-#include <mem/heap.h>
-#include <string.h>
-#include <core/stdio.h>
-#include "./pcb/pcb_utils.h"
-#include "./pcb/pcb_queue.h"
-#include "./pcb/pcb_constants.h"
-
 // global variable containing parameter used when making
 // system calls via sys_req
 param params;
@@ -59,7 +51,6 @@ int (*student_read)(char* buffer, int* count);
  *
  *************************************************/
 int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr)
-
 {
   int return_code = 0;
 
@@ -135,9 +126,9 @@ u32int* sys_call(context_t* registers)
   return (u32int*)gcontext;
 }
 
-void process_loader(char* proc_name, int priority, void (*func)(void))
+void process_loader(char* proc_name, int priority, int class, void (*func)(void))
 {
-  pcb_t* new_pcb = setup_pcb(proc_name, APPLICATION, priority);
+  pcb_t* new_pcb = setup_pcb(proc_name, class, priority);
   context_t* cp = (context_t*)(new_pcb->stacktop);
   memset(cp, 0, sizeof(context_t));
   cp->fs=0x10;
@@ -245,4 +236,8 @@ void idle() {
     sys_req(WRITE, DEFAULT_DEVICE, msg, &count);
     sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
   }
+}
+
+const pcb_t* get_running_process() {
+  return cop;
 }

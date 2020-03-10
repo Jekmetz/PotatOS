@@ -1,11 +1,13 @@
-#include "../mpx_supt.h"
+#pragma once
+
+#ifndef PCB_CONSTANTS_H
+#define PCB_CONSTANTS_H
+
 /**
 * @file pcb_constants.h
 *
 * @brief Contains all shared resources amongst all PCBs
 */
-
-#pragma once
 
 #define DEFAULT_PRIORITY 314159265
 
@@ -67,3 +69,5 @@ typedef struct queue
     struct node *head;
     struct node *tail;  
 } queue_t;
+
+#endif
