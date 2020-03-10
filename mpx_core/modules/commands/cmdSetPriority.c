@@ -43,6 +43,14 @@ int cmd_set_priority_pcb(char* params){
   // Getting the proces priority
   process_priority = atoi(get_pvalue('p'));
 
+  //find that boi
+  p = find_pcb(process_name);
+  if(p != NULL && p->process_class == SYSTEM)
+  {
+    printf("\033[31Process priority not set. Process '%s' is a SYSTEM process.\033[0m",p->process_name);
+    return FAILURE;
+  }
+
   // Attempting to remove the proces, remove_pcb() handles sys_free_mem for us
   p = remove_pcb(process_name);
 
