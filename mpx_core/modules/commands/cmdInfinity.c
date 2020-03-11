@@ -34,7 +34,7 @@ int cmd_infinity(char* params)
 {
   if (params == NULL) {}
 
-  process_loader("infinity_stone", 60, APPLICATION, &proc_inf);
+  process_loader("infinity_stone", 61, APPLICATION, &proc_inf);
 
   return 1;
 }

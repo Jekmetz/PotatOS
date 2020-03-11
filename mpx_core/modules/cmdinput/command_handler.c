@@ -31,6 +31,7 @@
 * @brief Entry point for the command handler
 */
 void command_handler() {
+  puts("\033[32;1mStarting command handler\033[0m");
   // Initialize vars
   char cmd[CMDSIZE];
   int exit = 0;

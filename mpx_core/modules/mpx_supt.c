@@ -6,6 +6,7 @@
  * 	the semester.
  **************************************************************/
 #include "mpx_supt.h"
+#include "./commands/time.h"
 
 // global variable containing parameter used when making
 // system calls via sys_req
@@ -111,7 +112,11 @@ u32int* sys_call(context_t* registers)
     {
       cop->stacktop = (unsigned char*)registers;
       cop->state = READY;
-      cop->last_time_run = 0; // TODO: this needs to be set to now
+
+      struct fakelong tim = rdtsc();
+      // unsigned int* shft = (unsigned int*)(((unsigned char*)&tim) + 16);
+      u32int mid = (tim.upper << 16) + (tim.lower >> 16);
+      cop->last_time_run = mid;
       insert_pcb(cop);
     }
   }
