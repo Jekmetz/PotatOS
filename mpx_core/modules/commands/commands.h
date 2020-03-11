@@ -198,3 +198,5 @@ int cmd_alias(char* params);
 * @returns SUCCESS or FAILURE
 */
 int cmd_alarm(char* params);
+
+int cmd_infinity(char* params);

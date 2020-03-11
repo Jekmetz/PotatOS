@@ -34,6 +34,7 @@ COMMAND commands[] = {
   //{"yield", &cmd_yield, NULL},
   {"alias", &cmd_alias, NULL},
   {"alarm", &cmd_alarm, NULL},
+  {"infinity", &cmd_infinity, NULL},
   {NULL, NULL, NULL} // leave NULL at the end for searching reasons
 };
 

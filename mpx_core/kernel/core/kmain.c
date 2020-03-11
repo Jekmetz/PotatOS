@@ -66,7 +66,7 @@ void kmain(void) {
 
   // 5) Add command handler and idle to ready queue
   klogv("Adding commhand to ready queue...");
-  process_loader("commhand", 314159265, SYSTEM, &command_handler);
+  process_loader("commhand", 60, SYSTEM, &command_handler);
   process_loader("idle", 314159266, SYSTEM, &idle);
   process_loader("alarm", 314159265, SYSTEM, &alarmProcess);
   asm volatile ("int $60");

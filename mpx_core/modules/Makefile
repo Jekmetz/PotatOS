@@ -37,6 +37,7 @@ commands/cmdPotat.o\
 commands/cmdLoadr3.o\
 commands/cmdYield.o\
 commands/procsr3.o\
+commands/cmdInfinity.o\
 pcb/pcb_queue.o\
 commands/cmdTestPCB.o\
 pcb/pcb_wrangler.o\
