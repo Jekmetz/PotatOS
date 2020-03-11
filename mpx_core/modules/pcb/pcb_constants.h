@@ -60,6 +60,9 @@ typedef struct node
     
     void *next;
     void *prev;
+
+    //TODO: REMOVE WHEN M5
+    unsigned char flag;
 } node_t;
 
 /**

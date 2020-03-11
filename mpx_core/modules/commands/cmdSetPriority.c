@@ -47,7 +47,7 @@ int cmd_set_priority_pcb(char* params){
   p = find_pcb(process_name);
   if(p != NULL && p->process_class == SYSTEM)
   {
-    printf("\033[31Process priority not set. Process '%s' is a SYSTEM process.\033[0m",p->process_name);
+    printf("\033[31mProcess priority not set. Process '%s' is a SYSTEM process.\033[0m",p->process_name);
     return FAILURE;
   }
 
@@ -58,7 +58,7 @@ int cmd_set_priority_pcb(char* params){
   // does not exist
   if(p == NULL)
   {
-    printf("\033[31Process: '%s' not found!\033[0m\n",process_name);
+    printf("\033[31mProcess: '%s' not found!\033[0m\n",process_name);
     return FAILURE;
   }
 

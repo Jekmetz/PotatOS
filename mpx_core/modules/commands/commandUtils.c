@@ -29,7 +29,7 @@ COMMAND commands[] = {
   {"createPCB", &cmd_create_pcb, NULL},
   //{"deletePCB", &cmd_delete_pcb, NULL},
   {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
-  //{"loadr3", &cmd_loadr3, NULL},
+  {"loadr3", &cmd_loadr3, NULL},
   {"potat", &cmd_potat, NULL},
   //{"yield", &cmd_yield, NULL},
   {"alias", &cmd_alias, NULL},

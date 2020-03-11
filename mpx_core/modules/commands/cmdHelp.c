@@ -279,7 +279,7 @@ HELP_PAGES help_pages[] = {
   {"setPriorityPCB", SETPRIORITYPCB},
   //{"deletePCB", DELETEPCB},
   {"potat", POTAT},
-  //{"loadr3", LOADR3},
+  {"loadr3", LOADR3},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 

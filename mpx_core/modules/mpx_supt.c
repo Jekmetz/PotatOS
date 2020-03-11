@@ -234,7 +234,7 @@ void idle() {
 
   while (1) {
     sys_req(WRITE, DEFAULT_DEVICE, msg, &count);
-    sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
+    sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
   }
 }
 
