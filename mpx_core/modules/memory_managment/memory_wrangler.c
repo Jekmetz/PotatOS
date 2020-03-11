@@ -1,5 +1,6 @@
 #include "memory_wrangler.h"
 #include <system.h>
+#include <mem/heap.h>
 
 void* fma;
 cmcb* ffree;
@@ -10,9 +11,14 @@ unsigned int remaining_free;
 #define SUCCESS 1
 #define FAILURE 0
 
+#define NEXT_BLOCK(block) (cmcb*)((unsigned char*)block + block->size + MCB_PADDING)
+#define GET_LMCB(block) (lmcb*)((unsigned char*)block + block->size + sizeof(cmcb))
+
+typedef unsigned char* location;
+
 void* init() {
   // Creating heap
-  fma = kmalloc(HEAP_SIZE + MCB_PADDING);
+  fma = (void*)kmalloc(HEAP_SIZE + MCB_PADDING);
 
   // Setting free block
   ffree = fma;
@@ -22,7 +28,7 @@ void* init() {
   ffree->type = FREE;
 
   // ending block
-  lmcb* end = sizeof(cmcb) + HEAP_SIZE;
+  lmcb* end = (lmcb*)(sizeof(cmcb) + HEAP_SIZE);
   end->top = ffree;
   end->type = FREE;
 
@@ -41,9 +47,11 @@ void* internal_malloc(unsigned int size, pcb_t* karen) {
 
   cmcb* curr_blk = ffree;
   while ((curr_blk->size < size || curr_blk->type == ALIVE) &&
-         curr_blk < fma + HEAP_SIZE + MCB_PADDING) {
-    curr_blk = curr_blk->size + MCB_PADDING;
-    if (curr_blk > fma + HEAP_SIZE + sizeof(cmcb)) {
+         (location)curr_blk <
+             (location)fma + HEAP_SIZE + MCB_PADDING) {
+    curr_blk = NEXT_BLOCK(curr_blk);
+    if ((location)curr_blk >
+        (location)fma + HEAP_SIZE + sizeof(cmcb)) {
       // TODO: run compaction
       curr_blk = ffree;
     }
@@ -55,19 +63,24 @@ void* internal_malloc(unsigned int size, pcb_t* karen) {
   curr_blk->type = ALIVE;
   curr_blk->size = size;
 
-  lmcb* e_blk = curr_blk + size + sizeof(cmcb);
+  lmcb* e_blk = (lmcb*)((location)curr_blk + size + sizeof(cmcb));
   e_blk->top = curr_blk;
   e_blk->type = ALIVE;
 
   // fixing the free block
-  cmcb* nfree = e_blk + sizeof(lmcb);
+  cmcb* nfree = (cmcb*)((location)e_blk + sizeof(lmcb));
   nfree->karen = NULL;
   nfree->size = prev_size - size;
   nfree->type = FREE;
+  if (curr_blk == ffree) {
+    ffree = nfree;
+  }
 
-  lmcb* fend = nfree + nfree->size + sizeof(cmcb);
+  lmcb* fend = (lmcb*)((location)nfree + nfree->size + sizeof(cmcb));
   fend->top = nfree;
   fend->type = FREE;
+
+  remaining_free -= size;
 
   return curr_blk + sizeof(cmcb);
 }
@@ -80,15 +93,28 @@ int internal_free(void* data) {
   block->type = FREE;
   end->type = FREE;
   block->karen = NULL;
+  remaining_free += block->size;
 
-  if (block == fma)
-  {
+  if (block == fma) {
     ffree = block;
   }
 
-  cmcb* nblock = block + MCB_PADDING;
-  
+  // checking previous block
+  lmcb* prev_lmcb = (lmcb*)((location)block - sizeof(lmcb));
+  if ((location)prev_lmcb >= (location)fma && prev_lmcb->type == FREE) {
+    prev_lmcb->top->size += block->size + MCB_PADDING;
+    end->top = prev_lmcb->top;
+    block = end->top;
+  }
 
-  //TODO: combining free blocks
+  // checking next block
+  cmcb* next_cmcb = (cmcb*)((location)block + MCB_PADDING + block->size);
+  if ((location)next_cmcb < (location)fma + HEAP_SIZE + MCB_PADDING && next_cmcb->type == FREE)
+  {
+    lmcb* next_lmcb = GET_LMCB(next_cmcb);
+    next_lmcb->top = block;
+    block->size += next_cmcb->size + MCB_PADDING;
+  }
+
   return SUCCESS;
 }
