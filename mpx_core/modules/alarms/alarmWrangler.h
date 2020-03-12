@@ -18,6 +18,7 @@ int alarmNumber();
 int insertAlarm(char* message, char* dateIn);
 int removeAlarm(const char* message);
 int check();
+void alarmProcess();
 
 typedef struct {
   char* message;

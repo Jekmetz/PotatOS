@@ -210,36 +210,41 @@ struct fakelong rdtsc(void) {
 }
 
 time_h* parseTandD(time_h* dest, char* input){
+ 	// Splitting input into date and time section
  	char *date = strtok(input, " ");
  	char *time = strtok(NULL, " ");
 
- 	char *aday = strtok(date, "/");
-    char *amonth = strtok(NULL, "/");
-    char *ayear = strtok(NULL, "/");
+ 	// Using date to strip off the date values
+ 	char *day = strtok(date, "/");
+    char *month = strtok(NULL, "/");
+    char *year = strtok(NULL, "/");
 
-    dest->day_of_month = atoi(aday);
-    dest->month = atoi(amonth);
-    dest->year = atoi(ayear);
+    // Calling validDate
+    if(!(validDate(year, month, day))){
+    	return 0;
+    }
 
-	char *ahour = strtok(time, ":");
-	char *aminute = strtok(NULL, ":");
-	char *asecond = strtok(NULL, ":");
+    // Using time to strip off the time values 
+	char *hour = strtok(time, ":");
+	char *minute = strtok(NULL, ":");
+	char *second = strtok(NULL, ":");
 
-	dest->seconds = atoi(asecond);
-	dest->minutes = atoi(aminute);
-	dest->hours = atoi(ahour);
+	if(!(validTime(hour, minute, second))){
+		return 0;
+	}
+
+	// If everything worked to here, we are good, setting inside the destination
+    dest->day_of_month = atoi(day);
+    dest->month = atoi(month);
+    dest->year = atoi(year);
+	dest->seconds = atoi(second);
+	dest->minutes = atoi(minute);
+	dest->hours = atoi(hour);
 
 	return dest;
 }
 
 int compareTime(time_h timeOne, time_h timeTwo){
-	// if(timeOne-> year != timeTwo -> year) return (timeOne -> year - timeTwo -> year);
-	// if(timeOne-> month != timeTwo -> month) return (timeOne -> month - timeTwo -> month);
-	// if(timeOne-> day_of_month != timeTwo -> day_of_month) return (timeOne -> day_of_month - timeTwo -> day_of_month);
-	// if(timeOne-> hours != timeTwo -> hours) return (timeOne -> hours - timeTwo -> hours);
-	// if(timeOne-> minutes != timeTwo -> minutes) return (timeOne -> minutes - timeTwo -> minutes);
-	// else return timeOne -> seconds - timeTwo -> seconds;
-
 	if(timeOne.year != timeTwo.year) return (timeOne.year - timeTwo.year);
 	if(timeOne.month != timeTwo.month) return (timeOne.month - timeTwo.month);
 	if(timeOne.day_of_month != timeTwo.day_of_month) return (timeOne.day_of_month - timeTwo.day_of_month);
@@ -247,4 +252,78 @@ int compareTime(time_h timeOne, time_h timeTwo){
 	if(timeOne.minutes != timeTwo.minutes) return (timeOne.minutes - timeTwo.minutes);
 	else return timeOne.seconds - timeTwo.seconds;
 
+}
+
+int validDate(char* year, char* month, char* day){
+	int yearInt = atoi(year);
+	int monthInt = atoi(month);
+	int dayInt = atoi(day);
+
+	// Year validity
+	if (yearInt < MIN_YEAR || yearInt > MAX_YEAR)
+	{
+		printf("\033[31mTIME ERROR: The year %d is not valid.\033[0m\n", yearInt);
+		return 0;
+	}
+
+	// checking month validity
+	if (monthInt == 0 || monthInt > 12)
+	{
+		printf("\033[31mTIME ERROR: The month %d is not valid.\033[0m\n", monthInt);
+		return 0;
+	}
+	
+	// checking if day is valid
+	// Leap year condition
+	// if the year is divisible by 400 it is a leapyear
+	// if not, and the year is divisible by 100 it is not a leapyear (1900 and 2100)
+	// otherwise the year must be divisible by 4 to be a leapyear
+	int is_leap = yearInt % 4 == 0 && !(yearInt % 400 != 0 && yearInt % 100 == 0);
+
+	// day cannot be 0 (negatives are allowed because of no write case)
+	// leap year in FEBRUARY
+	// FEBRUARY
+	// Even months have 30 days
+	// no month has more than 31 days
+	if (dayInt == 0 ||
+	(monthInt == 2 && is_leap && dayInt > 29) ||
+	(monthInt == 2 && !is_leap && dayInt > 28) ||
+	(monthInt % 2 == 0 && dayInt > 30) ||
+	(dayInt > 31))
+	{
+		printf("\033[31mTIME ERROR: The day %d is not valid.\033[0m\n", dayInt);
+		return 0;
+	}
+
+	return 1;
+}
+
+int validTime(char* hours, char* minutes, char* seconds){
+	int hoursInt = atoi(hours);
+	int minutesInt = atoi(minutes);
+	int secondsInt = atoi(seconds);
+
+
+	// checking if the hour is valid
+	if (hoursInt > 24 || hoursInt < -1)
+	{
+		printf("\033[31mTIME ERROR: The hour %d is not valid.\033[0m\n", hoursInt);
+		return 0;
+	}
+
+	// checking if the minutes are valid
+	if (minutesInt > 59 || minutesInt < -1)
+	{
+		printf("\033[31mTIME ERROR: The minute %d is not valid.\033[0m\n", minutesInt);
+		return 0;
+	}
+
+	// checking if the seconds are valid
+	if (secondsInt > 59 || secondsInt < -1)
+	{
+		printf("\033[31mTIME ERROR: The second %d is not valid.\033[0m\n", secondsInt);
+		return 0;
+	}
+
+	return 1;
 }

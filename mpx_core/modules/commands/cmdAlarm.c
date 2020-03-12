@@ -17,7 +17,12 @@ int cmd_alarm(char* params) {
   char *cmd;
 
   // trim and set flags
-  chk = set_flags(trim(params),&flag,5,'l',"list",'s',"set",'r',"remove",'d',"date", 'c', "check");
+  chk = set_flags(trim(params),&flag,4,
+    'l',"list",
+    's',"set",
+    'r',"remove",
+    'd',"date"
+    );
 
   // If set flags fails
   if(chk != SUCCESS)
@@ -26,55 +31,63 @@ int cmd_alarm(char* params) {
     return FAILURE;
   }
 
-  // If L flag used to list all alarms 
+  // L Flag: list all alarms 
   if(flag & L_FLAG){
     listAlarms();
     return SUCCESS;
   }
 
+  // S & D Flag: Set a new alarm
   if((flag & S_FLAG) && (flag & D_FLAG)){
+    // Getting the values for s which is the alarm message
     char* tmp = get_pvalue('s');
+
+    // Allocating memory
     char* name = (char*)sys_alloc_mem(sizeof(ALARM) * (strlen(tmp) + 1));
     name = strcpy(name, tmp);
 
+    // Getting the values for d which is the date
     cmd = get_pvalue('d');
+
+    // Inserting the alarm
     insertAlarm(name, cmd);
+
+    // Informing user
+    puts("\033[32mAlarm successfully submitted!\033[0m");
+
     return SUCCESS;
   }
 
+  // S Flag: Only s flag, must have d flag
   if(flag & S_FLAG){
-    puts("You must also submit the date with the -d flag");
+    puts("\033[31mYou must also submit the date with the -d flag\033[0m");
     return FAILURE;
   }
 
+  // R Flag: Remove alarm
   if(flag & R_FLAG){
+    // Getting the values for r which is the alarm to be removed
     cmd = get_pvalue('r');
-    removeAlarm(cmd);
-    //other();
+
+    // Calling remove alarm
+    int ret = removeAlarm(cmd);
+
+    if(ret == FAILURE){
+      puts("\033[31mAlarm was not removed\033[0m");
+      return FAILURE;
+    }
+    else{
+      puts("\033[32mAlarm successfully removed\033[0m");
+    }
     return SUCCESS;
   }
 
-  if(flag & C_FLAG){
-    check();
-    return SUCCESS;
-  }
-
-  // if(flag & C_FLAG){
-  //   check();
-
-
-  //   return SUCCESS;
-  // }
-
-  ////if there was nothing specified...
-
+  // No Flag: Tell user to do it righ 
   if(flag & NO_FLAG)
   {
-    puts("Calling");
+    puts("Refer to Alarm help page to learn command structure");
     return SUCCESS;
   }
-
-
 
   return SUCCESS;  // successful response
 }

@@ -20,6 +20,7 @@
 #include "modules/cmdinput/command_handler.h"
 #include "modules/pcb/pcb_wrangler.h"
 #include "modules/pcb/pcb_constants.h"
+#include "modules/alarms/alarmWrangler.h"
 
 void kmain(void) {
   extern uint32_t magic;
@@ -67,6 +68,7 @@ void kmain(void) {
   klogv("Adding commhand to ready queue...");
   process_loader("commhand", 314159265, SYSTEM, &command_handler);
   process_loader("idle", 314159266, SYSTEM, &idle);
+  process_loader("alarm", 314159265, SYSTEM, &alarmProcess);
   asm volatile ("int $60");
 
   // 6) System Shutdown on return from your command handler

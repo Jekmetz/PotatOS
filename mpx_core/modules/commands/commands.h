@@ -185,6 +185,16 @@ int cmd_loadr3(char* params);
 */
 int cmd_yield(char* params);
 
+/**
+* @brief Command to make an alias for a command
+*
+* @returns SUCCESS
+*/
 int cmd_alias(char* params);
 
+/**
+* @brief Command to set/delete/list alarms
+*
+* @returns SUCCESS or FAILURE
+*/
 int cmd_alarm(char* params);

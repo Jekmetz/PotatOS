@@ -17,6 +17,9 @@
 #define INDEX_REG 0x70
 #define DATA_REG 0x71
 
+#define MIN_YEAR 1750
+#define MAX_YEAR 2500
+
 // Available months to set
 // Not necessary but are for convinience
 enum MONTH
@@ -121,4 +124,12 @@ struct fakelong rdtsc(void);
 
 time_h* parseTandD(time_h* dest, char* input);
 
-int compareTime();
+int validTime(char* hours, char* minutes, char* seconds);
+
+int validDate(char* year, char* month, char* day);
+
+int compareTime(time_h timeOne, time_h timeTwo);
+
+int validDate(char* year, char* month, char* day);
+
+int validTime(char* hours, char* minutes, char* seconds);
