@@ -238,9 +238,16 @@ int poll_input(char* buffer, int* length) {
         // check for both here for enter. If we hit enter, we print
         // a newline and return. We also return if we've hit the max
         // length
+
         memcpy(history[0], buffer, BUFFER_LEN);
 
         serial_print("\n");
+
+        // If it was empty, return early and dont add it to history
+        if (strlen(history[0]) == 0) {
+          return 0;
+        }
+
         for (int i = 10; i > 0; i--) {
             memset(history[i], 0, 100);
             memcpy(history[i], history[i - 1], BUFFER_LEN);
