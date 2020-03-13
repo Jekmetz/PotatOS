@@ -1,30 +1,23 @@
 #include "../pcb/pcb_constants.h"
 
-#define HEAP_SIZE 54321
+#define HEAP_SIZE 54301
 #define MCB_PADDING (sizeof(cmcb) + sizeof(lmcb))
 
+typedef enum { FREE, ALIVE } MEMTYPE;
 
-typedef enum
-{
-    FREE,
-    ALIVE
-} MEMTYPE;
-
-typedef struct 
-{
-    pcb_t *karen;
-    unsigned int size;
-    MEMTYPE type;
+typedef struct {
+  pcb_t* karen;
+  unsigned int size;
+  MEMTYPE type;
 } cmcb;
 
-typedef struct
-{
-    cmcb *top;
-    MEMTYPE type;
+typedef struct {
+  cmcb* top;
+  MEMTYPE type;
 } lmcb;
 
-void *init();
+void* mem_init();
 
-void *internal_malloc(unsigned int size, pcb_t *karen);
+u32int internal_malloc(u32int size);
 
-int internal_free(void * data);
+int internal_free(void* data);

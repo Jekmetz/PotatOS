@@ -1,4 +1,5 @@
 #include "memory_wrangler.h"
+#include "../mpx_supt.h"
 #include <system.h>
 #include <mem/heap.h>
 
@@ -11,12 +12,22 @@ unsigned int remaining_free;
 #define SUCCESS 1
 #define FAILURE 0
 
-#define NEXT_BLOCK(block) (cmcb*)((unsigned char*)block + block->size + MCB_PADDING)
-#define GET_LMCB(block) (lmcb*)((unsigned char*)block + block->size + sizeof(cmcb))
+#define DEBUG 1
+
+#if DEBUG
+#include <core/stdio.h>
+#define PRINT(str, dat...) \
+  printf("\033[35mMEM_WRANGLER(%d):\033[0m " str "\033[0m\n", __LINE__, dat)
+#endif
+
+#define NEXT_BLOCK(block) \
+  (cmcb*)((unsigned char*)block + block->size + MCB_PADDING)
+#define GET_LMCB(block) \
+  (lmcb*)((unsigned char*)block + block->size + sizeof(cmcb))
 
 typedef unsigned char* location;
 
-void* init() {
+void* mem_init() {
   // Creating heap
   fma = (void*)kmalloc(HEAP_SIZE + MCB_PADDING);
 
@@ -34,10 +45,22 @@ void* init() {
 
   remaining_free = HEAP_SIZE;
 
+#if DEBUG
+  PRINT("Created heap with \033[32;1m%d bytes", HEAP_SIZE + MCB_PADDING);
+#endif
   return fma;
 }
 
-void* internal_malloc(unsigned int size, pcb_t* karen) {
+u32int internal_malloc(u32int size) {
+  pcb_t* karen = (pcb_t*)get_running_process();
+#if DEBUG
+  if (karen != NULL) {
+    PRINT("Allocating memory for %s - %d", karen->process_name, size);
+  }
+  else {
+    PRINT("Allocating memory for NULL - %d bytes", size);
+  }
+#endif
   // checking that there is enough memory in the heap
   if (remaining_free < size) {
     return NULL;
@@ -47,12 +70,9 @@ void* internal_malloc(unsigned int size, pcb_t* karen) {
 
   cmcb* curr_blk = ffree;
   while ((curr_blk->size < size || curr_blk->type == ALIVE) &&
-         (location)curr_blk <
-             (location)fma + HEAP_SIZE + MCB_PADDING) {
+         (location)curr_blk < (location)fma + HEAP_SIZE + MCB_PADDING) {
     curr_blk = NEXT_BLOCK(curr_blk);
-    if ((location)curr_blk >
-        (location)fma + HEAP_SIZE + sizeof(cmcb)) {
-      // TODO: run compaction
+    if ((location)curr_blk > (location)fma + HEAP_SIZE + sizeof(cmcb)) {
       curr_blk = ffree;
     }
   }
@@ -82,12 +102,20 @@ void* internal_malloc(unsigned int size, pcb_t* karen) {
 
   remaining_free -= size;
 
-  return curr_blk + sizeof(cmcb);
+  return (u32int)(curr_blk + sizeof(cmcb));
 }
 
 int internal_free(void* data) {
   cmcb* block = data - sizeof(cmcb);
   lmcb* end = data + block->size;
+
+  #if DEBUG
+  if (block->karen != NULL){
+    PRINT("Freeing memory @%x from process %s - %d bytes", data, block->karen->process_name, block->size);
+  } else {
+    PRINT("Freeing memory @%x from process NULL - %d bytes", data, block->size);
+  }
+  #endif
 
   // Setting variables of current block
   block->type = FREE;
@@ -109,8 +137,8 @@ int internal_free(void* data) {
 
   // checking next block
   cmcb* next_cmcb = (cmcb*)((location)block + MCB_PADDING + block->size);
-  if ((location)next_cmcb < (location)fma + HEAP_SIZE + MCB_PADDING && next_cmcb->type == FREE)
-  {
+  if ((location)next_cmcb < (location)fma + HEAP_SIZE + MCB_PADDING &&
+      next_cmcb->type == FREE) {
     lmcb* next_lmcb = GET_LMCB(next_cmcb);
     next_lmcb->top = block;
     block->size += next_cmcb->size + MCB_PADDING;
