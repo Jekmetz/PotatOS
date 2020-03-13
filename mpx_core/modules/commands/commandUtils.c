@@ -27,7 +27,7 @@ COMMAND commands[] = {
   {"showBlockedPCBs", &cmd_show_blocked_pcbs, NULL},
   //{"unblockPCB", &cmd_unblock_pcb, NULL},
   {"createPCB", &cmd_create_pcb, NULL},
-  //{"deletePCB", &cmd_delete_pcb, NULL},
+  {"deletePCB", &cmd_delete_pcb, NULL},
   {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
   {"loadr3", &cmd_loadr3, NULL},
   {"potat", &cmd_potat, NULL},

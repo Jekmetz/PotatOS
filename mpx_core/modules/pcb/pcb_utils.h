@@ -126,4 +126,9 @@ const char* get_process_class_string(PROCESS_CLASS process_class);
 */
 const char* get_process_state_string(PROCESS_STATE process_state);
 
+/**
+* @breif kills the ready queue after commhand death
+*/
+void kill_it___kill_it_all();
+
 #endif

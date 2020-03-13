@@ -34,6 +34,12 @@ int cmd_suspend(char* params)
     return FAILURE;
   }
 
+  if(p->process_class == SYSTEM)
+  {
+    printf("\033[31mProcess not removed. Process '%s' is a SYSTEM process.\033[0m",p->process_name);
+    return FAILURE;
+  }
+
   if(p->state == SUSPENDED_BLOCKED || p->state == SUSPENDED_READY)
   {
     printf("\033[31mProcess: '%s' is already suspended!\033[0m\n", pname);

@@ -133,6 +133,9 @@ u32int* sys_call(context_t* registers)
 
 void process_loader(char* proc_name, int priority, int class, void (*func)(void))
 {
+  //dont load a duplicate process
+  if(find_pcb(proc_name) != NULL) return;
+
   pcb_t* new_pcb = setup_pcb(proc_name, class, priority);
   context_t* cp = (context_t*)(new_pcb->stacktop);
   memset(cp, 0, sizeof(context_t));

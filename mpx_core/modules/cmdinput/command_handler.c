@@ -116,5 +116,7 @@ void command_handler() {
 
   puts("Exiting prompt! Goodbye and have a \033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033[33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
 
+  kill_it___kill_it_all();
+
   sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
 }

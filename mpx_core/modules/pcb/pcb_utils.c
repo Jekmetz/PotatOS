@@ -226,3 +226,8 @@ const char* get_process_state_string(PROCESS_STATE process_state) {
       return "UNKNOWN STATE";
   }
 }
+
+void kill_it___kill_it_all()
+{
+  destruct_queue(ready_queue);
+}
