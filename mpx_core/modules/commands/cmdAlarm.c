@@ -31,8 +31,14 @@ int cmd_alarm(char* params) {
     return FAILURE;
   }
 
+  if(strcmp(params,"alarm") == 0){
+    puts("Refer to Alarm help page to learn command structure");
+    return FAILURE;
+  }
+
   // L Flag: list all alarms 
-  if(flag & L_FLAG){
+  if(flag & L_FLAG)
+  {
     listAlarms();
     return SUCCESS;
   }
@@ -87,10 +93,10 @@ int cmd_alarm(char* params) {
   }
 
   // No Flag: Tell user to do it right
-  if(!(flag & NO_FLAG))
+  if(flag & NO_FLAG)
   {
     puts("Refer to Alarm help page to learn command structure");
-    return SUCCESS;
+    return FAILURE;
   }
 
   return SUCCESS;  // successful response

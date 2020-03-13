@@ -95,7 +95,7 @@ int check(){
 		// If its time to send alarm
 		if(compareTime(currentTime, alarms[i].time) > 0){
 			// Printing alarm then removing it
-			printf("%s\n",alarms[i].message);
+			printf("\033[95mAlarm activated! %s\n\033[0m",alarms[i].message);
 			removeAlarm(alarms[i].message);
 		}
 	}
