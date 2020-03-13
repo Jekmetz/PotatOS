@@ -82,8 +82,8 @@ int cmd_alarm(char* params) {
     return SUCCESS;
   }
 
-  // No Flag: Tell user to do it righ 
-  if(flag & NO_FLAG)
+  // No Flag: Tell user to do it right
+  if(!(flag & NO_FLAG))
   {
     puts("Refer to Alarm help page to learn command structure");
     return SUCCESS;
