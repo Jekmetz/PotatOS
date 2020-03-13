@@ -50,7 +50,11 @@ int cmd_alarm(char* params) {
     cmd = get_pvalue('d');
 
     // Inserting the alarm
-    insertAlarm(name, cmd);
+    if(insertAlarm(name, cmd) == FAILURE)
+    {
+       puts("\033[31mAlarm not added!\033[0m");
+       return FAILURE;
+    }
 
     // Informing user
     puts("\033[32mAlarm successfully submitted!\033[0m");

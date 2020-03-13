@@ -52,7 +52,7 @@ int insertAlarm(char* messageIn, char* dateIn){
     	return FAILURE;
  	}
  	time_h alarmDandT;
- 	parseTandD(&alarmDandT, dateIn);
+ 	if(parseTandD(&alarmDandT, dateIn) == NULL) return FAILURE;
 	
 	ALARM newAlarm;
 	newAlarm.message = messageIn;
