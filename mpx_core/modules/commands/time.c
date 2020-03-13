@@ -214,40 +214,58 @@ time_h* parseTandD(time_h* dest, char* input){
  	char *date = strtok(input, " ");
  	char *time = strtok(NULL, " ");
 
- 	// 
+ 	// Specifying date and time
  	if(date != NULL && time !=  NULL){
- 		puts("Neither is null");
+		// Using date to strip off the date values
+	 	char *day = strtok(date, "/");
+	 	char *month = strtok(NULL, "/");
+	 	char *year = strtok(NULL, "/");
+
+	 	// Calling validDate
+	 	if(!(validDate(year, month, day))){
+	 	 return 0;
+	 	}
+
+	    // Using time to strip off the time values 
+		char *hour = strtok(time, ":");
+		char *minute = strtok(NULL, ":");
+		char *second = strtok(NULL, ":");
+
+		if(!(validTime(hour, minute, second))){
+			return 0;
+		}
+
+		// If everything worked to here, we are good, setting inside the destination
+	 	dest->day_of_month = atoi(day);
+	 	dest->month = atoi(month);
+	 	dest->year = atoi(year);
+		dest->seconds = atoi(second);
+		dest->minutes = atoi(minute);
+		dest->hours = atoi(hour);
  	}
+
+ 	// Using default date
  	else if(date != NULL && time == NULL){
- 		puts("First is not null and seconds is null");
+	 	time_h curr = get_current_time();
+
+	    // Using time to strip off the time values 
+		char *hour = strtok(date, ":");
+		char *minute = strtok(NULL, ":");
+		char *second = strtok(NULL, ":");
+
+		if(!(validTime(hour, minute, second))){
+			return 0;
+		}
+
+		// If everything worked to here, we are good, setting inside the destination
+	 	dest->day_of_month = curr.day_of_month;
+	 	dest->month = curr.month;
+	 	dest->year = curr.year;
+		dest->seconds = atoi(second);
+		dest->minutes = atoi(minute);
+		dest->hours = atoi(hour);
+
  	}
-
- 	// Using date to strip off the date values
- 	// char *day = strtok(date, "/");
- 	// char *month = strtok(NULL, "/");
- 	// char *year = strtok(NULL, "/");
-
- 	// Calling validDate
- 	// if(!(validDate(year, month, day))){
- 	//  return 0;
- 	// }
-
-    // Using time to strip off the time values 
-	// char *hour = strtok(time, ":");
-	// char *minute = strtok(NULL, ":");
-	// char *second = strtok(NULL, ":");
-
-	// if(!(validTime(hour, minute, second))){
-	// 	return 0;
-	// }
-
-	// If everything worked to here, we are good, setting inside the destination
- 	// dest->day_of_month = atoi(day);
- 	// dest->month = atoi(month);
- 	// dest->year = atoi(year);
-	// dest->seconds = atoi(second);
-	// dest->minutes = atoi(minute);
-	// dest->hours = atoi(hour);
 
 	return dest;
 }
