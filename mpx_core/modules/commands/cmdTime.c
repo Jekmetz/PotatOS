@@ -13,7 +13,7 @@ int cmd_time(char* params) {
   // Init vars
   int flag = 0, chk;
 
-  chk = set_flags(params, &flag, 2,
+  chk = set_flags(params, &flag, 1,
     's',"set"
     );
 
