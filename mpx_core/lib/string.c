@@ -5,6 +5,7 @@
 */ 
 
 #include <string.h>
+#include <core/serial.h>
 #include <stdarg.h>
 #include <system.h>
 
@@ -231,7 +232,6 @@ char* reverse(char* str, int end) {
     str[end] ^= str[front];
     str[front] ^= str[end];
 
-    front += 1;
     end -= 1;
   }
 
@@ -268,6 +268,7 @@ char* itoa(int num, char* str, int base) {
 * @return pointer to str
 */
 char* utoa(u32int num, char* str, int base) {
+  str = memset(str,'\0',6);
   int idx = 0;
 
   int digit;
@@ -281,12 +282,11 @@ char* utoa(u32int num, char* str, int base) {
     } else {
       str[idx] = digit + '0';
     }
-
     idx += 1;
   } while (num != 0);
 
   str[idx] = '\0';
-  reverse(str, idx - 1);
+  reverse(str, idx-1);
   return str;
 }
 
