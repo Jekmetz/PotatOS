@@ -48,15 +48,21 @@ int cmd_alarm(char* params) {
     // Getting the values for s which is the alarm message
     char* tmp = get_pvalue('s');
 
+    if(tmp == NULL)
+    {
+      puts("\033[31mMessage was empty! Alarm not added!\033[0m");
+      return FAILURE;
+    }
+
     // Allocating memory
-    char* name = (char*)sys_alloc_mem(sizeof(ALARM) * (strlen(tmp) + 1));
-    name = strcpy(name, tmp);
+    char* str = (char*)sys_alloc_mem(sizeof(ALARM) * (strlen(tmp) + 1));
+    str = strcpy(str, tmp);
 
     // Getting the values for d which is the date
     cmd = get_pvalue('d');
 
     // Inserting the alarm
-    if(insertAlarm(name, cmd) == FAILURE)
+    if(insertAlarm(str, cmd) == FAILURE)
     {
        puts("\033[31mAlarm not added!\033[0m");
        return FAILURE;
