@@ -35,6 +35,7 @@ COMMAND commands[] = {
   {"alias", &cmd_alias, NULL},
   {"alarm", &cmd_alarm, NULL},
   {"infinity", &cmd_infinity, NULL},
+  {"history", &cmd_history, NULL},
   {NULL, NULL, NULL} // leave NULL at the end for searching reasons
 };
 

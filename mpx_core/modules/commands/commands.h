@@ -200,6 +200,13 @@ int cmd_alias(char* params);
 int cmd_alarm(char* params);
 
 /**
+* @brief Command to show history of commands typed
+*
+* @returns SUCCESS or FAILURE
+*/
+int cmd_history(char* params);
+
+/**
 * @brief The infinity alarm for R4
 *
 * @returns SUCCESS or FAILURE

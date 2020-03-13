@@ -82,6 +82,34 @@ const char ESC = '\x1B';
 const int ALT_FLAG = 1 << 8;
 
 /**
+ * @brief The array of the last used commands
+ */
+static char history[11][BUFFER_LEN] = { {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0} };
+
+/**
+ * @brief The current length of the last used commands
+ */
+static int history_length = 0;
+
+/**
+ * @brief Getter function for the command history length
+ *
+ * @return An int of how long the history currently is. Maxes out at 10
+ */
+int get_history_length() {
+  return history_length;
+}
+
+/**
+ * @brief Getter function for the command history array
+ *
+ * @return A char pointer to char pointers; an array of commands.
+ */
+char (*get_command_history())[11][100] {
+  return &history;
+}
+
+/**
 * @brief Polls COM1 for input and puts it into buffer
 *
 * An internal history is kept so the user can go through past commands
@@ -92,9 +120,6 @@ const int ALT_FLAG = 1 << 8;
 * @return function status
 */
 int poll_input(char* buffer, int* length) {
-  static char history[11][BUFFER_LEN] = { {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0} };
-  static int history_length = 0;
-
   int history_index = 0;
 
   int max_length = *length;

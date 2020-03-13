@@ -6,6 +6,10 @@
 
 #pragma once
 
+int get_history_length();
+
+char (*get_command_history())[11][100];
+
 int poll_input(char* buffer, int* length);
 
 /**
