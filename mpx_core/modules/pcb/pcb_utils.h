@@ -65,7 +65,7 @@ pcb_t *remove_pcb(char* pname);
 
 // TODO
 /**
-*
+* @brief Initializes queues
 */
 void init_queue();
 

@@ -199,4 +199,9 @@ int cmd_alias(char* params);
 */
 int cmd_alarm(char* params);
 
+/**
+* @brief The infinity alarm for R4
+*
+* @returns SUCCESS or FAILURE
+*/
 int cmd_infinity(char* params);

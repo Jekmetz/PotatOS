@@ -114,4 +114,4 @@ void alarmProcess(){
 		// Calling idle to give control back
 		sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL); 
 	}
-}
+} 

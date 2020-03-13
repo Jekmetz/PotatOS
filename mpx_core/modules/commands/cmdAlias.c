@@ -64,7 +64,7 @@ int cmd_alias(char* params) {
     char* name = (char*)sys_alloc_mem(sizeof(char) * (strlen(aliasCmd) + 1));
     name = strcpy(name, aliasCmd);
     ret->alias = name;
-    //printf("'%s' is aliased as '%s'\n",nativeCmd,aliasCmd);
+    printf("'%s' is aliased as '%s'\n",nativeCmd,aliasCmd);
     return SUCCESS;
   }
 

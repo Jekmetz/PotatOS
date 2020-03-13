@@ -243,6 +243,47 @@ Example:\n\
   loadr3\n\
 "
 
+#define ALARM \
+"\
+Description:\n\
+  Set/list/delete an alarm\n\n\
+Usage:\n\
+  alarm [-l | --list] [-s | --set && -d | --date] [-r | --remove]\n\n\
+Example:\n\
+  alarm -s Test alarm -d 12:24:32\n\
+  alarm --set Another test --date 25/5/2020 16:02:00\n\
+"
+
+#define INFINITE \
+"\
+Description:\n\
+  Start infinite process\n\n\
+Usage:\n\
+  infinity\n\n\
+Example:\n\
+  infinity\n\
+"
+#define ALIAS \
+"\
+Description:\n\
+  Set alias for commands\n\n\
+Usage:\n\
+  alias <native command> <alias command>\n\n\
+Example:\n\
+  alias help h\n\
+  alias version v\n\
+"
+
+#define HISTORY \
+"\
+Description:\n\
+  View command history\n\n\
+Usage:\n\
+  history\n\n\
+Example:\n\
+  history\n\
+"
+
 /**
 * @brief A struct to hold help outputs
 *
@@ -280,6 +321,10 @@ HELP_PAGES help_pages[] = {
   {"deletePCB", DELETEPCB},
   {"potat", POTAT},
   {"loadr3", LOADR3},
+  {"alarm", ALARM},
+  {"infinity", INFINITE},
+  {"alias", ALIAS},
+  {"history", HISTORY},
   {NULL, NULL} // leave NULL at the end for searching reasons
 };
 
