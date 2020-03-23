@@ -47,6 +47,8 @@ void command_handler() {
 
   puts("\nType \033[33;1m\"help\"\033[0m for a list of commands\n");
 
+  puts("Type \033[33;1m\"alias -l\"\033[0m for a list of built-in aliases\nThis will make your life easier, Alex \033[32m:)\033[0m\n");
+
   while (!exit) {
     printf("\n\033[33;1mPOS User Shell\033[34m>>\033[0m ");  // show prompt
 
