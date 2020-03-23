@@ -7,6 +7,10 @@
  **************************************************************/
 #include "mpx_supt.h"
 #include "./commands/time.h"
+#include "./pcb/pcb_queue.h"
+
+//TMP 
+#include "./pcb/pcb_utils.h"
 
 // global variable containing parameter used when making
 // system calls via sys_req
@@ -97,6 +101,7 @@ int sys_req(int op_code, int device_id, char* buffer_ptr, int* count_ptr)
 u32int* sys_call(context_t* registers)
 {
   queue_t* ready_queue = get_ready_queue();
+  pcb_t* tmp = NULL;
 
   if(cop == NULL) //if sys_call has not been called...
   {
@@ -117,7 +122,7 @@ u32int* sys_call(context_t* registers)
       // unsigned int* shft = (unsigned int*)(((unsigned char*)&tim) + 16);
       u32int mid = (tim.upper << 16) + (tim.lower >> 16);
       cop->last_time_run = mid;
-      insert_pcb(cop);
+      tmp = cop;
     }
   }
 
@@ -125,13 +130,15 @@ u32int* sys_call(context_t* registers)
   {
     cop = dequeue(ready_queue);
     cop->state = RUNNING;
+    if(tmp != NULL) insert_pcb(tmp);
+    //showReadyQueue();
     return (u32int*)cop->stacktop;
   }
 
   return (u32int*)gcontext;
 }
 
-void process_loader(char* proc_name, int priority, int class, void (*func)(void))
+void process_loader(char* proc_name, int priority, int class, void (*func)(void), u32int state)
 {
   //dont load a duplicate process
   if(find_pcb(proc_name) != NULL) return;
@@ -148,7 +155,7 @@ void process_loader(char* proc_name, int priority, int class, void (*func)(void)
   cp->esp=(u32int)(new_pcb->stacktop);
   cp->eip=(u32int)func;
   cp->eflags=0x202;
-  new_pcb->state = READY;
+  new_pcb->state = state;
   insert_pcb(new_pcb);
 }
 

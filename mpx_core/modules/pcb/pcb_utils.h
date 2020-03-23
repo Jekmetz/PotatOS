@@ -12,6 +12,8 @@
 #include "pcb_queue.h"
 #include "pcb_constants.h"
 
+void showReadyQueue();
+
 /**
 * @brief simply allocates space for a pcb and returns that pointer
 *

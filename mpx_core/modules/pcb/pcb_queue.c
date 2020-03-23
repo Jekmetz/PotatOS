@@ -100,47 +100,28 @@ void priority_enqueue(queue_t* cue, pcb_t* data) {
   // struct node* nnode = sys_alloc_mem(sizeof(struct node));
 
   // TODO: REMOVE WHEN M5
-  node_t* nnode = local_alloc_mem();
+  struct node* nnode = local_alloc_mem();
 
-  u32int now = cc_mid32();
   // setting node data
   nnode->data = data;
   nnode->prev = NULL;
   nnode->next = NULL;
-  nnode->data->last_time_run = now;
 
   if (cue->size == 0) {
     cue->head = nnode;
   } else {
-
-    // getting the time addative for the head node
-    u32int head_time_piority =
-        TIME_FLUX / (now - cue->head->data->last_time_run + 1);
-    // getting the time addative for the new node
-    u32int node_time_piority =
-        TIME_FLUX / (now - nnode->data->last_time_run + 1);
-
-    // comparing priorities of head and new node as edge case
-    if (cue->head->data->priority + head_time_piority >
-        nnode->data->priority + node_time_piority) {
-      cue->head->prev = nnode;
-      nnode->next = cue->head;
-      cue->head = nnode;
-    } else {  // if not that edge case
-      // iterating through all the nodes
+    if (cue->head->data->priority > nnode->data->priority) {
+        cue->head->prev = nnode;
+        nnode->next = cue->head;
+        cue->head = nnode;
+    } else {
       struct node* curr = cue->head;
-      u32int curr_time_priority = head_time_piority;
       while (curr->next != NULL &&
-             curr->data->priority + curr_time_priority <=
-                 nnode->data->priority + node_time_piority) {
+             curr->data->priority <= nnode->data->priority) {
         curr = curr->next;
-        curr_time_priority = TIME_FLUX / (now - curr->data->last_time_run + 1);
       }
 
-      // checking end edge case
-      // and inserting new node into queue
-      if (curr->data->priority + curr_time_priority <=
-          nnode->data->priority + node_time_piority) {
+      if (curr->data->priority <= nnode->data->priority) {
         curr->next = nnode;
         nnode->prev = curr;
       } else {

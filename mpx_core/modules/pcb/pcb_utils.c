@@ -196,6 +196,19 @@ void print_pcb_info(const pcb_t* pcb) {
   );
 }
 
+//TEMP
+void showReadyQueue()
+{
+  node_t* nnode;
+  nnode = ready_queue->head;
+  while(nnode != NULL)
+  {
+    print_pcb_info(nnode->data);
+    nnode = nnode->next;
+  }
+  puts("end\n");
+}
+
 const char* get_process_class_string(PROCESS_CLASS process_class) {
   switch (process_class) {
     case SYSTEM:

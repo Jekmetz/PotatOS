@@ -13,7 +13,6 @@
 #include <system.h>
 
 #define BUFFER_LEN 100
-#define LEAVE_TIME 700
 
 // Internally used functions, not placed in the header file for external use
 int input_available();
@@ -275,16 +274,9 @@ int poll_input(char* buffer, int* length) {
 * @return Returns an int corresponding to the key
 */
 int get_key() {
-  int count = 0;
   // Wait until input is available
   while (!input_available()) {
-    count++;
-    if(count >= LEAVE_TIME)
-    {
-      count = 0;
-      sys_req(IDLE, DEFAULT_DEVICE, NULL, NULL);
-    }
-    continue;
+      continue;
   }
 
   char first_char = inb(COM1);

@@ -70,7 +70,7 @@ u32int* sys_call(context_t* registers);
 *
 * @returns NOTHING.
 */
-void process_loader(char* proc_name, int priority, int class, void (*func)(void));
+void process_loader(char* proc_name, int priority, int class, void (*func)(void), u32int state);
 
 /*
   Procedure..: mpx_init
