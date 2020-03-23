@@ -268,8 +268,10 @@ Example:\n\
 Description:\n\
   Set alias for commands\n\n\
 Usage:\n\
+  alias [-l | --list]\n\
   alias <native command> <alias command>\n\n\
 Example:\n\
+  alias -l\n\
   alias help h\n\
   alias version v\n\
 "

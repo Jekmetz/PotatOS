@@ -13,21 +13,21 @@
 * @brief Array of COMMANDS that are supported
 */
 COMMAND commands[] = {
-  {"help", &cmd_help, NULL},
-  {"version",&cmd_version, NULL},
+  {"help", &cmd_help, "h"},
+  {"version",&cmd_version, "v"},
   {"date",&cmd_date, NULL},
   {"time", &cmd_time, NULL},
   {"clear", &cmd_clear, NULL},
   //{"blockPCB", &cmd_blockPCB, NULL},
-  {"resumePCB", &cmd_resume, NULL},
-  {"suspendPCB", &cmd_suspend, NULL},
-  {"showPCB", &cmd_show_pcb, NULL},
-  {"showAllPCBs", &cmd_show_all_pcbs, NULL},
-  {"showReadyPCBs", &cmd_show_ready_pcbs, NULL},
-  {"showBlockedPCBs", &cmd_show_blocked_pcbs, NULL},
+  {"resumePCB", &cmd_resume, "rp"},
+  {"suspendPCB", &cmd_suspend, "sp"},
+  {"showPCB", &cmd_show_pcb, "shp"},
+  {"showAllPCBs", &cmd_show_all_pcbs, "sap"},
+  {"showReadyPCBs", &cmd_show_ready_pcbs, "srp"},
+  {"showBlockedPCBs", &cmd_show_blocked_pcbs, "sbp"},
   //{"unblockPCB", &cmd_unblock_pcb, NULL},
   {"createPCB", &cmd_create_pcb, NULL},
-  {"deletePCB", &cmd_delete_pcb, NULL},
+  {"deletePCB", &cmd_delete_pcb, "dp"},
   {"setPriorityPCB", &cmd_set_priority_pcb, NULL},
   {"loadr3", &cmd_loadr3, NULL},
   {"potat", &cmd_potat, NULL},
@@ -187,6 +187,11 @@ int set_flags(char* paramstr, int* flag, int num_aliases, ...)
   }
 
   return SUCCESS;
+}
+
+COMMAND *get_command_array()
+{
+  return commands;
 }
 
 /**

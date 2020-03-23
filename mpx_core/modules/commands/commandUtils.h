@@ -175,6 +175,12 @@ char* get_pvalue(char c);
 */
 char set_flags_search_alias(char* alias, int num_aliases, ALIAS aliases[]);
 
+/**
+* @brief returns pointer to the command array
+*
+* @return pointer to the command array
+*/
+COMMAND *get_command_array();
 
 /**
 * @brief search commands with a command name

@@ -37,6 +37,12 @@ int cmd_delete_pcb(char* params){
     return FAILURE;
   }
 
+  if(p != NULL && p->state == READY)
+  {
+    printf("\033[31mProcess not removed. Process '%s' is currently ready to run.\nSuspend the process to delete it.\033[0m",p->process_name);
+    return FAILURE;  
+  }
+
   // Attempting to remove the proces, remove_pcb() handles sys_free_mem for us
   p = remove_pcb(process_name);
 

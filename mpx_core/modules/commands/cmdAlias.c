@@ -16,13 +16,44 @@ int cmd_alias(char* params) {
   char *cmd, *nativeCmd, *aliasCmd;
 
   // trim and set flags
-  chk = set_flags(trim(params),&flag,0);
+  chk = set_flags(trim(params),&flag,
+    1,
+    'l',"list"
+    );
 
   // If flags fail
   if(chk != SUCCESS)
   {
     puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
     return FAILURE;
+  }
+
+  if(flag & L_FLAG) //list
+  {
+    //loop through all commands and list the aliases
+    puts("");
+    printf(
+      "______________________________________\n"
+      "|%-20s|%-15s|\n"
+      "|====================|===============|\n"
+      ,"command","alias");
+
+    COMMAND* trav = get_command_array();
+
+    while(trav->str != NULL)
+    {
+      if(trav->alias != NULL)
+      {
+        printf(
+          "|%-20s|%-15s|\n"
+          "|--------------------|---------------|\n"
+          ,trav->str, trav->alias);
+      }
+      trav = trav + 1;
+    }
+
+    printf("|====================================|");
+    return SUCCESS;
   }
 
   //if there was nothing specified...
