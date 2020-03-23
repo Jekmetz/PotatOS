@@ -31,6 +31,7 @@ commands/cmdShowAllPCBs.o\
 commands/cmdShowBlockedPCBs.o\
 commands/cmdShowPCB.o\
 commands/cmdShowReadyPCBs.o\
+commands/cmdShowSusReadyPCBs.o\
 commands/cmdSuspend.o\
 commands/cmdUnblockPCB.o\
 commands/cmdPotat.o\

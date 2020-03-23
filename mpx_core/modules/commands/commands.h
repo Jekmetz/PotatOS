@@ -143,6 +143,11 @@ int cmd_show_pcb(char* params);
 int cmd_show_all_pcbs(char* params);
 
 /**
+* @brief Show all suspended ready PCBs command
+*/
+int cmd_show_sus_ready_pcbs(char* params);
+
+/**
 * @brief Show ready PCBs command
 */
 int cmd_show_ready_pcbs(char* params);

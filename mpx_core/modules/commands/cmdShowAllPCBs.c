@@ -8,8 +8,15 @@
 #include "commands.h"
 
 int cmd_show_all_pcbs(char* params) {
-  if (params) {
-    // Ignore unused parameter warning
+  
+  int flag = 0, chk;
+  // Calling set flags
+  chk = set_flags(params, &flag, 0);
+
+  if(chk != SUCCESS)
+  {
+    puts("\033[31mHouston, we have a problem. Check your flags!\033[0m");
+    return FAILURE; 
   }
 
   int total_printed = 0;

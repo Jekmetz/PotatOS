@@ -181,6 +181,14 @@ Usage:\n\
   showBlockedPCBs\n\
 "
 
+#define SHOWSUSREADYPCBS \
+"\
+Description\n\
+  Show all the suspended ready processes\n\n\
+Usage:\n\
+  showSusReadyPCBs\n\
+"
+
 #define CREATEPCB \
 "\
 Description:\n\
@@ -322,6 +330,7 @@ HELP_PAGES help_pages[] = {
   {"showBlockedPCBs", SHOWBLOCKEDPCBS},
   {"showPCB", SHOWPCB},
   {"showReadyPCBs", SHOWREADYPCBS},
+  {"showSusReadyPCBs",SHOWSUSREADYPCBS},
   {"shutdown", SHUTDOWN},
   {"suspendPCB", SUSPENDPCB},
   {"time", TIME},
