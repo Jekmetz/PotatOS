@@ -102,7 +102,11 @@ u32int internal_malloc(u32int size) {
 
   remaining_free -= size;
 
-  return (u32int)(curr_blk + sizeof(cmcb));
+  #if DEBUG
+    print_both(curr_blk, fend, "JUST AFTER ALLOCATION");
+  #endif
+
+  return (u32int)((location)curr_blk + sizeof(cmcb));
 }
 
 int internal_free(void* data) {
@@ -115,6 +119,7 @@ int internal_free(void* data) {
   } else {
     PRINT("Freeing memory @%x from process NULL - %d bytes", data, block->size);
   }
+  print_both(block,end,"JUST BEFORE FREEING");
   #endif
 
   // Setting variables of current block
@@ -145,4 +150,43 @@ int internal_free(void* data) {
   }
 
   return SUCCESS;
+}
+
+void print_cmcb(cmcb* p)
+{
+  printf(
+    "CMCB INFO: (%d BYTES)\n"
+    "karen: %s\n"
+    "cmcbloc: %x\n"
+    "datloc: %x\n"
+    "size: %d\n"
+    "type: %s\n\n",
+    sizeof(cmcb),
+    (p->karen != NULL) ? p->karen->process_name : "NULL",
+    p,
+    (location)p + sizeof(cmcb),
+    p->size,
+    (p->type == 0) ? "FREE" : "ALIVE"
+    );
+}
+
+void print_lmcb(lmcb* p)
+{
+    printf(
+    "LMCB INFO: (%d BYTES)\n"
+    "lmcbloc: %x\n"
+    "top: %x\n"
+    "type: %s\n\n",
+    sizeof(lmcb),
+    p,
+    p->top,
+    (p->type == 0) ? "FREE" : "ALIVE"
+    );
+}
+
+void print_both(cmcb* c, lmcb* l, char* msg)
+{
+  puts(msg);
+  print_cmcb(c);
+  print_lmcb(l);
 }

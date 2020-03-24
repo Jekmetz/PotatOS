@@ -36,6 +36,8 @@ typedef unsigned int       u32int;
 typedef signed long long   s64int;
 typedef unsigned long long u64int;
 
+typedef unsigned char BYTE;
+
 /* Time */
 typedef struct {
   int sec;

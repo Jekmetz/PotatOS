@@ -21,3 +21,18 @@ void* mem_init();
 u32int internal_malloc(u32int size);
 
 int internal_free(void* data);
+
+/**
+* @brief prints out cmcb info
+*/
+void print_cmcb(cmcb*);
+
+/**
+* @brief prints out lmcb info
+*/
+void print_lmcb(lmcb*);
+
+/**
+* @brief prints out cmcb info and lmcb info with a message
+*/
+void print_both(cmcb* c, lmcb* l, char* msg);
