@@ -89,10 +89,6 @@ int removeAlarm(const char* message){
 		}
 	}
 
-	// If the alarm number is reduced to zero, we need to remove the alarm process
-	if(numberAlarms == 0){
-		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
-	}
 	return SUCCESS;
 }
 
@@ -109,6 +105,11 @@ int check(){
 			printf("\033[95mAlarm activated! %s\n\033[0m",alarms[i].message);
 			removeAlarm(alarms[i].message);
 		}
+	}
+
+	// If the alarm number is reduced to zero, we need to remove the alarm process
+	if(numberAlarms == 0){
+		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
 	}
 
 	return SUCCESS;
