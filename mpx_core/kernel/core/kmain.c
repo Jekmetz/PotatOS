@@ -68,7 +68,6 @@ void kmain(void) {
   klogv("Adding commhand to ready queue...");
   process_loader("commhand", 0, SYSTEM, &command_handler, READY);
   process_loader("idle", 314159266, SYSTEM, &idle, READY);
-  //process_loader("alarm", 60, SYSTEM, &alarmProcess);
   asm volatile ("int $60");
 
   // 6) System Shutdown on return from your command handler

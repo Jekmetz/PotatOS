@@ -41,6 +41,12 @@ int listAlarms(){
 
 // Insert an alarm into the array
 int insertAlarm(char* messageIn, char* dateIn){	
+	// If there are zero alarms, we need to create the alarm process
+	if(numberAlarms == 0){
+		process_loader("alarm", 60, SYSTEM, &alarmProcess, READY);
+	}
+
+
 	if(numberAlarms >= MAX_ALARM){
 	  puts("Exceeded max alarms");
 	  return FAILURE;
@@ -81,6 +87,11 @@ int removeAlarm(const char* message){
 			alarms[numberAlarms-1].message = NULL;
 			numberAlarms--;
 		}
+	}
+
+	// If the alarm number is reduced to zero, we need to remove the alarm process
+	if(numberAlarms == 0){
+		sys_req(EXIT, DEFAULT_DEVICE, NULL, NULL);
 	}
 	return SUCCESS;
 }
