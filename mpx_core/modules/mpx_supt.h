@@ -84,7 +84,7 @@ void mpx_init(int cur_mod);
   Description..: Sets the memory allocation function for sys_alloc_mem
   Params..: Function pointer
 */
-void sys_set_malloc(u32int (*func)(u32int));
+void sys_set_malloc(void* (*func)(u32int));
 
 /*
   Procedure..: sys_set_free

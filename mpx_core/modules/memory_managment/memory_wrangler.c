@@ -127,7 +127,7 @@ void* internal_malloc(u32int size) {
   remaining_free -= size;
 
   #if DEBUG
-    print_both(curr_blk, e_blk, "JUST AFTER ALLOCATION");
+    //print_both(curr_blk, e_blk, "JUST AFTER ALLOCATION");
   #endif
 
   return (void*)((location)curr_blk + sizeof(cmcb));
@@ -143,7 +143,7 @@ int internal_free(void* data) {
   } else {
     PRINT("Freeing memory @%x from process NULL - %d bytes", data, block->size);
   }
-  print_both(block,end,"JUST BEFORE FREEING");
+  //print_both(block,end,"JUST BEFORE FREEING");
   #endif
 
     // Setting variables of current block
@@ -175,6 +175,8 @@ int internal_free(void* data) {
     ffree = block;
     falive = NEXT_BLOCK(block);
   }
+
+  show_mem_state();
 
   return SUCCESS;
 }
