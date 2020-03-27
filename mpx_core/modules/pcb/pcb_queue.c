@@ -13,23 +13,23 @@
 
 // #define DEBUG(msg, dat...) printf("\033[32;1mQUEUE: "msg"\n\033[0m", dat)
 
-// TODO: REMOVE WHEN M5
-#define MAX_PROCS 15
-node_t nelly[MAX_PROCS] = {(node_t){NULL, NULL, NULL, 0}};
+// // TODO: REMOVE WHEN M5
+// #define MAX_PROCS 15
+// node_t nelly[MAX_PROCS] = {(node_t){NULL, NULL, NULL, 0}};
 
-node_t* local_alloc_mem() {
-  int idx = 0;
-  while (nelly[idx].flag != 0)
-    idx++;
+// node_t* local_alloc_mem() {
+//   int idx = 0;
+//   while (nelly[idx].flag != 0)
+//     idx++;
 
-  nelly[idx].flag = 1;
-  return &(nelly[idx]);
-}
+//   nelly[idx].flag = 1;
+//   return &(nelly[idx]);
+// }
 
-void local_free_mem(node_t* thing) {
-  thing->flag = 0;
-  return;
-}
+// void local_free_mem(node_t* thing) {
+//   thing->flag = 0;
+//   return;
+// }
 // TODO: DONE
 
 unsigned int cc_mid32() {
@@ -48,9 +48,9 @@ unsigned int cc_mid32() {
  * @param data A pointer to the PCB to insert into the queue.
  */
 void enqueue(queue_t* cue, pcb_t* data) {
-  // struct node* nnode = sys_alloc_mem(sizeof(struct node));
+  struct node* nnode = sys_alloc_mem(sizeof(struct node));
   // TODO: REMOVE WHEN M5
-  node_t* nnode = local_alloc_mem();
+  // node_t* nnode = local_alloc_mem();
 
   // DEBUG("ENQUEUE: adding %s", data->process_name);
 
@@ -97,10 +97,10 @@ void enqueue(queue_t* cue, pcb_t* data) {
  */
 void priority_enqueue(queue_t* cue, pcb_t* data) {
   // allocating node space
-  // struct node* nnode = sys_alloc_mem(sizeof(struct node));
+  struct node* nnode = sys_alloc_mem(sizeof(struct node));
 
   // TODO: REMOVE WHEN M5
-  struct node* nnode = local_alloc_mem();
+  // struct node* nnode = local_alloc_mem();
 
   // setting node data
   nnode->data = data;
@@ -161,7 +161,7 @@ pcb_t* dequeue(queue_t* queue) {
 
   // freeing old head
   sys_free_mem(ded);
-  local_free_mem(ded);
+  // local_free_mem(ded);
   // decrementing queue
   queue->size--;
 

@@ -22,6 +22,8 @@ void* internal_malloc(u32int size);
 
 int internal_free(void* data);
 
+u32int get_remaining_free();
+
 /**
 * @brief prints out cmcb info
 */

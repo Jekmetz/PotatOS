@@ -1,4 +1,4 @@
-#define HEAP_SIZE 300
+#define HEAP_SIZE 1000
 #define MCB_PADDING (sizeof(cmcb) + sizeof(lmcb))
 
 //Compat
@@ -36,6 +36,8 @@ void* mem_init();
 void* internal_malloc(u32int size);
 
 int internal_free(void* data);
+
+u32int get_remaining_free();
 
 /**
 * @brief prints out cmcb info
