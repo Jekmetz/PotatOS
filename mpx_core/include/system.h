@@ -22,6 +22,8 @@
 #define hlt() asm volatile("hlt" ::)    // halt
 #define iret() asm volatile("iret" ::)  // interrupt return
 
+#define DEBLOC() printf("\033[33;1m%s(%d)\033[0m\n",__FILE__,__LINE__)
+
 #define GDT_CS_ID 0x01  // kernel code segment ID
 #define GDT_DS_ID 0x02  // kernel data segment ID
 

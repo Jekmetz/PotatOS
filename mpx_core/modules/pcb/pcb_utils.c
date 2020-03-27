@@ -4,6 +4,7 @@
 #include "pcb_utils.h"
 #include <string.h>
 #include <core/stdio.h>
+#include <system.h>
 
 #define NUMQUEUES 4
 
@@ -151,7 +152,6 @@ pcb_t *remove_pcb(char* name) {
       curr = curr->next;
     }
   }
-
   return NULL;
 }
 
@@ -204,6 +204,7 @@ void showReadyQueue()
   while(nnode != NULL)
   {
     print_pcb_info(nnode->data);
+    puts("=============");
     nnode = nnode->next;
   }
   puts("end\n");

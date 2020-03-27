@@ -29,6 +29,7 @@ commands/cmdResume.o\
 commands/cmdSetPriority.o\
 commands/cmdShowAllPCBs.o\
 commands/cmdShowBlockedPCBs.o\
+commands/cmdShowMem.o\
 commands/cmdShowPCB.o\
 commands/cmdShowReadyPCBs.o\
 commands/cmdShowSusReadyPCBs.o\
@@ -47,7 +48,7 @@ commands/cmdAlias.o\
 commands/cmdAlarm.o\
 alarms/alarmWrangler.o\
 commands/cmdHistory.o\
-memory_managment/memory_wrangler.o
+memory_management/memory_wrangler.o
 
 .c.s:
 	$(CC) $(CFLAGS) -S -o $@ $<

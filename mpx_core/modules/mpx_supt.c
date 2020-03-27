@@ -114,7 +114,7 @@ u32int* sys_call(context_t* registers)
     if(params.op_code == EXIT)
     {
       //kill it with fire
-      free_pcb(remove_pcb(cop->process_name));
+      free_pcb(cop);
     } else
     {
       cop->stacktop = (unsigned char*)registers;
@@ -133,7 +133,6 @@ u32int* sys_call(context_t* registers)
     cop = dequeue(ready_queue);
     cop->state = RUNNING;
     if(tmp != NULL) insert_pcb(tmp);
-    //showReadyQueue();
     return (u32int*)cop->stacktop;
   }
 

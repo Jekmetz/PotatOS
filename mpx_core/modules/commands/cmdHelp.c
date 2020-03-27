@@ -294,6 +294,15 @@ Example:\n\
   history\n\
 "
 
+#define SHOWMEM \
+"\
+Description:\n\
+  Show the state of memory\n\n\
+Usage:\n\
+  showMem\n\n\
+Example:\n\
+  showMem\n\
+"
 /**
 * @brief A struct to hold help outputs
 *
@@ -334,6 +343,7 @@ HELP_PAGES help_pages[] = {
   {"shutdown", SHUTDOWN},
   {"suspendPCB", SUSPENDPCB},
   {"time", TIME},
+  {"showMem", SHOWMEM},
   //{"unblockPCB", UNBLOCKPCB},
   {"version", VERSION},
   {NULL, NULL} // leave NULL at the end for searching reasons

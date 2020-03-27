@@ -12,7 +12,7 @@ unsigned int remaining_free;
 #define SUCCESS 1
 #define FAILURE 0
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 #include <core/stdio.h>
@@ -169,12 +169,13 @@ void* internal_malloc(u32int size) {
     print_both(curr_blk, e_blk, "JUST AFTER ALLOCATION");
   #endif
 
-  show_mem_state();
-
   return (void*)((location)curr_blk + sizeof(cmcb));
 }
 
 int internal_free(void* data) {
+
+  if(data == NULL) return NULL;
+
   cmcb* block = data - sizeof(cmcb);
   lmcb* end = data + block->size;
 
@@ -219,8 +220,10 @@ int internal_free(void* data) {
     falive = NEXT_BLOCK(block);
   }
 
+  #if DEBUG
   PRINT("remaining_free: %d",get_remaining_free());
-
+  #endif
+  
   return SUCCESS;
 }
 

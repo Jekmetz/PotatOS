@@ -153,6 +153,12 @@ int cmd_show_sus_ready_pcbs(char* params);
 int cmd_show_ready_pcbs(char* params);
 
 /**
+* @brief Show the state of memory
+*/
+
+int cmd_show_mem(char* params);
+
+/**
 * @brief Show blocked PCBs command
 */
 int cmd_show_blocked_pcbs(char* params);
