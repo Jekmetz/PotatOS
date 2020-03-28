@@ -12,7 +12,7 @@
 //TMP 
 #include "./pcb/pcb_utils.h"
 
-#include "./memory_managment/memory_wrangler.h"
+#include "./memory_management/memory_wrangler.h"
 
 // global variable containing parameter used when making
 // system calls via sys_req
@@ -176,9 +176,6 @@ void mpx_init(int cur_mod) {
   if (cur_mod == MEM_MODULE || cur_mod == MODULE_R5)
   {
     mem_module_active = TRUE;
-    sys_set_malloc(&internal_malloc);
-    sys_set_free(&internal_free);
-    mem_init(); // this returns the FMA
   }
 
   if (cur_mod == IO_MODULE)

@@ -25,32 +25,32 @@
 */
 #define CMDSIZE 100
 
-//REMOVE
-BYTE* numberfyRegion(BYTE* p, int size)
-{
-  //function that will 'numberfy a region'
-  //ex: size = 13, p will point to "1234567890123"
-  for(int i = 1; i < size; i++)
-    *(p+i-1) = '0' + i%10;
+// //REMOVE
+// BYTE* numberfyRegion(BYTE* p, int size)
+// {
+//   //function that will 'numberfy a region'
+//   //ex: size = 13, p will point to "1234567890123"
+//   for(int i = 1; i < size; i++)
+//     *(p+i-1) = '0' + i%10;
 
-  *(p + size - 1) = '\0';
-  return p;
-}
+//   *(p + size - 1) = '\0';
+//   return p;
+// }
 
-//REMOVE
-void testM5()
-{
-  BYTE* block32 = (BYTE*) sys_alloc_mem(sizeof(BYTE) * 32);
-  BYTE* block64 = (BYTE*) sys_alloc_mem(sizeof(BYTE) * 64);
+// //REMOVE
+// void testM5()
+// {
+//   BYTE* block32 = (BYTE*) sys_alloc_mem(sizeof(BYTE) * 32);
+//   BYTE* block64 = (BYTE*) sys_alloc_mem(sizeof(BYTE) * 64);
 
-  numberfyRegion(block32, 32);
-  numberfyRegion(block64, 64);
+//   numberfyRegion(block32, 32);
+//   numberfyRegion(block64, 64);
 
-  printf("block32: %x; block64: %x\n*block32: %s\n*block64: %s\n",block32, block64, block32, block64);
+//   printf("block32: %x; block64: %x\n*block32: %s\n*block64: %s\n",block32, block64, block32, block64);
 
-  sys_free_mem(block32);
-  sys_free_mem(block64);
-}
+//   sys_free_mem(block32);
+//   sys_free_mem(block64);
+// }
 
 /********END OF COMMANDS AND FUNCTION DECLARATION*******/
 
@@ -61,7 +61,7 @@ void command_handler() {
   puts("\033[32;1mStarting command handler\033[0m");
 
   //REMOVE
-  testM5();
+  //testM5();
 
   // Initialize vars
   char cmd[CMDSIZE];

@@ -21,6 +21,7 @@
 #include "modules/pcb/pcb_wrangler.h"
 #include "modules/pcb/pcb_constants.h"
 #include "modules/alarms/alarmWrangler.h"
+#include "modules/memory_management/memory_wrangler.h"
 
 void kmain(void) {
   extern uint32_t magic;
@@ -38,7 +39,10 @@ void kmain(void) {
 
   // 1) Initialize the support software by identifying the current
   //     MPX Module.  This will change with each module.
-  mpx_init(MODULE_R5);
+  sys_set_malloc(&internal_malloc);
+  sys_set_free(&internal_free);
+  mem_init(); // this returns the FMA
+  mpx_init(MEM_MODULE);
 
   // 2) Check that the boot was successful and correct when using grub
   // Comment this when booting the kernel directly using QEMU, etc.
