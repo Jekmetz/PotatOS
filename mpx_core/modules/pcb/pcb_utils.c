@@ -23,9 +23,9 @@ void init_queue() {
 *
 * @return pointer to allocated pcb
 */
-pcb_t* allocate_pcb()
+pcb_t* allocate_pcb(char* pname)
 {
-  return (pcb_t*) sys_alloc_mem(sizeof(pcb_t));
+  return (pcb_t*) sys_alloc_mem_named(sizeof(pcb_t), pname);
 }
 
 /**
@@ -69,7 +69,7 @@ int insert_pcb(pcb_t *proc)
 */
 pcb_t* setup_pcb(char* pname, PROCESS_CLASS pclass, int priority){
   // Allocating new PCB
-  pcb_t* pcb = allocate_pcb();
+  pcb_t* pcb = allocate_pcb(pname);
 
   // If allocate fails, returns null
   if(pcb == NULL){

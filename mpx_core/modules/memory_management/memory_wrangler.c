@@ -55,9 +55,8 @@ void* mem_init() {
   return fma;
 }
 
-void* internal_malloc(u32int size) {
-  pcb_t* karen = (pcb_t*)get_running_process();
-
+void* internal_malloc_named(u32int size, char* karen)
+{
 #if DEBUG
   if (karen != NULL) {
     PRINT("Allocating memory for %s - %d", karen->process_name, size);
@@ -138,7 +137,6 @@ void* internal_malloc(u32int size) {
   {
     ffree = NULL;
   }
-
     return (void*)((location)curr_blk + sizeof(cmcb));
   }
 
@@ -170,6 +168,12 @@ void* internal_malloc(u32int size) {
   #endif
 
   return (void*)((location)curr_blk + sizeof(cmcb));
+}
+
+void* internal_malloc(u32int size) {
+  char* karen = "Created Memory";
+
+  return internal_malloc_named(size, karen);
 }
 
 int internal_free(void* data) {
@@ -242,7 +246,7 @@ void print_cmcb(cmcb* p)
     "size: %d\n"
     "type: %s\n\n",
     sizeof(cmcb),
-    (p->karen != NULL) ? p->karen->process_name : "NULL",
+    (p->karen != NULL) ? p->karen : "NULL",
     p,
     (location)p + sizeof(cmcb),
     p->size,
@@ -327,7 +331,7 @@ void show_mem_state()
   while(covered < (HEAP_SIZE + MCB_PADDING))
   {
     covered += ASCMCB(curr_blk)->size + MCB_PADDING;
-    printf("%s : %x : %s\n",ASCMCB(curr_blk)->type == FREE ? "FCMCB" : "ACMCB", curr_blk, (ASCMCB(curr_blk)->karen != NULL) ? ASCMCB(curr_blk)->karen->process_name : "NULL");
+    printf("%s : %x : %s\n",ASCMCB(curr_blk)->type == FREE ? "FCMCB" : "ACMCB", curr_blk, (ASCMCB(curr_blk)->karen != NULL) ? ASCMCB(curr_blk)->karen : "Free Memory - For all to enjoy");
     printf("%d\n",ASCMCB(curr_blk)->size);
     curr_blk += sizeof(cmcb) + ASCMCB(curr_blk)->size;
     printf("%s\n",ASLMCB(curr_blk)->type == FREE ? "FLMCB" : "ALMCB");

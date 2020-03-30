@@ -6,7 +6,7 @@
 typedef enum { FREE, ALIVE } MEMTYPE;
 
 typedef struct {
-  pcb_t* karen;
+  char* karen;
   unsigned int size;
   MEMTYPE type;
 } cmcb;
@@ -19,6 +19,8 @@ typedef struct {
 void* mem_init();
 
 void* internal_malloc(u32int size);
+
+void* internal_malloc_named(u32int size, char* karen);
 
 int internal_free(void* data);
 

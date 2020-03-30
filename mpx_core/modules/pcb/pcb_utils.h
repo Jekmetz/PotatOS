@@ -19,7 +19,7 @@ void showReadyQueue();
 *
 * @return pointer to allocated pcb
 */
-pcb_t* allocate_pcb();
+pcb_t* allocate_pcb(char*);
 
 // TODO
 /**

@@ -5,6 +5,9 @@
 #include <core/stdio.h>
 #include "../commands/time.h"
 
+//remove
+#include "../memory_management/memory_wrangler.h"
+
 // definitions of success and failure for true/false returns
 #define SUCCESS 1
 #define FAILURE 0
@@ -48,7 +51,9 @@ unsigned int cc_mid32() {
  * @param data A pointer to the PCB to insert into the queue.
  */
 void enqueue(queue_t* cue, pcb_t* data) {
+
   struct node* nnode = sys_alloc_mem(sizeof(struct node));
+
   // TODO: REMOVE WHEN M5
   // node_t* nnode = local_alloc_mem();
 
@@ -97,6 +102,7 @@ void enqueue(queue_t* cue, pcb_t* data) {
  */
 void priority_enqueue(queue_t* cue, pcb_t* data) {
   // allocating node space
+
   struct node* nnode = sys_alloc_mem(sizeof(struct node));
 
   // TODO: REMOVE WHEN M5

@@ -31,6 +31,8 @@ static int mem_module_active = 0;
 // is a pointer to the student's "malloc" operation.
 void* (*student_malloc)(u32int);
 
+void* (*student_malloc_named)(u32int,char*);
+
 //Function to save the context from the source to the dest
 void save_context(context_t* dest, context_t* source);
 
@@ -176,6 +178,7 @@ void mpx_init(int cur_mod) {
   if (cur_mod == MEM_MODULE || cur_mod == MODULE_R5)
   {
     mem_module_active = TRUE;
+    student_malloc_named = &internal_malloc_named;
   }
 
   if (cur_mod == IO_MODULE)
@@ -221,6 +224,13 @@ void* sys_alloc_mem(u32int size) {
     return (void*)kmalloc(size);
   else
     return (void*)(*student_malloc)(size);
+}
+
+void* sys_alloc_mem_named(u32int size, char* pname) {
+  if(!mem_module_active)
+    return (void*)kmalloc(size);
+  else 
+    return (void*)(*student_malloc_named)(size,pname);
 }
 
 /*

@@ -109,6 +109,8 @@ void sys_set_read(int (*func)(char*, int*));
 */
 void* sys_alloc_mem(u32int size);
 
+void* sys_alloc_mem_named(u32int size, char* pname);
+
 /*
   Procedure..: sys_free_mem
   Description..: Frees memory
