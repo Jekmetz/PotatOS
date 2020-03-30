@@ -128,9 +128,14 @@ pcb_t *remove_pcb(char* name) {
     if(currs[i]->head != NULL && strcmp(currs[i]->head->data->process_name,name) == 0)
     {
       pcb_t *ret = currs[i]->head->data;
+      node_t *kill_me = currs[i]->head;
       currs[i]->head = currs[i]->head->next;
-      sys_free_mem(currs[i]->head->prev);
-      currs[i]->head->prev = NULL;
+      sys_free_mem(kill_me);
+      if(currs[i]->head != NULL)
+      {
+        currs[i]->head->prev = NULL;
+      }  
+
       (currs[i]->size)--;
       return ret;
     }
