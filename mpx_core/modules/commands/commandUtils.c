@@ -25,6 +25,8 @@ COMMAND commands[] = {
   {"showAllPCBs", &cmd_show_all_pcbs, "sap"},
   {"showReadyPCBs", &cmd_show_ready_pcbs, "srp"},
   {"showBlockedPCBs", &cmd_show_blocked_pcbs, "sbp"},
+  {"showAllocMem", &cmd_show_alloc_mem, NULL},
+  {"showFreeMem", &cmd_show_free_mem, NULL},
   {"showMem", &cmd_show_mem, "sm"},
   {"showSusReadyPCBs", &cmd_show_sus_ready_pcbs, "ssrp"},
   //{"unblockPCB", &cmd_unblock_pcb, NULL},

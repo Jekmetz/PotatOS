@@ -155,8 +155,17 @@ int cmd_show_ready_pcbs(char* params);
 /**
 * @brief Show the state of memory
 */
-
 int cmd_show_mem(char* params);
+
+/**
+* @brief Show the state of allocated memory
+*/
+int cmd_show_alloc_mem(char* params);
+
+/**
+* @brief Show the state of free memory
+*/
+int cmd_show_free_mem(char* params);
 
 /**
 * @brief Show blocked PCBs command

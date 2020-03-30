@@ -271,6 +271,54 @@ void print_both(cmcb* c, lmcb* l, char* msg)
   print_lmcb(l);
 }
 
+void show_free_mem_state()
+{
+  void *curr_blk = fma;
+  unsigned int covered = 0;
+
+  while(covered < (HEAP_SIZE + MCB_PADDING))
+  {
+    covered += ASCMCB(curr_blk)->size + MCB_PADDING;
+    if(ASCMCB(curr_blk)->type == FREE)
+    {
+      printf("%s : %x : %s\n",ASCMCB(curr_blk)->type == FREE ? "FCMCB" : "ACMCB", curr_blk, "Free Memory - For all to enjoy");
+      printf("%d\n",ASCMCB(curr_blk)->size);
+    }
+    curr_blk += sizeof(cmcb) + ASCMCB(curr_blk)->size;
+    if(ASLMCB(curr_blk)->type == FREE)
+    {
+      printf("%s\n",ASLMCB(curr_blk)->type == FREE ? "FLMCB" : "ALMCB");
+    }
+    curr_blk += sizeof(lmcb);
+  }
+
+  puts("END OF HEAP");
+}
+
+void show_alloc_mem_state()
+{
+  void *curr_blk = fma;
+  unsigned int covered = 0;
+
+  while(covered < (HEAP_SIZE + MCB_PADDING))
+  {
+    covered += ASCMCB(curr_blk)->size + MCB_PADDING;
+    if(ASCMCB(curr_blk)->type == ALIVE)
+    {
+      printf("%s : %x : %s\n",ASCMCB(curr_blk)->type == FREE ? "FCMCB" : "ACMCB", curr_blk, (ASCMCB(curr_blk)->karen != NULL) ? ASCMCB(curr_blk)->karen->process_name : "NULL");
+      printf("%d\n",ASCMCB(curr_blk)->size);
+    }
+    curr_blk += sizeof(cmcb) + ASCMCB(curr_blk)->size;
+    if(ASLMCB(curr_blk)->type == ALIVE)
+    {
+      printf("%s\n",ASLMCB(curr_blk)->type == FREE ? "FLMCB" : "ALMCB");
+    }
+    curr_blk += sizeof(lmcb);
+  }
+
+  puts("END OF HEAP");
+}
+
 void show_mem_state()
 {
   void *curr_blk = fma;

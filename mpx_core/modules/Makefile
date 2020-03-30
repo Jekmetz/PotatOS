@@ -30,6 +30,8 @@ commands/cmdSetPriority.o\
 commands/cmdShowAllPCBs.o\
 commands/cmdShowBlockedPCBs.o\
 commands/cmdShowMem.o\
+commands/cmdShowAllocMem.o\
+commands/cmdShowFreeMem.o\
 commands/cmdShowPCB.o\
 commands/cmdShowReadyPCBs.o\
 commands/cmdShowSusReadyPCBs.o\

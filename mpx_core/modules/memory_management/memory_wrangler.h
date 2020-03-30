@@ -43,3 +43,7 @@ void print_both(cmcb* c, lmcb* l, char* msg);
 * @breif show the entire state of memory visualized
 */
 void show_mem_state();
+
+void show_free_mem_state();
+
+void show_alloc_mem_state();

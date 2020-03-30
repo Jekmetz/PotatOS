@@ -181,6 +181,36 @@ Usage:\n\
   showBlockedPCBs\n\
 "
 
+#define SHOWMEM \
+"\
+Description:\n\
+  Show the state of memory\n\n\
+Usage:\n\
+  showMem\n\n\
+Example:\n\
+  showMem\n\
+"
+
+#define SHOWALLOCMEM \
+"\
+Description:\n\
+  Show the state of allocated memory\n\n\
+Usage:\n\
+  showAllocMem\n\n\
+Example:\n\
+  showAllocMem\n\
+"
+
+#define SHOWFREEMEM \
+"\
+Description:\n\
+  Show the state of free memory\n\n\
+Usage:\n\
+  showFreeMem\n\n\
+Example:\n\
+  showFreeMem\n\
+"
+
 #define SHOWSUSREADYPCBS \
 "\
 Description\n\
@@ -294,15 +324,6 @@ Example:\n\
   history\n\
 "
 
-#define SHOWMEM \
-"\
-Description:\n\
-  Show the state of memory\n\n\
-Usage:\n\
-  showMem\n\n\
-Example:\n\
-  showMem\n\
-"
 /**
 * @brief A struct to hold help outputs
 *
@@ -338,12 +359,14 @@ HELP_PAGES help_pages[] = {
   {"showAllPCBs", SHOWALLPCBS},
   {"showBlockedPCBs", SHOWBLOCKEDPCBS},
   {"showPCB", SHOWPCB},
+  {"showMem", SHOWMEM},
+  {"showAllocMem", SHOWALLOCMEM},
+  {"showFreeMem", SHOWFREEMEM},
   {"showReadyPCBs", SHOWREADYPCBS},
   {"showSusReadyPCBs",SHOWSUSREADYPCBS},
   {"shutdown", SHUTDOWN},
   {"suspendPCB", SUSPENDPCB},
   {"time", TIME},
-  {"showMem", SHOWMEM},
   //{"unblockPCB", UNBLOCKPCB},
   {"version", VERSION},
   {NULL, NULL} // leave NULL at the end for searching reasons
