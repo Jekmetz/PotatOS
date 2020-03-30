@@ -309,7 +309,7 @@ void show_alloc_mem_state()
     covered += ASCMCB(curr_blk)->size + MCB_PADDING;
     if(ASCMCB(curr_blk)->type == ALIVE)
     {
-      printf("%s : %x : %s\n",ASCMCB(curr_blk)->type == FREE ? "FCMCB" : "ACMCB", curr_blk, (ASCMCB(curr_blk)->karen != NULL) ? ASCMCB(curr_blk)->karen->process_name : "NULL");
+      printf("%s : %x : %s\n",ASCMCB(curr_blk)->type == FREE ? "FCMCB" : "ACMCB", curr_blk, (ASCMCB(curr_blk)->karen != NULL) ? ASCMCB(curr_blk)->karen : "NULL");
       printf("%d\n",ASCMCB(curr_blk)->size);
     }
     curr_blk += sizeof(cmcb) + ASCMCB(curr_blk)->size;
