@@ -82,8 +82,6 @@ int cmd_date(char* params);
 */
 int cmd_time(char* params);
 
-int cmd_test(char* params);
-
 /**
 * @brief clears the screen and sets the pointer at home
 *
