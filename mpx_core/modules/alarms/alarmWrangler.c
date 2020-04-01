@@ -84,6 +84,7 @@ int removeAlarm(const char* message){
 		if(strcmp(alarms[i].message, message) == 0){
 			// Moving the last alarm to the deleted alarms spot
 			alarms[i] = alarms[numberAlarms-1];
+			sys_free_mem(alarms[numberAlarms-1].message);
 			alarms[numberAlarms-1].message = NULL;
 			numberAlarms--;
 		}
