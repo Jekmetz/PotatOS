@@ -177,6 +177,9 @@ void* internal_malloc(u32int size) {
 }
 
 int internal_free(void* data) {
+  if ((size_t)data < (size_t)fma || (size_t)data > (size_t)(fma + KHEAP_SIZE)) {
+    return FAILURE;
+  }
 
   if(data == NULL) return NULL;
 
