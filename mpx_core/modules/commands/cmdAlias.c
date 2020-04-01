@@ -91,13 +91,17 @@ int cmd_alias(char* params) {
     printf("'%s' is not a valid command\n", nativeCmd);
     return FAILURE;
   }
-  else if(ret != FAILURE){
+  else {
+    // If we're overwriting an alias, make sure to free the previous alias
+    if (ret->alias != NULL) {
+      sys_free_mem(ret->alias);
+    }
+
     char* name = (char*)sys_alloc_mem(sizeof(char) * (strlen(aliasCmd) + 1));
     name = strcpy(name, aliasCmd);
+
     ret->alias = name;
-    printf("'%s' is aliased as '%s'\n",nativeCmd,aliasCmd);
+    printf("'%s' is aliased as '%s'\n", nativeCmd, aliasCmd);
     return SUCCESS;
   }
-
-  return SUCCESS;  // successful response
 }
