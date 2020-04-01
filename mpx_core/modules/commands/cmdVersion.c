@@ -14,7 +14,7 @@
 */
 #define VERSION \
 "\
-Version 3.5\n\
+Version 5.0\n\
 "
 
 /**
@@ -22,8 +22,8 @@ Version 3.5\n\
 */
 #define VERSION_FULL \
 "\
-Version 3.5\n\
-Module 3/4\n\
+Version 5.0\n\
+Module 5\n\
 Developers:\n\
   Hasan Ibraheem\n\
   Henry Vos\n\
