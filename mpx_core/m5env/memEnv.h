@@ -1,4 +1,17 @@
+/**
+* @file memEnv.h
+*
+* @brief The header file for the memory env files
+*/
+
+/**
+@ brief Macro of the heap size
+*/
 #define HEAP_SIZE 1000
+
+/**
+* @brief Macro of the MCB_Padding
+*/
 #define MCB_PADDING (sizeof(cmcb) + sizeof(lmcb))
 
 //Compat
@@ -20,23 +33,49 @@ typedef struct pcb
     unsigned char *stacktop;
 } pcb_t;
 
+/**
+* @brief CMCB struct
+*/
 typedef struct {
 	pcb_t* karen;
 	unsigned int size;
 	MEMTYPE type;
 } cmcb;
 
+/**
+* @brief LMCB struct
+*/
 typedef struct {
 	cmcb* top;
 	MEMTYPE type;
 } lmcb;
 
+/**
+* @brief Memory init function
+* 
+* @params None
+*/
 void* mem_init();
 
+/**
+* @brief Internal memory allocation function
+*
+* @parms size The size of the memory to be allocated
+*/
 void* internal_malloc(u32int size);
 
+/**
+* @brief Internal free memory function
+* 
+* @params data The data to be freed
+*/
 int internal_free(void* data);
 
+/*
+* @brief Function to show the interanl free memory
+*
+* @params none
+*/
 u32int get_remaining_free();
 
 /**

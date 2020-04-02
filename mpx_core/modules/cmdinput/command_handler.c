@@ -1,5 +1,5 @@
 /**
-* @file command_handler c
+* @file command_handler.c
 *
 * @brief The primary command handler for the Operating System
 */

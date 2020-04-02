@@ -21,21 +21,19 @@ void showReadyQueue();
 */
 pcb_t* allocate_pcb(char*);
 
-// TODO
 /**
+* @brief Setup a new PCB and enques that PCB
 *
+* @params PROCESS_CLASS The Process Class of the new PCB
+* @params priority The priority of the new PCB
 */
-// Setups a pcb and enques the pcb
-// pointer to pcb, name of the process, ...
 pcb_t* setup_pcb(char*, PROCESS_CLASS, int priority);
 
-// TODO
 /**
-* @brief frees the space for a pcb
+* @brief Frees the space for a pcb
 *
 * @return Success or failure
 */
-// Frees a pcb
 int free_pcb(pcb_t*);
 
 /**
@@ -49,9 +47,10 @@ int free_pcb(pcb_t*);
  */
 pcb_t* find_pcb(char* pname);
 
-// TODO
 /**
+* @brief Inserts a PCB
 *
+* @params pcb_t The PCB to be inserted
 */
 int insert_pcb(pcb_t*);
 
@@ -65,9 +64,10 @@ int insert_pcb(pcb_t*);
  */
 pcb_t *remove_pcb(char* pname);
 
-// TODO
 /**
 * @brief Initializes queues
+*
+* @params None
 */
 void init_queue();
 
