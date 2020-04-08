@@ -28,9 +28,8 @@ int main(int argc, char** argv) {
 
         fgets(command_buffer, 511, stdin);
         char* command = trim_whitespace(command_buffer);
-        printf("You said: \"%s\"\n", command);
 
-        int command_argc = split_args(command, argv);
+        int command_argc = split_args(command, command_argv);
 
         if (command_argc == 0) {
             continue;
