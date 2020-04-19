@@ -3,7 +3,6 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/stat.h>  
 
 // Sector size is 512 bytes always with FAT12
 #define SECTORSIZE 512
@@ -12,6 +11,7 @@
 #define MAXDIRENTRY 16
 #define MAXENTRIESPERDIR 16
 
+typedef unsigned char BYTE;
 
 typedef struct BOOTSECTORSTRUCT {
 	int bytesPerSector;
@@ -54,7 +54,7 @@ int loadBootSector(FILE *fpIn, struct BOOTSECTORSTRUCT *bootSectorIn);
 int printBootSector(struct BOOTSECTORSTRUCT *bootSectorIn);
 int copy(int startingLoc, int numBytes, unsigned char bs[SECTORSIZE]);
 char hexToAscii( char first, char second);
-int *loadFAT(FILE *fpIn, int startingSector);
+short *loadFAT(BYTE *fpIn, int startingSector);
 char*  charToBin(char c);
 int stringToDec(char *in);
 int loadRootDir(FILE *fpIn, ENTRY *rootDirIn);
@@ -66,41 +66,42 @@ int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName);
 
 int main() {
 	FILE *fp;
-	char* filename = "/home/nick/Downloads/cs450_2.img"; 
+	char* filename = "/home/jekmetz/Downloads/cs450_2.img"; 
 
 	fp = fopen(filename, "r");
 	if(fp == NULL){
 		printf("Did not load\n");
 	}
 
-	// // Boot sector does not need to be an array, it is only one struct
+	fseek(fp, 0, SEEK_END);
+	int size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	// Size of entire system
+	BYTE *ENTIRESYSTEM = malloc(sizeof(char) * size);
+
+	// Reading the ENTIRE DAMN THING
+	fread(ENTIRESYSTEM, size, 1, fp);
+
+
+	// Boot sector does not need to be an array, it is only one struct
+
 	BOOTSECTORSTRUCT *bootSector = malloc(sizeof(BOOTSECTORSTRUCT));
 	
 	// Loading boot sector
 	loadBootSector(fp, bootSector);
 
-	
-	fseek(fp, 0L, SEEK_END);
-	int size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-
-	// Size of entire system
-	unsigned char *ENTIRESYSTEM = malloc(size);
-
-	// Reading the ENTIRE DAMN THING
-	fread(ENTIRESYSTEM, size, 1, fp);
-	
 	// Int array pointer to hold FATs
-	int *fat1;
-	int *fat2;
+	short *fat1;
+	short *fat2;
 
 	// The starting sectors of the two FATs
 	int fat1StartingSec = 1;
 	int fat2StartingSec = 10;
 
 	// Loading both FATs into arrays
-	fat1 = loadFAT(fp, fat1StartingSec);
-	fat2 = loadFAT(fp, fat2StartingSec);
+	fat1 = loadFAT(ENTIRESYSTEM, fat1StartingSec);
+	fat2 = loadFAT(ENTIRESYSTEM, fat2StartingSec);
 
 	ENTRY *cwd;
 	int rootDirStartingSec = 19;
@@ -204,10 +205,9 @@ int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName){
 			int current;
 			current = cwdIn[i].firstLogicalCluster;
 
-			char *out;
+			BYTE *out;
 
-			// out = malloc(sizeof(char) * (SECTORSIZE * (cwdIn[i].fileSize / 512)));
-			out = malloc(sizeof(char) * 598367 * 2);
+			out = (BYTE*) malloc(sizeof(BYTE) * cwdIn[i].fileSize);
 
 			char *tempOut;
 			tempOut = malloc(sizeof(char) * 512);
@@ -227,8 +227,7 @@ int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName){
 
 			printf("%s", out);
 		}
-	}
-	
+	}	
 
 }
 
@@ -340,111 +339,32 @@ int printBootSector(BOOTSECTORSTRUCT *bootSectorIn){
 	printf("File System Type: %s\n", bootSectorIn->fileSystemType);
 }
 
-int *loadFAT(FILE *fpIn, int startingSector) {
-	// Temp array to hold the data before we swith it around
-	unsigned char temp[SECTORSIZE * SECTORSPERFAT];
+short *loadFAT(BYTE* sys, int startingSector) {	
 	
-	// Array to hold each bytes binary representation
-	unsigned char *binaryArray[SECTORSIZE * SECTORSPERFAT];
+	//move sys forward to the correct starting position
+	sys = (sys + SECTORSIZE * startingSector);
 
-	// Setting file at first FAT
-	fseek(fpIn, (SECTORSIZE * startingSector), SEEK_SET);
-
-	// Reading into temp array
-	fread(temp, SECTORSIZE * SECTORSPERFAT, 1, fpIn);
-	
-	// Int array to hold FAT 
-	int *fatTable = malloc(sizeof(int) * FATTABLESIZE);
-
-	// Char pointer to hold binary representation
-	char *tempmes;
-
-	// For loop that iterates over temp and copies bytes into binary values into binaryArray
-	for(int i = 0; i< SECTORSIZE * SECTORSPERFAT; i++){
-		// Calling charToBin to get binary representation
-		tempmes = charToBin(temp[i]);
-		
-		//Assigning into array 
-		binaryArray[i] = tempmes;
-	}
+	//fat table malloc
+	short *fatTable = malloc(sizeof(short) * FATTABLESIZE);
 
 	// For loop to iterate over FAT to insert 12 bit long FAT entry
-	for(int i = 0; i<  FATTABLESIZE;i++){
-		// Odd
-		if(i % 2){
-			/*
-			In odd FAT Entries
-			We pull the 8 bits from index
-				((3*i)/2) + 1
-			And the starting four bits from index
-				((1+(3*i))/2) - 1
-			*/
-			// The indicies of the two locations that we will need to pull data from, named after their portions that they will pull from
-			int eightbitsIndex = (((3*i)/2)+1);
-			int startingFourBitsIndex = (((1+(3*i))/2)-1);
+	BYTE* si;
+	short boi0,boi1;
+	for(int i = 0; i<  FATTABLESIZE/2;i++){
+		
+		si = sys + i*3;
+		//make our phatty bois
+		boi0,boi1;
 
-			// Char pointers to hold the pulling of info from the array of raw data
-			char *eight = malloc(sizeof(char) * 8);
-			char *startingFour = malloc(sizeof(char) * 4);
+		boi0 = ((*(si+1)&0x0F)<<8) + (*(si));
+		boi1 = (*(si+2)<<4) + (*(si+1)>>4);
 
-			// Copying the raw data from the array into the char pointers
-			strncpy(eight, binaryArray[eightbitsIndex], 8);
-			strncpy(startingFour, binaryArray[startingFourBitsIndex], 4);
-
-			// Char pointer to hold the final string of data 
-			char *final = malloc(sizeof(char) * 12);
-			// Copying the first portion into final
-			strncpy(final, eight, 8);
-			// Concatinating the final portion on the final string
-			strcat(final, startingFour);
-
-			// Sending to stringToDec function to get integer from string of binary
-			int finalInt = stringToDec(final);
-
-			// Print to show, will be removed later
-			// printf("%d\t%s\t%x\n",i, final, finalInt);
-
-			// Putting the finalInt into the array 
-			fatTable[i] = finalInt;
-		}
-
-		// Even
-		else{
-			/*
-			In even FAT Entries
-			We pull the last four bits from index
-				((1+(3*i))/2) + 1
-			And the 8 bits from index
-				(3*i)/2
-			*/
-			// The indicies of the two locations that we will need to pull data from, named after their portions that they will pull from
-			int endingFourBits = (((1+(3*i))/2) + 1);
-			int eightbitsIndex = (((3*i))/2);
-			
-			// Char pointers to hold the pulling of info from the array of raw data
-			char *endingFour = malloc(sizeof(char) *4);
-			char *eight = malloc(sizeof(char) * 8);
-
-			// Copying the raw data from the array into the char pointers
-			strncpy(endingFour, binaryArray[endingFourBits] + 4, 4);
-			strncpy(eight, binaryArray[eightbitsIndex], 8);
-
-			// Char pointer to hold the final string of data
-			char *final = malloc(sizeof(char) * 12);
-			// Copying the first portion into final
-			strncpy(final, endingFour, 4);
-			// Concatinating the final portion on the final string
-			strcat(final, eight);
-
-			// Sending to stringToDec function to get integer from string of binary
-			int finalInt = stringToDec(final);
-
-			// Print to show the finalInt, will be removed later
-			// printf("%d\t%s\t%x\n", i, final, finalInt);
-			
-			// Putting the finalInt into the array
-			fatTable[i] = finalInt;
-		}
+		// printf("---------------\n*(sys+si): %x\n,*(sys+si+1): %x\n,*(sys+si+2): %x\n(*(sys+si+1)|0x0F)<<8: %x\n*(sys+si): %x\nboi0: %x\nboi1: %x\n*(sys+si+2)<<4: %x\n(*(sys+si+1)>>4): %x\n"
+		// 	,*(sys+si),*(sys+si+1),*(sys+si+2),(*(sys+si+1)&0x0F)<<8,*(sys+si),boi0,boi1,*(sys+si+2)<<4,(*(sys+si+1)>>4));
+		//voila
+		
+		fatTable[2*i] = boi0;
+		fatTable[2*i+1] = boi1;
 	}
 
 	return fatTable;
@@ -498,32 +418,6 @@ int printRootDir(ENTRY *rootDirIn){
 	printf("Last Write Date: %d\n",rootDirIn->lastWriteDate);
 	printf("First Logical Cluster: %d\n", rootDirIn->firstLogicalCluster);
 	printf("File Size: %d\n", rootDirIn->fileSize);
-}
-
-char* charToBin(char c) {
-	char *temp;
-	temp = malloc(sizeof(char) * 7);
-	int count = 0;
-    for (int i = 7; i >= 0; --i)
-    {
-        temp[count] = ( (c & (1 << i)) ? '1' : '0' );
-    	count ++;
-    }
-  	
-  	// printf("%s\n", temp);
-  	return temp;
-}
-
-int stringToDec(char *in){
-  unsigned char *p = in;
-  unsigned int   r = 0;
-
-  while (p && *p ) {
-    r <<= 1;
-    r += (unsigned int)((*p++) & 0x01);
-  }
-
-  return (int)r;
 }
 
 void trim (char *dest, char *src)
