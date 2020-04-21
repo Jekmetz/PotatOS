@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <ctype.h>
 
 // Sector size is 512 bytes always with FAT12
 #define SECTORSIZE 512
@@ -58,11 +59,11 @@ char hexToAscii( char first, char second);
 uint16_t *loadFAT(BYTE *fpIn, uint32_t startingSector);
 char*  charToBin(char c);
 int pwd(ENTRY *cwdIn);
-int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName);
+int type(unsigned char *whole, uint16_t *FAT, ENTRY *cwdIn, char *fileName);
 void trim (char *dest, char *src);
 uint32_t loadRootDir(FILE *fpIn, ENTRY *rootDirIn);
 uint32_t printRootDir(ENTRY *rootDirIn);
-ENTRY *loadCWD(FILE *fpIn, uint32_t startingSec);
+ENTRY *loadCWD(BYTE* whole, uint32_t startingSec);
 
 uint32_t main() {
 	FILE *fp;
@@ -182,7 +183,7 @@ uint32_t main() {
 	}
 }
 
-int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName){
+int type(BYTE *whole, uint16_t *FAT, ENTRY *cwdIn, char *fileName){
 	// Declaring variables
 	char *name, *extension;
 	
@@ -243,7 +244,7 @@ int pwd(ENTRY *cwdIn){
 	}
 }
 
-int *loadCWD(unsigned char *whole, int startingSec){
+ENTRY *loadCWD(BYTE *whole, uint32_t startingSec){
 	// ENTRY array to the cws 
 	ENTRY *cwd = malloc(sizeof(ENTRY) * MAXENTRIESPERDIR);
 
@@ -275,15 +276,15 @@ int *loadCWD(unsigned char *whole, int startingSec){
 				memcpy(extension, whole + (startingSec * SECTORSIZE) + (32 * i) + 8, sizeof(char) * 3);
 				cwd[i].extension = extension;
 				
-				cwd[i].attributes = 			*((char*)  (temp + (32 * i) + 11)); 
-				cwd[i].reserved = 				*((uint16_t*) (temp + (32 * i) + 12));
-				cwd[i].creationTime = 			*((uint16_t*) (temp + (32 * i) + 14));
-				cwd[i].creationDate = 			*((uint16_t*) (temp + (32 * i) + 16));
-				cwd[i].lastAccessDate = 		*((uint16_t*) (temp + (32 * i) + 18));
-				cwd[i].lastWriteTime = 			*((uint16_t*) (temp + (32 * i) + 22));
-				cwd[i].lastWriteDate = 			*((uint16_t*) (temp + (32 * i) + 24));
-				cwd[i].firstLogicalCluster = 	*((uint16_t*) (temp + (32 * i) + 26));
-				cwd[i].fileSize = 				*((uint32_t*)   (temp + (32 * i) + 28));
+				cwd[i].attributes = 			*((char*)  (whole + (32 * i) + 11)); 
+				cwd[i].reserved = 				*((uint16_t*) (whole + (32 * i) + 12));
+				cwd[i].creationTime = 			*((uint16_t*) (whole + (32 * i) + 14));
+				cwd[i].creationDate = 			*((uint16_t*) (whole + (32 * i) + 16));
+				cwd[i].lastAccessDate = 		*((uint16_t*) (whole + (32 * i) + 18));
+				cwd[i].lastWriteTime = 			*((uint16_t*) (whole + (32 * i) + 22));
+				cwd[i].lastWriteDate = 			*((uint16_t*) (whole + (32 * i) + 24));
+				cwd[i].firstLogicalCluster = 	*((uint16_t*) (whole + (32 * i) + 26));
+				cwd[i].fileSize = 				*((uint32_t*)   (whole + (32 * i) + 28));
 		}
 	}
 
