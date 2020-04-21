@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 // Sector size is 512 bytes always with FAT12
 #define SECTORSIZE 512
@@ -14,35 +15,35 @@
 typedef unsigned char BYTE;
 
 typedef struct BOOTSECTORSTRUCT {
-	int bytesPerSector;
-	int sectorsPerCluster;
-	int numReservedSectors;
-	int numFATCopies;
-	int maxNumRoot;
-	int numOfSectors;
-	int numSECTORSPERFAT;
-	int sectorsPerTrack;
-	int numberHeads;
-	int sectorCountFAT32;
-	int bootSig;
-	int volumeID;
+	uint16_t bytesPerSector;
+	uint16_t sectorsPerCluster;
+	uint16_t numReservedSectors;
+	uint16_t numFATCopies;
+	uint16_t maxNumRoot;
+	uint16_t numOfSectors;
+	uint16_t numSECTORSPERFAT;
+	uint16_t sectorsPerTrack;
+	uint16_t numberHeads;
+	uint16_t sectorCountFAT32;
+	uint16_t bootSig;
+	uint32_t volumeID;
 	unsigned char *volumeLabel;
 	unsigned char *fileSystemType;
 } BOOTSECTORSTRUCT;
 
 typedef struct ENTRY {
-	int empty;
+	BYTE empty;
 	unsigned char *fileName;
 	unsigned char *extension;
-	int attributes;
-	int reserved;
-	int creationTime;
-	int creationDate;
-	int lastAccessDate;
-	int lastWriteTime;
-	int lastWriteDate;
-	int firstLogicalCluster;
-	int fileSize;
+	uint16_t attributes;
+	uint16_t reserved;
+	uint16_t creationTime;
+	uint16_t creationDate;
+	uint16_t lastAccessDate;
+	uint16_t lastWriteTime;
+	uint16_t lastWriteDate;
+	uint16_t firstLogicalCluster;
+	uint32_t fileSize;
 } ENTRY;
 
 typedef struct PREVDIR {
@@ -50,31 +51,31 @@ typedef struct PREVDIR {
 	int sectorStart;
 } PREVDIR;
 
-int loadBootSector(FILE *fpIn, struct BOOTSECTORSTRUCT *bootSectorIn);
-int printBootSector(struct BOOTSECTORSTRUCT *bootSectorIn);
-int copy(int startingLoc, int numBytes, unsigned char bs[SECTORSIZE]);
+uint32_t loadBootSector(FILE *fpIn, struct BOOTSECTORSTRUCT *bootSectorIn);
+uint32_t printBootSector(struct BOOTSECTORSTRUCT *bootSectorIn);
+uint32_t copy(uint32_t startingLoc, uint32_t numBytes, unsigned char bs[SECTORSIZE]);
 char hexToAscii( char first, char second);
-short *loadFAT(BYTE *fpIn, int startingSector);
+uint16_t *loadFAT(BYTE *fpIn, uint32_t startingSector);
 char*  charToBin(char c);
-int stringToDec(char *in);
-int loadRootDir(FILE *fpIn, ENTRY *rootDirIn);
-int printRootDir(ENTRY *rootDirIn);
-int *loadCWD(unsigned char *whole, int startingSec);
-void trim (char *dest, char *src);
 int pwd(ENTRY *cwdIn);
 int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName);
+void trim (char *dest, char *src);
+uint32_t loadRootDir(FILE *fpIn, ENTRY *rootDirIn);
+uint32_t printRootDir(ENTRY *rootDirIn);
+ENTRY *loadCWD(FILE *fpIn, uint32_t startingSec);
 
-int main() {
+uint32_t main() {
 	FILE *fp;
 	char* filename = "/home/jekmetz/Downloads/cs450_2.img"; 
 
 	fp = fopen(filename, "r");
 	if(fp == NULL){
 		printf("Did not load\n");
+		return 0;
 	}
 
 	fseek(fp, 0, SEEK_END);
-	int size = ftell(fp);
+	uint32_t size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
 	// Size of entire system
@@ -91,25 +92,26 @@ int main() {
 	// Loading boot sector
 	loadBootSector(fp, bootSector);
 
-	// Int array pointer to hold FATs
-	short *fat1;
-	short *fat2;
+	// uint32_t array pointer to hold FATs
+	uint16_t *fat1;
+	uint16_t *fat2;
 
 	// The starting sectors of the two FATs
-	int fat1StartingSec = 1;
-	int fat2StartingSec = 10;
+	uint32_t fat1StartingSec = 1;
+	uint32_t fat2StartingSec = 10;
 
 	// Loading both FATs into arrays
 	fat1 = loadFAT(ENTIRESYSTEM, fat1StartingSec);
 	fat2 = loadFAT(ENTIRESYSTEM, fat2StartingSec);
 
 	ENTRY *cwd;
-	int rootDirStartingSec = 19;
+	uint32_t rootDirStartingSec = 19;
 
 	cwd = loadCWD(ENTIRESYSTEM, rootDirStartingSec);
 
 	printf("%s\tFile size: %d\tFirst logical cluster: %d\n", cwd[3].fileName,cwd[3].fileSize, cwd[3].firstLogicalCluster);
 
+//NICKS COMMAND HANDLER
 	int exit = 0;
 
 	char cmd[50];
@@ -228,7 +230,6 @@ int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName){
 			printf("%s", out);
 		}
 	}	
-
 }
 
 int pwd(ENTRY *cwdIn){
@@ -246,7 +247,7 @@ int *loadCWD(unsigned char *whole, int startingSec){
 	// ENTRY array to the cws 
 	ENTRY *cwd = malloc(sizeof(ENTRY) * MAXENTRIESPERDIR);
 
-	for(int i = 0; i<MAXENTRIESPERDIR; i++){
+	for(uint32_t i = 0; i<MAXENTRIESPERDIR; i++){
 
 		// printf("%d\t%02X\n",i,  *(whole + (i * 32)));
 
@@ -274,22 +275,22 @@ int *loadCWD(unsigned char *whole, int startingSec){
 				memcpy(extension, whole + (startingSec * SECTORSIZE) + (32 * i) + 8, sizeof(char) * 3);
 				cwd[i].extension = extension;
 				
-				cwd[i].attributes = 			*((char*)  (whole + (startingSec * SECTORSIZE) + (32 * i) + 11)); 
-				cwd[i].reserved = 				*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 12));
-				cwd[i].creationTime = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 14));
-				cwd[i].creationDate = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 16));
-				cwd[i].lastAccessDate = 		*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 18));
-				cwd[i].lastWriteTime = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 22));
-				cwd[i].lastWriteDate = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 24));
-				cwd[i].firstLogicalCluster = 	*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 26));
-				cwd[i].fileSize = 				*((int*)   (whole + (startingSec * SECTORSIZE) + (32 * i) + 28));
+				cwd[i].attributes = 			*((char*)  (temp + (32 * i) + 11)); 
+				cwd[i].reserved = 				*((uint16_t*) (temp + (32 * i) + 12));
+				cwd[i].creationTime = 			*((uint16_t*) (temp + (32 * i) + 14));
+				cwd[i].creationDate = 			*((uint16_t*) (temp + (32 * i) + 16));
+				cwd[i].lastAccessDate = 		*((uint16_t*) (temp + (32 * i) + 18));
+				cwd[i].lastWriteTime = 			*((uint16_t*) (temp + (32 * i) + 22));
+				cwd[i].lastWriteDate = 			*((uint16_t*) (temp + (32 * i) + 24));
+				cwd[i].firstLogicalCluster = 	*((uint16_t*) (temp + (32 * i) + 26));
+				cwd[i].fileSize = 				*((uint32_t*)   (temp + (32 * i) + 28));
 		}
 	}
 
 	return cwd;
 }
 
-int loadBootSector(FILE *fpIn, BOOTSECTORSTRUCT *bootSectorIn){
+uint32_t loadBootSector(FILE *fpIn, BOOTSECTORSTRUCT *bootSectorIn){
 	// Loading Bytes Per Sector
 	// Starting location 11 bytes
 
@@ -302,18 +303,18 @@ int loadBootSector(FILE *fpIn, BOOTSECTORSTRUCT *bootSectorIn){
 	
 	fread(bs, SECTORSIZE, 1, fpIn);
 
-	bootSectorIn->bytesPerSector = *((short*)(bs+11));
+	bootSectorIn->bytesPerSector = *((uint16_t*)(bs+11));
 	bootSectorIn->sectorsPerCluster = *((char*)(bs+13));
-	bootSectorIn->numReservedSectors = *((short*)(bs+14));
+	bootSectorIn->numReservedSectors = *((uint16_t*)(bs+14));
 	bootSectorIn->numFATCopies = *((char*)(bs+16));
-	bootSectorIn->maxNumRoot = *((short*)(bs+17));
-	bootSectorIn->numOfSectors = *((short*)(bs+19));
-	bootSectorIn->numSECTORSPERFAT = *((short*)(bs+22));
-	bootSectorIn->sectorsPerTrack = *((short*)(bs+24));
-	bootSectorIn->numberHeads = *((short*)(bs+26));
-	bootSectorIn->sectorCountFAT32 = *((int*)(bs+32));
+	bootSectorIn->maxNumRoot = *((uint16_t*)(bs+17));
+	bootSectorIn->numOfSectors = *((uint16_t*)(bs+19));
+	bootSectorIn->numSECTORSPERFAT = *((uint16_t*)(bs+22));
+	bootSectorIn->sectorsPerTrack = *((uint16_t*)(bs+24));
+	bootSectorIn->numberHeads = *((uint16_t*)(bs+26));
+	bootSectorIn->sectorCountFAT32 = *((uint32_t*)(bs+32));
 	bootSectorIn->bootSig = *((char*)(bs+38));
-	bootSectorIn->volumeID = *((int*)(bs+32));
+	bootSectorIn->volumeID = *((uint32_t*)(bs+32));
 	memcpy(volumeLabel, bs+43, sizeof(char) * 11);
 	bootSectorIn->volumeLabel = volumeLabel;
 	memcpy(fileSystemType, bs+54, sizeof(char) * 8);
@@ -322,7 +323,7 @@ int loadBootSector(FILE *fpIn, BOOTSECTORSTRUCT *bootSectorIn){
 	return 1;
 }
 
-int printBootSector(BOOTSECTORSTRUCT *bootSectorIn){
+uint32_t printBootSector(BOOTSECTORSTRUCT *bootSectorIn){
 	printf("Bytes per sector: %d\n", bootSectorIn->sectorsPerCluster);
 	printf("Sectors per cluster: %d\n", bootSectorIn->bytesPerSector);
 	printf("Number of reserved sectors: %d\n", bootSectorIn->numReservedSectors);
@@ -339,18 +340,18 @@ int printBootSector(BOOTSECTORSTRUCT *bootSectorIn){
 	printf("File System Type: %s\n", bootSectorIn->fileSystemType);
 }
 
-short *loadFAT(BYTE* sys, int startingSector) {	
+uint16_t *loadFAT(BYTE* sys, uint32_t startingSector) {	
 	
 	//move sys forward to the correct starting position
 	sys = (sys + SECTORSIZE * startingSector);
 
 	//fat table malloc
-	short *fatTable = malloc(sizeof(short) * FATTABLESIZE);
+	uint16_t *fatTable = malloc(sizeof(uint16_t) * FATTABLESIZE);
 
 	// For loop to iterate over FAT to insert 12 bit long FAT entry
 	BYTE* si;
-	short boi0,boi1;
-	for(int i = 0; i<  FATTABLESIZE/2;i++){
+	uint16_t boi0,boi1;
+	for(uint32_t i = 0; i<  FATTABLESIZE/2;i++){
 		
 		si = sys + i*3;
 		//make our phatty bois
@@ -370,9 +371,9 @@ short *loadFAT(BYTE* sys, int startingSector) {
 	return fatTable;
 }
 
-int loadRootDir(FILE *fpIn, ENTRY *rootDirIn) {
+uint32_t loadRootDir(FILE *fpIn, ENTRY *rootDirIn) {
 	// Defining the root starting sector
-	int rootDirStartingSector = 19;
+	uint32_t rootDirStartingSector = 19;
 	
 	// Setting the file to the correct location
 	fseek(fpIn, SECTORSIZE*rootDirStartingSector, SEEK_SET);
@@ -383,7 +384,7 @@ int loadRootDir(FILE *fpIn, ENTRY *rootDirIn) {
 	// Reading file into the rootDir array
 	fread(rootDir, SECTORSIZE, 1, fpIn);
 
-	int entry = 0;
+	uint32_t entry = 0;
 
 	while(entry < 16 && rootDir[entry*32] != 0x00){
 		unsigned char *fileName = malloc(sizeof(char) * 8);
@@ -394,19 +395,19 @@ int loadRootDir(FILE *fpIn, ENTRY *rootDirIn) {
 		memcpy(extension, rootDir+8, sizeof(char) * 3);
 		rootDirIn->extension = extension;
 		rootDirIn->attributes = *((char*)(rootDir+11)); 
-		rootDirIn->reserved = *((short*)(rootDir+12));
-		rootDirIn->creationTime = *((short*)(rootDir+14));
-		rootDirIn->creationDate = *((short*)(rootDir+16));
-		rootDirIn->lastAccessDate = *((short*)(rootDir+18));
-		rootDirIn->lastWriteTime = *((short*)(rootDir+22));
-		rootDirIn->lastWriteDate = *((short*)(rootDir+24));
-		rootDirIn->firstLogicalCluster = *((short*)(rootDir+26));
-		rootDirIn->fileSize = *((int*)(rootDir+28));
+		rootDirIn->reserved = *((uint16_t*)(rootDir+12));
+		rootDirIn->creationTime = *((uint16_t*)(rootDir+14));
+		rootDirIn->creationDate = *((uint16_t*)(rootDir+16));
+		rootDirIn->lastAccessDate = *((uint16_t*)(rootDir+18));
+		rootDirIn->lastWriteTime = *((uint16_t*)(rootDir+22));
+		rootDirIn->lastWriteDate = *((uint16_t*)(rootDir+24));
+		rootDirIn->firstLogicalCluster = *((uint16_t*)(rootDir+26));
+		rootDirIn->fileSize = *((uint32_t*)(rootDir+28));
 	}
 	return 1;
 }
 
-int printRootDir(ENTRY *rootDirIn){
+uint32_t printRootDir(ENTRY *rootDirIn){
 	printf("File name: %s\n", rootDirIn->fileName);
 	printf("Extension: %s\n", rootDirIn->extension);
 	printf("Attributes: %d\n", rootDirIn->attributes);
