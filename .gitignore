@@ -60,3 +60,6 @@ dkms.conf
 
 # Ignoring the latex directory
 /latex/
+
+# Ignoring module6 bin
+module6

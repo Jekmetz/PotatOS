@@ -2,9 +2,12 @@
 # Bad Makefile for Module 6
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I.
+CFLAGS = -Wall -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -I.
 DEPS = 
-OBJ = module6.o
+OBJ =\
+module6.o\
+commands.o\
+command_utils.o
 
 all: module6
 
