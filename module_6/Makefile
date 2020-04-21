@@ -7,7 +7,8 @@ DEPS =
 OBJ =\
 module6.o\
 commands.o\
-command_utils.o
+command_utils.o\
+file_wrangler.o
 
 all: module6
 

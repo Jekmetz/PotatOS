@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "commands.h"
+#include "file_wrangler.h"
 
 static command_t COMMANDS[] = {
         {
@@ -70,7 +72,21 @@ int help_command(int argc, char **argv) {
 }
 
 int pbsi_command(int argc, char **argv) {
-    printf("Printing boot sector information.\n");
+    BOOTSECTORSTRUCT *bootSectorIn = getBootSectorIn();
+    printf("Bytes per sector: %d\n", bootSectorIn->sectorsPerCluster);
+    printf("Sectors per cluster: %d\n", bootSectorIn->bytesPerSector);
+    printf("Number of reserved sectors: %d\n", bootSectorIn->numReservedSectors);
+    printf("Number of FAT copies: %d\n", bootSectorIn->numFATCopies);
+    printf("Max number of root directory entries: %d\n", bootSectorIn->maxNumRoot);
+    printf("Total # of sectors in the file system: %d\n",bootSectorIn->numOfSectors);
+    printf("Number of sectors per FAT: %d\n", bootSectorIn->numSECTORSPERFAT);
+    printf("Sectors per track: %d\n", bootSectorIn->sectorsPerTrack);
+    printf("Number of heads: %d\n", bootSectorIn->numberHeads);
+    printf("Total sector count for FAT32: %d\n", bootSectorIn->sectorCountFAT32);
+    printf("Boot signature: %02X\n", bootSectorIn->bootSig);
+    printf("Volume ID: %d\n", bootSectorIn->volumeID);
+    printf("Volume label is: %s\n", bootSectorIn->volumeLabel);
+    printf("File System Type: %s\n", bootSectorIn->fileSystemType);
     return 0;
 }
 

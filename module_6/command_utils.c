@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdint.h>
 #include "command_utils.h"
 
 char *trim_whitespace(char *str) {
@@ -19,14 +20,14 @@ char *trim_whitespace(char *str) {
     return str;
 }
 
-int split_args(char *command, char **argv) {
+uint32_t split_args(char *command, char **argv) {
     // Delegate the responsibility of making an array of char pointers to the calling function
-    int argc = 0;
-    int argv_index = 0;
+    uint32_t argc = 0;
+    uint32_t argv_index = 0;
 
     bool last_char_was_space = true;
 
-    int command_i = 0;
+    uint32_t command_i = 0;
     bool keep_going = true;
 
     while (keep_going) {

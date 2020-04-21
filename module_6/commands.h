@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "command_utils.h"
 
 command_t *search_commands(char *command);
