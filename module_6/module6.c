@@ -7,8 +7,6 @@
 #include "commands.h"
 #include "file_wrangler.h"
 
-uint16_t *fat1, *fat2;
-
 int main(int argc, char **argv) {
     if (!(argc == 2 || argc == 3)) {
         printf("Usage: %s DISKIMAGE [PATH]\n", argv[0]);
@@ -24,40 +22,8 @@ int main(int argc, char **argv) {
     // Load entire disk image into array
     // make functions for dealing with accessing disk image
     // Do things in commands
-    FILE *fp;
-    char* filename = argv[1]; 
 
-    fp = fopen(filename, "r");
-
-    fseek(fp, 0, SEEK_END);
-    uint32_t size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-
-    // Size of entire system
-    BYTE *ENTIRESYSTEM = malloc(sizeof(char) * size);
-
-    // Reading the ENTIRE DAMN THING
-    fread(ENTIRESYSTEM, size, 1, fp);
-
-    // Loading boot sector
-    // call with getBootSectorIn();
-    loadBootSector(fp);
-
-    // The starting sectors of the two FATs
-    uint32_t fat1StartingSec = 1;
-    uint32_t fat2StartingSec = 10;
-
-    // Loading both FATs into arrays
-    fat1 = loadFAT(ENTIRESYSTEM, fat1StartingSec);
-    fat2 = loadFAT(ENTIRESYSTEM, fat2StartingSec); 
-
-    ENTRY *cwd;
-    uint32_t rootDirStartingSec = 19;
-
-    cwd = loadCWD(ENTIRESYSTEM, rootDirStartingSec);   
-
-    //TODO REMOVE
-    if(cwd == NULL) {};
+    loadEntireSystem(argv[1]);   
 
     if(argc == 2) //Command input mode
     {
@@ -65,11 +31,13 @@ int main(int argc, char **argv) {
         // We will never need 16 arguments. Maybe we should just malloc.
         char *command_argv[16] = {0};
 
-        while (1) {
+        while (1) 
+        {
             printf("> ");
 
             // This happens when someone hits CTRL+D to send EOF
-            if (fgets(command_buffer, 511, stdin) == NULL) {
+            if (fgets(command_buffer, 511, stdin) == NULL) 
+            {
                 exit_command(0, NULL);
                 break;
             }
@@ -78,7 +46,8 @@ int main(int argc, char **argv) {
 
             uint32_t command_argc = split_args(command, command_argv);
 
-            if (command_argc == 0) {
+            if (command_argc == 0) 
+            {
                 continue;
             }
 
@@ -86,9 +55,11 @@ int main(int argc, char **argv) {
             // and we just call their function with argc and argv
 
             command_t *found_command = search_commands(command_argv[0]);
-            if (found_command == NULL) {
+            if (found_command == NULL) 
+            {
                 printf("Command not found: %s\n", command_argv[0]);
-            } else {
+            } else 
+            {
                 found_command->function(command_argc, command_argv);
             }
 
@@ -97,8 +68,7 @@ int main(int argc, char **argv) {
 
             printf("\n");
         }
-    }
-    else //file input mode
+    } else //file input mode
     {
         //recursively go through files and pruint32_t out 
         //info from found file.

@@ -7,6 +7,9 @@
 #include "command_utils.h"
 
 BOOTSECTORSTRUCT* bootSectorIn;
+BYTE* sys;
+uint16_t *fat1, *fat2;
+ENTRY* cwd;
 
 void loadBootSector(FILE *fpIn){
     // Loading Bytes Per Sector
@@ -70,9 +73,7 @@ uint16_t *loadFAT(BYTE* sys, uint32_t startingSector) {
     return fatTable;
 }
 
-ENTRY *loadCWD(BYTE *whole, uint32_t startingSec){
-	// ENTRY array to the cws 
-	ENTRY *cwd = malloc(sizeof(ENTRY) * MAXENTRIESPERDIR);
+void loadCWD(ENTRY* cwd, BYTE *whole, uint32_t startingSec){
 
 	for(uint32_t i = 0; i<MAXENTRIESPERDIR; i++){
 
@@ -113,14 +114,53 @@ ENTRY *loadCWD(BYTE *whole, uint32_t startingSec){
 				cwd[i].fileSize = 				*((uint32_t*)   (whole + (32 * i) + 28));
 		}
 	}
-
-	return cwd;
 }
 
-BOOTSECTORSTRUCT* getBootSectorIn()
+void loadEntireSystem(char* filename)
 {
-	return bootSectorIn;
+	FILE *fp;
+
+    fp = fopen(filename, "r");
+
+    fseek(fp, 0, SEEK_END);
+    uint32_t size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    // Size of entire system
+    sys = malloc(sizeof(char) * size);
+
+    // Reading the ENTIRE DAMN THING
+    fread(sys, size, 1, fp);
+
+    // Loading boot sector
+    // call with getBootSectorIn();
+    loadBootSector(fp);
+
+    // The starting sectors of the two FATs
+    uint32_t fat1StartingSec = 1;
+    uint32_t fat2StartingSec = 10;
+
+    // Loading both FATs into arrays
+    fat1 = loadFAT(sys, fat1StartingSec);
+    fat2 = loadFAT(sys, fat2StartingSec); 
+
+    cwd = (ENTRY*) malloc(sizeof(ENTRY));
+    uint32_t rootDirStartingSec = 19;
+
+    loadCWD(cwd, sys, rootDirStartingSec);
+
+    fclose(fp);
 }
+
+BOOTSECTORSTRUCT* getBootSectorIn() { return bootSectorIn; }
+
+BYTE* getSystem() {	return sys; }
+
+uint16_t* getDiabetes1() { return fat1; }
+
+uint16_t* getDiabetes2() { return fat2; }
+
+ENTRY* getCWD() { return cwd; }
 
 void trim (char *dest, char *src)
 {
