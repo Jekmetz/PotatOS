@@ -45,6 +45,11 @@ typedef struct ENTRY {
 	int fileSize;
 } ENTRY;
 
+typedef struct PREVDIR {
+	unsigned char *dirName;
+	int sectorStart;
+} PREVDIR;
+
 int loadBootSector(FILE *fpIn, struct BOOTSECTORSTRUCT *bootSectorIn);
 int printBootSector(struct BOOTSECTORSTRUCT *bootSectorIn);
 int copy(int startingLoc, int numBytes, unsigned char bs[SECTORSIZE]);
@@ -54,7 +59,10 @@ char*  charToBin(char c);
 int stringToDec(char *in);
 int loadRootDir(FILE *fpIn, ENTRY *rootDirIn);
 int printRootDir(ENTRY *rootDirIn);
-int *loadCWD(FILE *fpIn, int startingSec);
+int *loadCWD(unsigned char *whole, int startingSec);
+void trim (char *dest, char *src);
+int pwd(ENTRY *cwdIn);
+int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName);
 
 int main() {
 	FILE *fp;
@@ -65,23 +73,23 @@ int main() {
 		printf("Did not load\n");
 	}
 
-	struct stat st;
-	fstat(fp, &st);
-	int size = st.st_size
-
-	// Size of entire system
-	unsigned char *ENTIRESYSTEM = malloc(sizeof(char) * size);
-
-	// Reading the ENTIRE DAMN THING
-	fread(ENTIRESYSTEM, size, 1, fpIn);
-
-
-	// Boot sector does not need to be an array, it is only one struct
+	// // Boot sector does not need to be an array, it is only one struct
 	BOOTSECTORSTRUCT *bootSector = malloc(sizeof(BOOTSECTORSTRUCT));
 	
 	// Loading boot sector
 	loadBootSector(fp, bootSector);
 
+	
+	fseek(fp, 0L, SEEK_END);
+	int size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	// Size of entire system
+	unsigned char *ENTIRESYSTEM = malloc(size);
+
+	// Reading the ENTIRE DAMN THING
+	fread(ENTIRESYSTEM, size, 1, fp);
+	
 	// Int array pointer to hold FATs
 	int *fat1;
 	int *fat2;
@@ -94,91 +102,190 @@ int main() {
 	fat1 = loadFAT(fp, fat1StartingSec);
 	fat2 = loadFAT(fp, fat2StartingSec);
 
-	// TODO: Implement check to make sure that FATs are the same?
-
 	ENTRY *cwd;
 	int rootDirStartingSec = 19;
 
-	cwd = loadCWD(fp, rootDirStartingSec);
+	cwd = loadCWD(ENTIRESYSTEM, rootDirStartingSec);
 
+	printf("%s\tFile size: %d\tFirst logical cluster: %d\n", cwd[3].fileName,cwd[3].fileSize, cwd[3].firstLogicalCluster);
 
-	for(int i = 0; i< MAXENTRIESPERDIR; i++){
-		// printf("%d\n", cwd[i].empty);
-		if(cwd[i].empty != 1){
-			printf("Name: %s.%s\n\tType: %02X\n", cwd[i].fileName,cwd[i].extension, cwd[i].attributes);
+	int exit = 0;
+
+	char cmd[50];
+
+	while(exit != 1){
+		fgets(cmd, 50, stdin);
+		// Removing newline
+		cmd[strcspn(cmd, "\n")] = '\0';
+
+		if(strcmp(cmd, "exit") == 0){
+			exit = 1;
+		}
+		else if(strcmp(cmd, "ls") == 0){
+			pwd(cwd);
+		}
+		else if(strncmp(cmd, "cd", strlen("cd")) == 0){
+			// Grabbing first token which should be "cd"
+			char *dir = strtok(cmd, " ");
+
+			// Attempting to grab second
+			dir = strtok(NULL, " ");
+
+			if(dir != NULL){
+				// Stripping off newline characters
+				// dir[strcspn(dir, "\n")] = '\0';
+
+				for(int i = 0; i<MAXENTRIESPERDIR; i++){
+					// if(cwd[i].empty != 1){
+					// 	printf("%s\n", cwd[i].fileName);
+					// }
+					if(cwd[i].empty != 1 && strcmp(cwd[i].fileName, dir) == 0){
+						printf("Yep: %s\tGo to raw: %d\n", cwd[i].fileName, cwd[i].firstLogicalCluster);
+						cwd = loadCWD(ENTIRESYSTEM, 33 + cwd[i].firstLogicalCluster - 2);
+					}
+				}
+			}
+			else{
+				printf("Have to specify dir to go to next\n");
+			}
+
+		}
+		else if(strncmp(cmd, "type", strlen("type")) == 0){
+			// Grabbing first token which should be "cd"
+			char *dir = strtok(cmd, " ");
+
+			// Attempting to grab second
+			dir = strtok(NULL, " ");
+
+			if(dir != NULL){
+				// Stripping off newline characters
+				// dir[strcspn(dir, "\n")] = '\0';
+
+				type(ENTIRESYSTEM, fat1, cwd, dir);
+			}
+			else{
+				printf("Have to specify what file you would like to print\n");
+			}
+		}
+		else if(strcmp(cmd, "root") == 0){
+			cwd = loadCWD(ENTIRESYSTEM, rootDirStartingSec);
+		}
+		else if(strcmp(cmd, "printBoot") == 0){
+			printBootSector(bootSector);
+		}
+		else{
+			printf("Unknown command\n");
 		}
 	}
-
-	// ENTRY *rootDir = malloc(sizeof(ENTRY));
-
-	// ENTRY *rootDir = malloc(sizeof(ENTRY));
-
-	// loadRootDir(fp, rootDir);
-
-	// Prints below
-	// printBootSector(bootSector);
-	// // printRootDir(rootDir);
-
-	// for(int i = 0; i< FATTABLESIZE; i++){
-	// 	printf("%d\t%x\t%x\n",i , fat1[i], fat2[i]);
-	// }
 }
 
-int *loadCWD(FILE *fpIn, int startingSec){
-	// Temp array to hold raw data from file pointer
-	unsigned char temp[SECTORSIZE];
+int type(unsigned char *whole, int *FAT, ENTRY *cwdIn, char *fileName){
+	// Declaring variables
+	char *name, *extension;
 	
-	// Setting file at first FAT
-	fseek(fpIn, (SECTORSIZE * startingSec), SEEK_SET);
+	if(strstr(fileName, ".") != 0) {
+		name = strtok(fileName, ".");
+		extension = strtok(NULL, "");
+		printf("%s\n", name);
+		printf("%s\n", extension);
+		
+	}
+	else{
+		printf("You must include the extension with the filename\n");
+		return 0;
+	}
 
-	// // Reading into temp array
-	fread(temp, SECTORSIZE, 1, fpIn);
+	for(int i = 0; i<MAXENTRIESPERDIR; i++){
+		if(cwdIn[i].empty != 1 && strcmp(cwdIn[i].fileName, fileName) == 0){
+			printf("Filename: %s\tFirst logical cluster: %d\tSize: %d\tNeeded jumps: %d\n", \
+				cwdIn[i].fileName, cwdIn[i].firstLogicalCluster, cwdIn[i].fileSize, cwdIn[i].fileSize / 512);
 
+
+			int current;
+			current = cwdIn[i].firstLogicalCluster;
+
+			char *out;
+
+			// out = malloc(sizeof(char) * (SECTORSIZE * (cwdIn[i].fileSize / 512)));
+			out = malloc(sizeof(char) * 598367 * 2);
+
+			char *tempOut;
+			tempOut = malloc(sizeof(char) * 512);
+
+
+			memcpy(tempOut, whole + (cwdIn[i].firstLogicalCluster + 33 - 2) * 512, sizeof(char) * 512);
+			strcat(out, tempOut);
+
+			while(current < 0xFF8 && FAT[current] != 0){
+				current = FAT[current];
+				if(FAT[current] == 0){
+					break;
+				}
+				memcpy(tempOut, whole + (current + 33 - 2) * 512, sizeof(char) * 512);
+				strcat(out, tempOut);
+			}
+
+			printf("%s", out);
+		}
+	}
+	
+
+}
+
+int pwd(ENTRY *cwdIn){
+	char *prefix = malloc(sizeof(cwdIn[0].fileName));
+	strcpy(prefix, cwdIn[0].fileName);
+
+	for(int i = 0; i< MAXENTRIESPERDIR; i++){
+		if(cwdIn[i].attributes != 0x28 && cwdIn[i].empty != 1){
+			printf("User@potatOS:/%s/%s.%s\n", prefix, cwdIn[i].fileName,cwdIn[i].extension);
+		}
+	}
+}
+
+int *loadCWD(unsigned char *whole, int startingSec){
 	// ENTRY array to the cws 
 	ENTRY *cwd = malloc(sizeof(ENTRY) * MAXENTRIESPERDIR);
 
 	for(int i = 0; i<MAXENTRIESPERDIR; i++){
 
-		// printf("%d\t%02X\n",i,  *(temp + (i * 32)));
+		// printf("%d\t%02X\n",i,  *(whole + (i * 32)));
 
 		unsigned char *fileName = malloc(sizeof(char) * 8);
 		unsigned char *extension = malloc(sizeof(char) * 3);
 
 
 		// Index is deleted
-		if ( *(temp + (i * 32)) == 0xE5) {
+		if ( *(whole + (startingSec * SECTORSIZE) + (i * 32)) == 0xE5) {
 			cwd[i].empty = 1;
 		}
 		// Last index
-		else if ( *(temp + (i * 32)) == 0x00){
+		else if ( *(whole + (startingSec * SECTORSIZE) + (i * 32)) == 0x00){
 			cwd[i].empty = 1;
 			// TODO: Stop 
 		}
+		else if( *(whole + (startingSec * SECTORSIZE) + (i * 32) + 11) == 0x0F){
+			cwd[i].empty = 1;
+		}
 		else{
 				cwd[i].empty = 0;
-				memcpy(fileName, temp + (32 * i) + 0, sizeof(char) * 8);
+				memcpy(fileName, whole + (startingSec * SECTORSIZE) + (32 * i) + 0, sizeof(char) * 8);
+				trim(fileName,fileName);
 				cwd[i].fileName = fileName;
-				memcpy(extension, temp + (32 * i) + 8, sizeof(char) * 3);
+				memcpy(extension, whole + (startingSec * SECTORSIZE) + (32 * i) + 8, sizeof(char) * 3);
 				cwd[i].extension = extension;
 				
-				cwd[i].attributes = 			*((char*)  (temp + (32 * i) + 11)); 
-				cwd[i].reserved = 				*((short*) (temp + (32 * i) + 12));
-				cwd[i].creationTime = 			*((short*) (temp + (32 * i) + 14));
-				cwd[i].creationDate = 			*((short*) (temp + (32 * i) + 16));
-				cwd[i].lastAccessDate = 		*((short*) (temp + (32 * i) + 18));
-				cwd[i].lastWriteTime = 			*((short*) (temp + (32 * i) + 22));
-				cwd[i].lastWriteDate = 			*((short*) (temp + (32 * i) + 24));
-				cwd[i].firstLogicalCluster = 	*((short*) (temp + (32 * i) + 26));
-				cwd[i].fileSize = 				*((int*)   (temp + (32 * i) + 28));
+				cwd[i].attributes = 			*((char*)  (whole + (startingSec * SECTORSIZE) + (32 * i) + 11)); 
+				cwd[i].reserved = 				*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 12));
+				cwd[i].creationTime = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 14));
+				cwd[i].creationDate = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 16));
+				cwd[i].lastAccessDate = 		*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 18));
+				cwd[i].lastWriteTime = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 22));
+				cwd[i].lastWriteDate = 			*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 24));
+				cwd[i].firstLogicalCluster = 	*((short*) (whole + (startingSec * SECTORSIZE) + (32 * i) + 26));
+				cwd[i].fileSize = 				*((int*)   (whole + (startingSec * SECTORSIZE) + (32 * i) + 28));
 		}
 	}
-
-	/*
-	Notes to self:
-		* Currently working in this function. Need to get it so that main only prints out used entries
-		* Need to figure out DOS date and time
-		* Need to figure out hidden attribute and how to use it
-	*/
 
 	return cwd;
 }
@@ -417,4 +524,37 @@ int stringToDec(char *in){
   }
 
   return (int)r;
+}
+
+void trim (char *dest, char *src)
+{
+    if (!src || !dest)
+       return;
+
+    int len = strlen (src);
+
+    if (!len) {
+        *dest = '\0';
+        return;
+    }
+    char *ptr = src + len - 1;
+
+    // remove trailing whitespace
+    while (ptr > src) {
+        if (!isspace (*ptr))
+            break;
+        ptr--;
+    }
+
+    ptr++;
+
+    char *q;
+    // remove leading whitespace
+    for (q = src; (q < ptr && isspace (*q)); q++)
+        ;
+
+    while (q < ptr)
+        *dest++ = *q++;
+
+    *dest = '\0';
 }
