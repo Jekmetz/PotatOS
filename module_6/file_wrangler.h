@@ -30,4 +30,6 @@ BYTE* getSystem();
 uint16_t* getDiabetes1();
 uint16_t* getDiabetes2();
 ENTRY* getCWD();
+char* getCwdPath();
+void setCwdPath(const char* jerry);
 void trim (char *dest, char *src);

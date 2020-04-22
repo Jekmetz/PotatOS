@@ -10,6 +10,7 @@ BOOTSECTORSTRUCT* bootSectorIn;
 BYTE* sys;
 uint16_t *fat1, *fat2;
 ENTRY* cwd;
+char cwdPath[100] = {0};
 
 void loadBootSector(FILE *fpIn){
     // Loading Bytes Per Sector
@@ -109,6 +110,9 @@ void loadCWD(ENTRY* cwd, BYTE *whole, uint32_t startingSec){
 
 void loadEntireSystem(char* filename)
 {
+    //init
+    strcat(cwdPath,"/");
+
 	FILE *fp;
 
     fp = fopen(filename, "r");
@@ -152,6 +156,10 @@ uint16_t* getDiabetes1() { return fat1; }
 uint16_t* getDiabetes2() { return fat2; }
 
 ENTRY* getCWD() { return cwd; }
+
+char* getCwdPath() { return cwdPath; }
+
+void setCwdPath(const char* jerry) { memcpy(cwdPath, jerry, strlen(jerry)); }
 
 void trim (char *dest, char *src)
 {

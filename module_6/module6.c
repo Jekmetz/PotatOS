@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
         while (1) 
         {
-            printf("> ");
+            printf("stdUser@potatOSR6:%s > ",getCwdPath());
 
             // This happens when someone hits CTRL+D to send EOF
             if (fgets(command_buffer, 511, stdin) == NULL) 
