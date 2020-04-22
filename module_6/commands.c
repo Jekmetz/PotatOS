@@ -103,8 +103,26 @@ int cd_command(int argc, char **argv) {
 }
 
 int ls_command(int argc, char **argv) {
-    printf("Listing directory.\n");
-    //J
+    //Grab the CWD
+    ENTRY* cwdIn = getCWD();
+
+    //get a flag ready for if it is a directory
+    BYTE isDir = 0;
+
+    for(int i = 0; i< MAXENTRIESPERDIR; i++)    //for the number of entries...
+    {
+        if( cwdIn[i].empty != 1 && cwdIn[i].attributes != 0x0F && !(cwdIn[i].attributes & 0x02)){
+            //if it is not a long file name,
+            //is not hidden,
+            //and is not empty...
+            isDir = cwdIn[i].attributes&0x10;
+            if(isDir) //directory
+                printf("\033[32m%s\033[0m",cwdIn[i].fileName);
+            else    //not directory
+                printf("%s.%s\n", cwdIn[i].fileName,cwdIn[i].extension);
+
+        }
+    }
     return 0;
 }
 

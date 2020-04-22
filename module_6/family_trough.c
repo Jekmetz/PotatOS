@@ -99,53 +99,7 @@ uint32_t main() {
 }
 
 int type(BYTE *whole, uint16_t *FAT, ENTRY *cwdIn, char *fileName){
-	// Declaring variables
-	char *name, *extension;
 	
-	if(strstr(fileName, ".") != 0) {
-		name = strtok(fileName, ".");
-		extension = strtok(NULL, "");
-		printf("%s\n", name);
-		printf("%s\n", extension);
-		
-	}
-	else{
-		printf("You must include the extension with the filename\n");
-		return 0;
-	}
-
-	for(int i = 0; i<MAXENTRIESPERDIR; i++){
-		if(cwdIn[i].empty != 1 && strcmp(cwdIn[i].fileName, fileName) == 0){
-			printf("Filename: %s\tFirst logical cluster: %d\tSize: %d\tNeeded jumps: %d\n", \
-				cwdIn[i].fileName, cwdIn[i].firstLogicalCluster, cwdIn[i].fileSize, cwdIn[i].fileSize / 512);
-
-
-			int current;
-			current = cwdIn[i].firstLogicalCluster;
-
-			BYTE *out;
-
-			out = (BYTE*) malloc(sizeof(BYTE) * cwdIn[i].fileSize);
-
-			char *tempOut;
-			tempOut = malloc(sizeof(char) * 512);
-
-
-			memcpy(tempOut, whole + (cwdIn[i].firstLogicalCluster + 33 - 2) * 512, sizeof(char) * 512);
-			strcat(out, tempOut);
-
-			while(current < 0xFF8 && FAT[current] != 0){
-				current = FAT[current];
-				if(FAT[current] == 0){
-					break;
-				}
-				memcpy(tempOut, whole + (current + 33 - 2) * 512, sizeof(char) * 512);
-				strcat(out, tempOut);
-			}
-
-			printf("%s", out);
-		}
-	}	
 }
 
 int pwd(ENTRY *cwdIn){

@@ -20,9 +20,9 @@ struct command {
 
 typedef struct ENTRY {
 	BYTE empty;
-	char *fileName;
-	char *extension;
-	uint16_t attributes;
+	char fileName[9];
+	char extension[4];
+	BYTE attributes;
 	uint16_t reserved;
 	uint16_t creationTime;
 	uint16_t creationDate;
