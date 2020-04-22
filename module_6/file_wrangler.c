@@ -93,8 +93,10 @@ void loadCWD(ENTRY* cwd, BYTE *whole, uint32_t startingSec){
 				cwd[i].empty = 0;
 				memcpy(cwd[i].fileName, curr + 0,8);
 				trim(cwd[i].fileName,cwd[i].fileName);
+                cwd[i].fileName[8] = '\0';
 				memcpy(cwd[i].extension, curr + 8,3);
-				
+				cwd[i].extension[3] = '\0';
+
 				cwd[i].attributes = 			*((char*)     (curr + 11)); 
 				cwd[i].reserved = 				*((uint16_t*) (curr + 12));
 				cwd[i].creationTime = 			*((uint16_t*) (curr + 14));
