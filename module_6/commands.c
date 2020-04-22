@@ -97,8 +97,22 @@ int prd_command(int argc, char **argv) {
 }
 
 int cd_command(int argc, char **argv) {
-    printf("Changing directory.\n");
-    //HE
+    //Grab the CWD
+    ENTRY* cwdIn = getCWD();
+    BYTE* whole = getSystem();
+    
+    if(argv[1] != NULL){
+
+        for(int i = 0; i<MAXENTRIESPERDIR; i++){
+            if(cwdIn[i].empty != 1 && strcmp(cwdIn[i].fileName, argv[1]) == 0){
+                printf("Yep: %s\tGo to raw: %d\n", cwdIn[i].fileName, cwdIn[i].firstLogicalCluster);
+                loadCWD(cwdIn, whole,  33 + cwdIn[i].firstLogicalCluster - 2);
+            }
+        }
+    }
+    else{
+        printf("Have to specify dir to go to next\n");
+    }
     return 0;
 }
 
