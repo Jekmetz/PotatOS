@@ -141,7 +141,7 @@ void loadEntireSystem(char* filename)
     fat1 = loadFAT(sys, fat1StartingSec);
     fat2 = loadFAT(sys, fat2StartingSec); 
 
-    cwd = (ENTRY*) malloc(sizeof(ENTRY));
+    cwd = (ENTRY*) malloc(sizeof(ENTRY) * 16);
     uint32_t rootDirStartingSec = 19;
 
     loadCWD(cwd, sys, rootDirStartingSec);
