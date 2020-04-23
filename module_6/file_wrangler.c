@@ -145,6 +145,7 @@ void loadEntireSystem(char* filename)
     uint32_t rootDirStartingSec = 19;
 
     loadCWD(cwd, sys, rootDirStartingSec);
+    setCwdPath(cwd[0].fileName);
 
     fclose(fp);
 }
@@ -161,7 +162,7 @@ ENTRY* getCWD() { return cwd; }
 
 char* getCwdPath() { return cwdPath; }
 
-void setCwdPath(const char* jerry) { memcpy(cwdPath, jerry, strlen(jerry)); }
+void setCwdPath(const char* jerry) { memcpy(cwdPath, jerry, sizeof(cwdPath)); } // Changed this: strlen(jerry)
 
 void trim (char *dest, char *src)
 {

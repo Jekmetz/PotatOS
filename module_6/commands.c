@@ -15,6 +15,10 @@ static command_t COMMANDS[] = {
                 .function = prd_command,
         },
         {
+                .command_name = "root",
+                .function = root_command,
+        },
+        {
                 .command_name = "cd",
                 .function = cd_command,
         },
@@ -71,6 +75,7 @@ int help_command(int argc, char **argv) {
     return 0;
 }
 
+
 int pbsi_command(int argc, char **argv) {
     BOOTSECTORSTRUCT *bootSectorIn = getBootSectorIn();
     printf("Bytes per sector: %d\n", bootSectorIn->sectorsPerCluster);
@@ -96,17 +101,34 @@ int prd_command(int argc, char **argv) {
     return 0;
 }
 
+int root_command(int argc, char **argv) {
+    ENTRY* cwdIn = getCWD();
+    BYTE* whole = getSystem();
+
+    loadCWD(cwdIn, whole,  19);
+    setCwdPath(cwdIn[0].fileName);
+
+    return 0;
+}
+
 int cd_command(int argc, char **argv) {
     //Grab the CWD
     ENTRY* cwdIn = getCWD();
     BYTE* whole = getSystem();
+    char *title;
+    // int place;
     
     if(argv[1] != NULL){
 
         for(int i = 0; i<MAXENTRIESPERDIR; i++){
             if(cwdIn[i].empty != 1 && strcmp(cwdIn[i].fileName, argv[1]) == 0){
-                printf("Yep: %s\tGo to raw: %d\n", cwdIn[i].fileName, cwdIn[i].firstLogicalCluster);
+                // printf("Yep: %s\tGo to raw: %d\n", cwdIn[i].fileName, cwdIn[i].firstLogicalCluster);
                 loadCWD(cwdIn, whole,  33 + cwdIn[i].firstLogicalCluster - 2);
+                char path[9];
+                path[0] = '/';
+                strcpy(path + 1, cwdIn[i].fileName);
+                printf("%s\n", path);               
+                setCwdPath(strcat(getCwdPath(), path)); 
             }
         }
     }

@@ -12,6 +12,8 @@ int pbsi_command(int argc, char **argv);
 
 int prd_command(int argc, char **argv);
 
+int root_command(int argc, char **argv);
+
 int cd_command(int argc, char **argv);
 
 int ls_command(int argc, char **argv);
@@ -23,3 +25,4 @@ int rename_command(int argc, char **argv);
 int move_command(int argc, char **argv);
 
 int exit_command(int argc, char **argv);
+
