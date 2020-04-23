@@ -9,6 +9,8 @@
 #define MAXDIRENTRY 16
 #define MAXENTRIESPERDIR 16
 
+#define DEBLOC() printf("\033[33;1m%s(%d)\033[0m\n",__FILE__,__LINE__)
+
 typedef unsigned char BYTE;
 
 typedef int (*CommandFunction)(int, char **);

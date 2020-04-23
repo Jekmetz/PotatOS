@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <termios.h>
 #include "commands.h"
 #include "file_wrangler.h"
 
@@ -163,59 +164,47 @@ int ls_command(int argc, char **argv) {
 }
 
 int type_command(int argc, char **argv) {
+    struct termios old,new;
+    tcgetattr(0, &old);
+    tcgetattr(0, &new);          /* get current terminal attirbutes; 0 is the file descriptor for stdin */
+    new.c_lflag &= ~ICANON;      /* disable canonical mode */
+    new.c_cc[VMIN] = 1;          /* wait until at least one keystroke available */
+    new.c_cc[VTIME] = 0;         /* no timeout */
+    tcsetattr(0, TCSANOW, &new); /* set immediately */
     //N
-    BYTE* whole = getSystem();
+    BYTE* sys = getSystem();
     uint16_t* FAT = getDiabetes1();
     ENTRY* cwdIn = getCWD();
     char* fileName = argv[1];
-
-    // Declaring variables
-    char *name, *extension;
-    
-    if(strstr(fileName, ".") != 0) {
-        name = strtok(fileName, ".");
-        extension = strtok(NULL, "");
-        printf("%s\n", name);
-        printf("%s\n", extension);
-        
-    }
-    else{
-        printf("You must include the extension with the filename\n");
-        return 0;
-    }
+    char curFileName[13];
 
     for(int i = 0; i<MAXENTRIESPERDIR; i++){
-        if(cwdIn[i].empty != 1 && strcmp(cwdIn[i].fileName, fileName) == 0){
-            printf("Filename: %s\tFirst logical cluster: %d\tSize: %d\tNeeded jumps: %d\n",
-               cwdIn[i].fileName, cwdIn[i].firstLogicalCluster, cwdIn[i].fileSize, cwdIn[i].fileSize / 512);
 
-
-            int current;
-            current = cwdIn[i].firstLogicalCluster;
-
-            char *out;
-
-            out = (char*) malloc(sizeof(char) * cwdIn[i].fileSize);
-
-            char *tempOut;
-            tempOut = malloc(sizeof(char) * 512);
-
-
-            memcpy(tempOut, whole + (cwdIn[i].firstLogicalCluster + 33 - 2) * 512, sizeof(char) * 512);
-            strcat(out, tempOut);
-
-            while(current < 0xFF8 && FAT[current] != 0){
-                current = FAT[current];
-                if(FAT[current] == 0){
-                    break;
+        if(cwdIn[i].empty == 0)
+        {
+            //get curFileName
+            curFileName[0] = '\0';
+            strcat(curFileName, cwdIn[i].fileName);
+            strcat(curFileName,".\0");
+            strcat(curFileName,cwdIn[i].extension);
+            if(strcmp(fileName,curFileName) == 0)
+            {
+                //We have found a match, bois.
+                uint16_t curClust = cwdIn[i].firstLogicalCluster;
+                while(curClust < 0xFF8 && FAT[curClust] != 0) 
+                {
+                    fwrite(sys+(curClust+31)*512,512,1,stdout);
+                    // printf("------Press [SPACE]------");
+                    if(argc > 2) getchar();
+                    // printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+                    curClust = FAT[curClust];
                 }
-                memcpy(tempOut, whole + (current + 33 - 2) * 512, sizeof(char) * 512);
-                strcat(out, tempOut);
+                break;
             }
-
-            printf("%s", out);
         }
     }   
+
+    tcsetattr(0, TCSANOW, &old); /* set immediately */    
 
     return 0;
 }
