@@ -265,7 +265,8 @@ int cd_command(int argc, char **argv) {
     // int place;
     
     // ENTRY* cur;
-    if(argv[1] != NULL){
+    if(strcmp(argv[1], ".") == 0){} // Do nothing, covers cd . appending to CwdPath
+    else if(argv[1] != NULL){
 
         ENTRY* cur;
         for(uint32_t i = 0; i < numEntries; i++){
