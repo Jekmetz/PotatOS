@@ -70,7 +70,7 @@ static command_t COMMANDS[] = {
                 .function = help_command,
                 .command_usage = "help [COMMAND]",
                 .command_description = "Get help for commands.",
-                .command_examples = "help\nhelp ls\nhelp help help",
+                .command_examples = "help\nhelp ls\nhelp help help\n",
         },
         {
                 .command_name = "exit",
@@ -514,13 +514,19 @@ int rename_command(int argc, char **argv) {
     char newExt[3] = {0};
     unsigned char hasExt = 0;
 
+    if(dotPosition == 1 || (strlen(argv[2]+dotPosition) == 0))
+    {
+        printf("Enough with your dirty tricks, Hasan.\n");
+        return 1;
+    }
+
     if(dotPosition > 0)
     {
-        if(strlen(argv[2]) != (uint16_t)(dotPosition + 3))
-        {   //invalid extension
-            printf("Extension must be 3 characters long!\n");
-            return 1;
-        }
+        //if(strlen(argv[2]) != (uint16_t)(dotPosition + 3))
+        //{   //invalid extension
+        //    printf("Extension must be 3 characters long!\n");
+        //    return 1;
+        //}
         //This has an extension
         hasExt = 1;
         memcpyUpper(newFileName,argv[2],dotPosition - 1);
@@ -571,7 +577,7 @@ int rename_command(int argc, char **argv) {
         return 1;
     } else
     {
-        printf("Rename successful!");
+        printf("Rename successful!\n");
     }
 
     //Load the new cwd if success!
