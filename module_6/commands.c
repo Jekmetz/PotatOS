@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <termios.h>
@@ -154,32 +155,87 @@ int ls_command(int argc, char **argv) {
     BYTE isDir = 0;
     ENTRY* cur;
 
-    for(uint32_t i = 0; i < numEntries; i++)    //for the number of entries...
-    {
-        cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
-        if( cur->empty != 1 && cur->attributes != 0x0F && !(cur->attributes & 0x02) && !(cur->attributes & 0x08)){
-            //if it is not a long file name,
-            //is not hidden,
-            //and is not empty...
-            isDir = cur->attributes&0x10;
-            if(isDir) //directory
-                printf("\033[32m%s\033[0m",cur->fileName);
-            else    //not directory
-                printf("%s.%s\n", cur->fileName,cur->extension);
+    if(argc == 1)
+    {   //if we are listing the directory...
+        for(uint32_t i = 0; i < numEntries; i++)    //for the number of entries...
+        {
+            cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+            if( cur->empty != 1 && cur->attributes != 0x0F && !(cur->attributes & 0x02) && !(cur->attributes & 0x08)){
+                //if it is not a long file name,
+                //is not hidden,
+                //and is not empty...
+                isDir = cur->attributes&0x10;
+                if(isDir) //directory
+                    printf("\033[32m%s\033[0m",cur->fileName);
+                else    //not directory
+                    printf("%s.%s\n", cur->fileName,cur->extension);
 
+            }
         }
+    } else if (argc == 2)
+    {   //if we are printing a file...
+        char* fileName = argv[1];
+        char curFileName[13];
+        BYTE found = 0;
+        for(uint32_t i = 0; i<numEntries; i++)
+        {
+            cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+            if(cur->empty == 0)
+            {
+                //get curFileName
+                curFileName[0] = '\0';
+                strcat(curFileName, cur->fileName);
+                strcat(curFileName,".\0");
+                strcat(curFileName,cur->extension);
+                if(strcasecmp(fileName,curFileName) == 0)
+                {   //If we have found a match...
+                    found = 1;
+                    printf(
+                        "Filename: %s\n"
+                        "Extension: %s\n"
+                        "Attributes: %x\n"
+                        "Creation Time: %hu\n"
+                        "Creation Date: %hu\n"
+                        "Last Access Date: %hu\n"
+                        "Last Write Date: %hu\n"
+                        "First Locical Cluster: %x\n"
+                        "File Size: %d\n",
+                        cur->fileName,
+                        cur->extension,
+                        cur->attributes,
+                        cur->creationTime,
+                        cur->creationDate,
+                        cur->lastAccessDate,
+                        cur->lastWriteDate,
+                        cur->firstLogicalCluster,
+                        cur->fileSize
+                        );
+                    break;
+                }
+            }
+            if(!found)
+            {
+                printf("No file found under  that name!\n");
+            }
+        }
+    } else
+    {   //they typed the command wrong
+        printf("Check your syntax there, boss! ls [<filename>]\n");
     }
     return 0;
 }
 
 int type_command(int argc, char **argv) {
-    struct termios old,new;
-    tcgetattr(0, &old);
-    tcgetattr(0, &new);          /* get current terminal attirbutes; 0 is the file descriptor for stdin */
-    new.c_lflag &= ~ICANON;      /* disable canonical mode */
-    new.c_cc[VMIN] = 1;          /* wait until at least one keystroke available */
-    new.c_cc[VTIME] = 0;         /* no timeout */
-    tcsetattr(0, TCSANOW, &new); /* set immediately */
+    //error checking!
+    if(argc != 2)
+    {
+        printf("Check your syntax there hoss! type <filename including extension>\n");
+        return 1;
+    } else if(strstr(argv[1],".") == NULL)
+    {
+        printf("Must be a file including a '.' between the name and extension!\n");
+        return 1;
+    }
     
     BYTE* sys = getSystem();
     uint16_t* FAT = getDiabetes1();
@@ -192,6 +248,8 @@ int type_command(int argc, char **argv) {
     uint32_t curSector = *((uint32_t*)cwdIn);
     cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
 
+    BYTE found = 0;
+
     ENTRY* cur;
     for(uint32_t i = 0; i<numEntries; i++)
     {
@@ -203,29 +261,78 @@ int type_command(int argc, char **argv) {
             strcat(curFileName, cur->fileName);
             strcat(curFileName,".\0");
             strcat(curFileName,cur->extension);
-            if(strcmp(fileName,curFileName) == 0)
+            if(strcasecmp(fileName,curFileName) == 0)
             {
+                found = 1;
+                char entireFile[cur->fileSize + SECTORSIZE];
                 //We have found a match, bois.
                 uint16_t curClust = cur->firstLogicalCluster;
-                while(curClust < 0xFF8 && FAT[curClust] != 0) 
+                uint32_t count = 0;
+                while(count < cur->fileSize && curClust < 0xFF8 && FAT[curClust] != 0) 
                 {
-                    fwrite(sys+(curClust+31)*512,512,1,stdout);
+                    memcpy((entireFile+count),sys+(curClust+31)*SECTORSIZE,SECTORSIZE);
+                    // fwrite(sys+(curClust+31)*512,512,1,stdout);
                     // printf("------Press [SPACE]------");
-                    if(argc > 2) getchar();
+                    // if(argc > 2) getchar();
                     // printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
                     curClust = FAT[curClust];
+                    count += SECTORSIZE;
                 }
+
+                //Terminal Setup for Any Key
+                struct termios old,new;
+                tcgetattr(0, &old);
+                tcgetattr(0, &new);          /* get current terminal attirbutes; 0 is the file descriptor for stdin */
+                new.c_lflag &= ~ICANON;      /* disable canonical mode */
+                new.c_cc[VMIN] = 1;          /* wait until at least one keystroke available */
+                new.c_cc[VTIME] = 0;         /* no timeout */
+                tcsetattr(0, TCSANOW, &new); /* set immediately */
+
+                //print entire boi 25 lines at a time
+                uint32_t lineCount = 0;
+                char c, recieved;
+                for(uint32_t chi = 0; chi < cur->fileSize; chi++)
+                {
+                    c = entireFile[chi];
+                    if(c == '\n')
+                        lineCount++;
+                    putc(c,stdout);
+
+                    if(lineCount == 25)
+                    {
+                        printf("------- PRESS ANY KEY -------\r");
+                        lineCount = 0;
+                        recieved = getchar();
+                        printf("                             \r");
+                        if(recieved == '\n')
+                            printf("\033[2A");
+                        else
+                            printf("\b\033[1A");
+                    }
+                }
+
+                tcsetattr(0, TCSANOW, &old); /* set immediately */    
                 break;
             }
         }
-    }   
+    }
 
-    tcsetattr(0, TCSANOW, &old); /* set immediately */    
+    if(!found)
+    {
+        printf("That file was not found there my friend!\n");
+    }
 
     return 0;
 }
 
 int rename_command(int argc, char **argv) {
+    //error checking
+    if(argc != 3)
+    {
+        printf("Check your syntax there friendo! rename <oldname> <newname>\n");
+        return 1;
+    }
+
     BYTE* cwdIn = getCWD();     //get cwdIn
     uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
     cwdIn += sizeof(uint32_t);
@@ -239,17 +346,23 @@ int rename_command(int argc, char **argv) {
 
     if(dotPosition > 0)
     {
+        if(strlen(argv[2]) != (uint16_t)(dotPosition + 3))
+        {   //invalid extension
+            printf("Extension must be 3 characters long!\n");
+            return 1;
+        }
         //This has an extension
         hasExt = 1;
-        memcpy(newFileName,argv[2],dotPosition - 1);
-        memcpy(newExt,argv[2]+dotPosition,3);
+        memcpyUpper(newFileName,argv[2],dotPosition - 1);
+        memcpyUpper(newExt,argv[2]+dotPosition,3);
     } else
     {
         //This does not have an extension
         hasExt = 0;
-        memcpy(newFileName,argv[2],strlen(argv[2]));
+        memcpyUpper(newFileName,argv[2],strlen(argv[2]));
     }
 
+    BYTE found = 0;
     char curFileName[13];
     ENTRY* cur;
 
@@ -264,8 +377,9 @@ int rename_command(int argc, char **argv) {
             strcat(curFileName, cur->fileName);
             strcat(curFileName,".\0");
             strcat(curFileName,cur->extension);
-            if(strcmp(argv[1],curFileName) == 0)
+            if(strcasecmp(argv[1],curFileName) == 0)
             {
+                found = 1;
                 BYTE* curEntryLoc = getSystem() + (curSector * SECTORSIZE) + (i*32);
                 //We have a match there parnter
                 //FileName
@@ -279,6 +393,15 @@ int rename_command(int argc, char **argv) {
             }
         }
         
+    }
+
+    if(!found)
+    {
+        printf("That file was not found!\n");
+        return 1;
+    } else
+    {
+        printf("Rename successful!");
     }
 
     //Load the new cwd if success!

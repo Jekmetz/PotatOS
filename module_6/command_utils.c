@@ -63,3 +63,13 @@ uint32_t split_args(char *command, char **argv) {
 
     return argc;
 }
+
+void memcpyUpper(char* dest, const char* source, int nchars)
+{
+    for(int i = 0; i < nchars; i++)
+    {
+        *(dest+i) = toupper(*(source+i));
+    }
+
+    return;
+}

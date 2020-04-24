@@ -45,3 +45,7 @@ typedef struct command command_t;
 char *trim_whitespace(char *str);
 
 uint32_t split_args(char *command, char **argv);
+
+void memcpyUpper(char*,const char*, int);
+
+int strcimp(char const *a, char const* b);
