@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
     }
 
     if (access(argv[1], F_OK) == -1) {
-        printf("Error: Diskimage file '%s' could not be found.", argv[1]);
+        printf("Error: Diskimage file '%s' could not be found.\n", argv[1]);
         return 1;
     }
 

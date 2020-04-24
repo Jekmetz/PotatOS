@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <termios.h>
+#include <stdbool.h>
 #include "commands.h"
 #include "file_wrangler.h"
 
@@ -11,42 +12,72 @@ static command_t COMMANDS[] = {
         {
                 .command_name = "pbsi",
                 .function = pbsi_command,
+                .command_usage = "pbsi",
+                .command_description = "Prints the boot sector information.",
+                .command_examples = "",
         },
         {
                 .command_name = "prd",
                 .function = prd_command,
+                .command_usage = "prd",
+                .command_description = "Prints the root directory entries and their attributes.",
+                .command_examples = "",
         },
         {
                 .command_name = "root",
                 .function = root_command,
+                .command_usage = "root",
+                .command_description = "Changes the current directory to be the root directory.",
+                .command_examples = "",
         },
         {
                 .command_name = "cd",
                 .function = cd_command,
+                .command_usage = "cd DIR",
+                .command_description = "Changes the current directory.",
+                .command_examples = "",
         },
         {
                 .command_name = "ls",
                 .function = ls_command,
+                .command_usage = "ls [DIR]",
+                .command_description = "List the entries in a directory.",
+                .command_examples = "ls files",
         },
         {
                 .command_name = "type",
                 .function = type_command,
+                .command_usage = "type FILE",
+                .command_description = "Print the contents of a TXT, BAT, or C file.",
+                .command_examples = "type 1984.txt",
         },
         {
                 .command_name = "rename",
                 .function = rename_command,
+                .command_usage = "rename OLD_FILE NEW_FILE",
+                .command_description = "Rename a file in the current directory.",
+                .command_examples = "rename a.txt b.txt",
         },
         {
                 .command_name = "move",
                 .function = move_command,
+                .command_usage = "move FILE NEW_DIRECTORY",
+                .command_description = "Move a file to a new directory.",
+                .command_examples = "move a.txt /\nmove a.txt files\n",
         },
         {
                 .command_name = "help",
                 .function = help_command,
+                .command_usage = "help [COMMAND]",
+                .command_description = "Get help for commands.",
+                .command_examples = "help\nhelp ls\n",
         },
         {
                 .command_name = "exit",
                 .function = exit_command,
+                .command_usage = "exit",
+                .command_description = "Exits this program",
+                .command_examples = "",
         },
         {0}
 };
@@ -67,6 +98,69 @@ command_t *search_commands(char *command) {
 
 int help_command(int argc, char **argv) {
     command_t *current_command = COMMANDS;
+
+    if (argc > 2) {
+        bool call_911 = true;
+
+        for (int arg_i = 0; arg_i < argc; arg_i++) {
+            if (strcmp(argv[arg_i], "help") != 0) {
+                call_911 = false;
+                break;
+            }
+        }
+
+        if (call_911) {
+            printf("Calling 911...\n");
+        } else {
+            printf("Too many arguments given, see `help help`\n");
+        }
+
+        return 0;
+    }
+
+    if (argc == 2) {
+        char *command = argv[1];
+
+        while (current_command->command_name != NULL) {
+            if (strcmp(command, current_command->command_name) == 0) {
+                printf("Description:\n   %s\n\n", current_command->command_description);
+                printf("Usage:\n   %s\n", current_command->command_usage);
+
+                char *examples = current_command->command_examples;
+                int ex_len = strlen(examples);
+
+                if (ex_len > 0) {
+                    printf("\nExamples:\n");
+
+                    while (*examples != '\0') {
+                        char *found_newline = strchr(examples, '\n');
+
+                        if (found_newline == NULL) {
+                            found_newline = examples + ex_len;
+                        }
+
+                        int index = (int) (found_newline - examples);
+
+                        printf(" - %.*s\n", index, examples);
+
+                        examples = examples + index;
+
+                        if (*examples == '\n') {
+                            examples += 1;
+                        }
+                    }
+                }
+
+                return 0;
+            }
+
+            current_command += 1;
+        }
+
+        printf("Could not find command: %s\n", command);
+    }
+
+    printf("Available commands:\n");
 
     while (current_command->command_name != NULL) {
         printf(" - %s\n", current_command->command_name);

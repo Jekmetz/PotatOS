@@ -18,6 +18,9 @@ typedef int (*CommandFunction)(int, char **);
 struct command {
     char *command_name;
     CommandFunction function;
+    char *command_usage;
+    char *command_description;
+    char *command_examples;
 };
 
 typedef struct ENTRY {
