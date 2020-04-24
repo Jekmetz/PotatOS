@@ -141,12 +141,19 @@ int cd_command(int argc, char **argv) {
             cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
             if(cur->empty != 1 && strcmp(cur->fileName, argv[1]) == 0){
                 // printf("Yep: %s\tGo to raw: %d\n", cwdIn[i].fileName, cwdIn[i].firstLogicalCluster);
-                char path[10];
-                path[0] = '/';
-                strcpy(path + 1, cur->fileName);
-                printf("%s\n", path);               
-                setCwdPath(strcat(getCwdPath(), path)); 
-                loadCWD(whole,  33 + cur->firstLogicalCluster - 2);
+                if(cur->firstLogicalCluster == 0x00){
+                    loadCWD(whole,  19);
+                    cwdIn = getCWD();
+                    setCwdPath(((ENTRY*)(cwdIn+8))->fileName);
+                }
+                else{
+                    char path[10];
+                    path[0] = '/';
+                    strcpy(path + 1, cur->fileName);
+                    printf("%s\n", path);               
+                    setCwdPath(strcat(getCwdPath(), path)); 
+                    loadCWD(whole,  33 + cur->firstLogicalCluster - 2);
+                }
             }
         }
     }
