@@ -300,14 +300,28 @@ int type_command(int argc, char **argv) {
 
                     if(lineCount == 25)
                     {
-                        printf("------- PRESS ANY KEY -------\r");
+                        printf("------- PRESS ANY KEY (q to quit) -------\r");
                         lineCount = 0;
                         recieved = getchar();
-                        printf("                             \r");
+                        
                         if(recieved == '\n')
-                            printf("\033[2A");
-                        else
-                            printf("\b\033[1A");
+                        {
+                            printf("\033[1A");
+                            printf("                                         \r");
+                            printf("\033[1A");
+                        } else if(recieved == 'q')
+                        {   //they doneski bois
+                            printf("\b");
+                            printf("                                         \r");
+                            printf("\033[1A");
+                            break;
+                        }else
+                        {
+                            printf("\b");
+                            printf("                                         \r");
+                            printf("\033[1A");
+                        }
+                        
                     }
                 }
 
