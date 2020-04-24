@@ -104,18 +104,31 @@ int prd_command(int argc, char **argv) {
 }
 
 int root_command(int argc, char **argv) {
-    ENTRY* cwdIn = getCWD();
+    BYTE* cwdIn = getCWD();
+
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
+
     BYTE* whole = getSystem();
 
-    loadCWD(cwdIn, whole,  19);
-    setCwdPath(cwdIn[0].fileName);
+    loadCWD(whole,  19);
+    cwdIn = getCWD();
+    setCwdPath(((ENTRY*)(cwdIn+8))->fileName);
 
     return 0;
 }
 
 int cd_command(int argc, char **argv) {
     //Grab the CWD
-    ENTRY* cwdIn = getCWD();
+    BYTE* cwdIn = getCWD();
+
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
+
     BYTE* whole = getSystem();
     char *title;
     // int place;
@@ -123,15 +136,17 @@ int cd_command(int argc, char **argv) {
     // ENTRY* cur;
     if(argv[1] != NULL){
 
-        for(int i = 0; i<MAXENTRIESPERDIR; i++){
-            if(cwdIn[i].empty != 1 && strcmp(cwdIn[i].fileName, argv[1]) == 0){
+        ENTRY* cur;
+        for(uint32_t i = 0; i < numEntries; i++){
+            cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+            if(cur->empty != 1 && strcmp(cur->fileName, argv[1]) == 0){
                 // printf("Yep: %s\tGo to raw: %d\n", cwdIn[i].fileName, cwdIn[i].firstLogicalCluster);
-                loadCWD(cwdIn, whole,  33 + cwdIn[i].firstLogicalCluster - 2);
-                char path[9];
+                char path[10];
                 path[0] = '/';
-                strcpy(path + 1, cwdIn[i].fileName);
+                strcpy(path + 1, cur->fileName);
                 printf("%s\n", path);               
                 setCwdPath(strcat(getCwdPath(), path)); 
+                loadCWD(whole,  33 + cur->firstLogicalCluster - 2);
             }
         }
     }
@@ -166,7 +181,7 @@ int ls_command(int argc, char **argv) {
                 //and is not empty...
                 isDir = cur->attributes&0x10;
                 if(isDir) //directory
-                    printf("\033[32m%s\033[0m",cur->fileName);
+                    printf("\033[32m%s\033[0m\n",cur->fileName);
                 else    //not directory
                     printf("%s.%s\n", cur->fileName,cur->extension);
 
@@ -213,10 +228,10 @@ int ls_command(int argc, char **argv) {
                     break;
                 }
             }
-            if(!found)
-            {
-                printf("No file found under  that name!\n");
-            }
+        }
+        if(!found)
+        {
+            printf("No file found under  that name!\n");
         }
     } else
     {   //they typed the command wrong

@@ -93,9 +93,6 @@ void loadCWD(BYTE *sys, uint32_t startingSec){
         numEntries++;
     } while(*(startingLoc + numEntries*32) != '\0');
 
-    //we went past it by 1!
-    numEntries--;
-
     //free it if we have used it before
     if(cwd!=NULL) free(cwd);
 
@@ -216,8 +213,8 @@ void loadEntireSystem(char* filename)
 
     uint32_t rootDirStartingSec = 19;
 
-    setCwdPath(cwd[0].fileName);
     loadCWD(sys, rootDirStartingSec);
+    setCwdPath(((ENTRY*)(cwd+8))->fileName);
 
     fclose(fp);
 }
