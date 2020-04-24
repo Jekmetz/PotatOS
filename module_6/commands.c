@@ -98,8 +98,45 @@ int pbsi_command(int argc, char **argv) {
 }
 
 int prd_command(int argc, char **argv) {
-    printf("Printing root directory.\n");
-    //HE
+    //Grab the CWD
+    BYTE* cwdIn = getCWD();
+
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
+
+    ENTRY* cur;
+    for(uint32_t i = 0; i<numEntries; i++)
+    {
+        cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+        if(cur->empty == 0)
+        {
+            if(cur->attributes != 0x0F && !(cur->attributes & 0x02) && !(cur->attributes & 0x08))
+            {
+                printf(
+                    "Filename: %s\n"
+                    "Extension: %s\n"
+                    "Attributes: %x\n"
+                    "Creation Time: %hu\n"
+                    "Creation Date: %hu\n"
+                    "Last Access Date: %hu\n"
+                    "Last Write Date: %hu\n"
+                    "First Locical Cluster: %x\n"
+                    "File Size: %d\n\n",
+                    cur->fileName,
+                    cur->extension,
+                    cur->attributes,
+                    cur->creationTime,
+                    cur->creationDate,
+                    cur->lastAccessDate,
+                    cur->lastWriteDate,
+                    cur->firstLogicalCluster,
+                    cur->fileSize
+                    );
+            }
+        }
+    }
     return 0;
 }
 
@@ -196,6 +233,7 @@ int ls_command(int argc, char **argv) {
         }
     } else if (argc == 2)
     {   //if we are printing a file...
+        isDir = strchr(argv[1],'.') == NULL;
         char* fileName = argv[1];
         char curFileName[13];
         BYTE found = 0;
@@ -207,8 +245,9 @@ int ls_command(int argc, char **argv) {
                 //get curFileName
                 curFileName[0] = '\0';
                 strcat(curFileName, cur->fileName);
-                strcat(curFileName,".\0");
-                strcat(curFileName,cur->extension);
+                if(!isDir) strcat(curFileName,".\0");
+                if(!isDir) strcat(curFileName,cur->extension);
+
                 if(strcasecmp(fileName,curFileName) == 0)
                 {   //If we have found a match...
                     found = 1;
@@ -451,9 +490,26 @@ int move_command(int argc, char **argv) {
     return 0;
 }
 
-int exit_command(int argc, char **argv) {
-    printf("Shutting down.\n");
-    //HE
+int exit_command(int argc, char** argv) {
+  puts("\n\033[33;43m▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\033[0m");
+  puts(
+      "\033[33;43m▓\033[0;33m   Warning system shutting down!   "
+      "\033[33;43m▓\033[0m");
+  puts("\033[33;43m▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\033[0m");
+  printf("\nAre you sure that you want to exit?: ");
+
+  char conf[4] = {'\0'};
+  fgets(conf, 4, stdin);
+
+  // TODO: Saving state
+
+  if (conf[0] == 'y' || conf[0] == 'Y') {
+    puts(
+        "\nGoodbye and have a "
+        "\033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033["
+        "33mf\033[32me\033[36mr\033[34mo\033[35mu\033[31ms\033[0m day!\n");
     exit(0);
-    return 0;
+  }
+
+  return 0;
 }

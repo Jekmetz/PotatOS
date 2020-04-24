@@ -9,7 +9,7 @@
 BOOTSECTORSTRUCT* bootSectorIn;
 BYTE* sys;
 uint16_t *fat1, *fat2;
-BYTE* cwd = NULL;
+BYTE *cwd = NULL, *root = NULL;
 /*
 CWD is stored:
 uint32  :  number of entries
@@ -144,40 +144,70 @@ void loadCWD(BYTE *sys, uint32_t startingSec){
         }
 
     }
-    //
-	// BYTE* curr;
-	// for(uint32_t i = 0; i<MAXENTRIESPERDIR; i++){
-	// 	curr = (whole + (startingSec * SECTORSIZE) + (i * 32));
-	// 	// Index is deleted
-	// 	if ( *curr == 0xE5) {
-	// 		curEntry->empty = 1;
-	// 	}
-	// 	// Last index
-	// 	else if ( *curr == 0x00){
-	// 		curEntry->empty = 1;
-	// 	}
-	// 	else if( *curr == 0x0F){
-	// 		curEntry->empty = 1;
-	// 	}
-	// 	else{
-	// 			curEntry->empty = 0;
-	// 			memcpy(curEntry->fileName, curr + 0,8);
-	// 			trim(curEntry->fileName,curEntry->fileName);
- //                curEntry->fileName[8] = '\0';
-	// 			memcpy(curEntry->extension, curr + 8,3);
-	// 			cwd[i].extension[3] = '\0';
+}
 
-				// cwd[i].attributes = 			*((char*)     (curr + 11)); 
-				// curEntry->reserved = 				*((uint16_t*) (curr + 12));
-				// curEntry->creationTime = 			*((uint16_t*) (curr + 14));
-				// curEntry->creationDate = 			*((uint16_t*) (curr + 16));
-				// curEntry->lastAccessDate = 		*((uint16_t*) (curr + 18));
-				// curEntry->lastWriteTime = 			*((uint16_t*) (curr + 22));
-				// curEntry->lastWriteDate = 			*((uint16_t*) (curr + 24));
-				// curEntry->firstLogicalCluster = 	*((uint16_t*) (curr + 26));
-				// curEntry->fileSize = 				*((uint32_t*) (curr + 28));
-	// 	}
-	// }
+void loadROOT(BYTE *sys){
+    //find how many entries we are looking at here:
+    int startingSec = 19;
+    BYTE* startingLoc = sys + (startingSec * SECTORSIZE);
+    uint32_t numEntries = 0;
+
+    do
+    {
+        numEntries++;
+    } while(*(startingLoc + numEntries*32) != '\0');
+
+    //free it if we have used it before
+    if(root!=NULL) free(root);
+
+    root = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY));
+
+    //get the first two ints in there
+    memcpy(root,&numEntries,4);
+    memcpy(root+4,&startingSec,4);
+
+    BYTE* curLoc;
+    ENTRY* curEntry;
+    //go through all of the entries
+    for(uint32_t i = 0; i < numEntries; i++)
+    {
+        curLoc = (sys+(startingSec * SECTORSIZE) + (i*32));
+        curEntry = (ENTRY*)((root+8) + i*sizeof(ENTRY));
+
+        //Index is deleted
+        if(*curLoc == 0xE5) 
+        {
+            curEntry->empty = 1;
+        }else if (*curLoc == 0x00) //Last entry (shouldn't happen)
+        {
+            curEntry->empty = 1;
+        } else if (*curLoc == 0x0F) //Something or other
+        {
+            curEntry->empty = 1;
+        }else //If we have ourselves a rowdy one...
+        {   
+            //wipe out filename and extension
+            memset(curEntry->fileName, 0, 13);
+
+            curEntry->empty = 0;
+            memcpy(curEntry->fileName, curLoc + 0, 8);
+            trim_whitespace(curEntry->fileName);
+            (curEntry->fileName)[8] = '\0';
+            memcpy(curEntry->extension, curLoc + 8, 3);
+            (curEntry->extension)[8] = '\0';
+
+            curEntry->attributes =             *((char*)     (curLoc + 11)); 
+            curEntry->reserved =               *((uint16_t*) (curLoc + 12));
+            curEntry->creationTime =           *((uint16_t*) (curLoc + 14));
+            curEntry->creationDate =           *((uint16_t*) (curLoc + 16));
+            curEntry->lastAccessDate =         *((uint16_t*) (curLoc + 18));
+            curEntry->lastWriteTime =          *((uint16_t*) (curLoc + 22));
+            curEntry->lastWriteDate =          *((uint16_t*) (curLoc + 24));
+            curEntry->firstLogicalCluster =    *((uint16_t*) (curLoc + 26));
+            curEntry->fileSize =               *((uint32_t*) (curLoc + 28));
+        }
+
+    }
 }
 
 void loadEntireSystem(char* filename)
@@ -214,6 +244,7 @@ void loadEntireSystem(char* filename)
     uint32_t rootDirStartingSec = 19;
 
     loadCWD(sys, rootDirStartingSec);
+    loadROOT(sys);
     setCwdPath(((ENTRY*)(cwd+8))->fileName);
 
     fclose(fp);
@@ -230,6 +261,8 @@ uint16_t* getDiabetes2() { return fat2; }
 BYTE* getCWD() { return cwd; }
 
 char* getCwdPath() { return cwdPath; }
+
+BYTE* getRoot(){ return root; }
 
 void setCwdPath(const char* jerry) { memcpy(cwdPath, jerry, sizeof(cwdPath)); } // Changed this: strlen(jerry)
 

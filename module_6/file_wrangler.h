@@ -24,6 +24,7 @@ typedef struct BOOTSECTORSTRUCT {
 void loadBootSector(FILE *fpIn);
 uint16_t *loadFAT(BYTE *fpIn, uint32_t startingSector);
 void loadCWD(BYTE* whole, uint32_t startingSec);
+void loadROOT(BYTE *sys);
 void loadEntireSystem(char* filename);
 BOOTSECTORSTRUCT *getBootSectorIn();
 BYTE* getSystem();
