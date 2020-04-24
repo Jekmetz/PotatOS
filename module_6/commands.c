@@ -119,6 +119,7 @@ int cd_command(int argc, char **argv) {
     char *title;
     // int place;
     
+    // ENTRY* cur;
     if(argv[1] != NULL){
 
         for(int i = 0; i<MAXENTRIESPERDIR; i++){
@@ -136,27 +137,35 @@ int cd_command(int argc, char **argv) {
     else{
         printf("Have to specify dir to go to next\n");
     }
+    
     return 0;
 }
 
 int ls_command(int argc, char **argv) {
     //Grab the CWD
-    ENTRY* cwdIn = getCWD();
+    BYTE* cwdIn = getCWD();
+
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
 
     //get a flag ready for if it is a directory
     BYTE isDir = 0;
+    ENTRY* cur;
 
-    for(int i = 0; i< MAXENTRIESPERDIR; i++)    //for the number of entries...
+    for(uint32_t i = 0; i < numEntries; i++)    //for the number of entries...
     {
-        if( cwdIn[i].empty != 1 && cwdIn[i].attributes != 0x0F && !(cwdIn[i].attributes & 0x02)){
+        cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+        if( cur->empty != 1 && cur->attributes != 0x0F && !(cur->attributes & 0x02) && !(cur->attributes & 0x08)){
             //if it is not a long file name,
             //is not hidden,
             //and is not empty...
-            isDir = cwdIn[i].attributes&0x10;
+            isDir = cur->attributes&0x10;
             if(isDir) //directory
-                printf("\033[32m%s\033[0m",cwdIn[i].fileName);
+                printf("\033[32m%s\033[0m",cur->fileName);
             else    //not directory
-                printf("%s.%s\n", cwdIn[i].fileName,cwdIn[i].extension);
+                printf("%s.%s\n", cur->fileName,cur->extension);
 
         }
     }
@@ -171,26 +180,33 @@ int type_command(int argc, char **argv) {
     new.c_cc[VMIN] = 1;          /* wait until at least one keystroke available */
     new.c_cc[VTIME] = 0;         /* no timeout */
     tcsetattr(0, TCSANOW, &new); /* set immediately */
-    //N
+    
     BYTE* sys = getSystem();
     uint16_t* FAT = getDiabetes1();
-    ENTRY* cwdIn = getCWD();
     char* fileName = argv[1];
     char curFileName[13];
 
-    for(int i = 0; i<MAXENTRIESPERDIR; i++){
+    BYTE* cwdIn = getCWD();
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
 
-        if(cwdIn[i].empty == 0)
+    ENTRY* cur;
+    for(uint32_t i = 0; i<numEntries; i++)
+    {
+        cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+        if(cur->empty == 0)
         {
             //get curFileName
             curFileName[0] = '\0';
-            strcat(curFileName, cwdIn[i].fileName);
+            strcat(curFileName, cur->fileName);
             strcat(curFileName,".\0");
-            strcat(curFileName,cwdIn[i].extension);
+            strcat(curFileName,cur->extension);
             if(strcmp(fileName,curFileName) == 0)
             {
                 //We have found a match, bois.
-                uint16_t curClust = cwdIn[i].firstLogicalCluster;
+                uint16_t curClust = cur->firstLogicalCluster;
                 while(curClust < 0xFF8 && FAT[curClust] != 0) 
                 {
                     fwrite(sys+(curClust+31)*512,512,1,stdout);
@@ -210,8 +226,64 @@ int type_command(int argc, char **argv) {
 }
 
 int rename_command(int argc, char **argv) {
-    printf("Renaming file.\n");
-    //J
+    BYTE* cwdIn = getCWD();     //get cwdIn
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
+
+    int16_t dotPosition = (int16_t)(strchr(argv[2],'.') - argv[2] + 1);
+    char newFileName[8]= {0};
+    char newExt[3] = {0};
+    unsigned char hasExt = 0;
+
+    if(dotPosition > 0)
+    {
+        //This has an extension
+        hasExt = 1;
+        memcpy(newFileName,argv[2],dotPosition - 1);
+        memcpy(newExt,argv[2]+dotPosition,3);
+    } else
+    {
+        //This does not have an extension
+        hasExt = 0;
+        memcpy(newFileName,argv[2],strlen(argv[2]));
+    }
+
+    char curFileName[13];
+    ENTRY* cur;
+
+    for(uint32_t i = 0; i < numEntries; i++)
+    {
+        cur = (ENTRY*)(cwdIn + i*(sizeof(ENTRY)));
+
+        if(cur->empty == 0)
+        {
+            //get curFileName
+            curFileName[0] = '\0';
+            strcat(curFileName, cur->fileName);
+            strcat(curFileName,".\0");
+            strcat(curFileName,cur->extension);
+            if(strcmp(argv[1],curFileName) == 0)
+            {
+                BYTE* curEntryLoc = getSystem() + (curSector * SECTORSIZE) + (i*32);
+                //We have a match there parnter
+                //FileName
+                memcpy(curEntryLoc, newFileName, 8);
+                if(hasExt)
+                {
+                    memcpy(curEntryLoc + 8, newExt, 3);
+                }
+                if(hasExt){}
+                break;
+            }
+        }
+        
+    }
+
+    //Load the new cwd if success!
+    loadCWD(getSystem(),curSector);
+
     return 0;
 }
 

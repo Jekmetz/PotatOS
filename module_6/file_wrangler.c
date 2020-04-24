@@ -9,7 +9,16 @@
 BOOTSECTORSTRUCT* bootSectorIn;
 BYTE* sys;
 uint16_t *fat1, *fat2;
-ENTRY* cwd;
+BYTE* cwd = NULL;
+/*
+CWD is stored:
+uint32  :  number of entries
+uint32  :  sector
+ENTRY   :  ENTRY 1
+ENTRY   :  ENTRY 2
+...
+ENTRY   :  ENTRY (number of entries)
+*/
 char cwdPath[100] = {0};
 
 void loadBootSector(FILE *fpIn){
@@ -74,40 +83,104 @@ uint16_t *loadFAT(BYTE* sys, uint32_t startingSector) {
     return fatTable;
 }
 
-void loadCWD(ENTRY* cwd, BYTE *whole, uint32_t startingSec){
-	BYTE* curr;
-	for(uint32_t i = 0; i<MAXENTRIESPERDIR; i++){
-		curr = (whole + (startingSec * SECTORSIZE) + (i * 32));
-		// Index is deleted
-		if ( *curr == 0xE5) {
-			cwd[i].empty = 1;
-		}
-		// Last index
-		else if ( *curr == 0x00){
-			cwd[i].empty = 1;
-		}
-		else if( *curr == 0x0F){
-			cwd[i].empty = 1;
-		}
-		else{
-				cwd[i].empty = 0;
-				memcpy(cwd[i].fileName, curr + 0,8);
-				trim(cwd[i].fileName,cwd[i].fileName);
-                cwd[i].fileName[8] = '\0';
-				memcpy(cwd[i].extension, curr + 8,3);
-				cwd[i].extension[3] = '\0';
+void loadCWD(BYTE *sys, uint32_t startingSec){
+    //find how many entries we are looking at here:
+    BYTE* startingLoc = sys + (startingSec * SECTORSIZE);
+    uint32_t numEntries = 0;
 
-				cwd[i].attributes = 			*((char*)     (curr + 11)); 
-				cwd[i].reserved = 				*((uint16_t*) (curr + 12));
-				cwd[i].creationTime = 			*((uint16_t*) (curr + 14));
-				cwd[i].creationDate = 			*((uint16_t*) (curr + 16));
-				cwd[i].lastAccessDate = 		*((uint16_t*) (curr + 18));
-				cwd[i].lastWriteTime = 			*((uint16_t*) (curr + 22));
-				cwd[i].lastWriteDate = 			*((uint16_t*) (curr + 24));
-				cwd[i].firstLogicalCluster = 	*((uint16_t*) (curr + 26));
-				cwd[i].fileSize = 				*((uint32_t*) (curr + 28));
-		}
-	}
+    do
+    {
+        numEntries++;
+    } while(*(startingLoc + numEntries*32) != '\0');
+
+    //we went past it by 1!
+    numEntries--;
+
+    //free it if we have used it before
+    if(cwd!=NULL) free(cwd);
+
+    cwd = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY));
+
+    //get the first two ints in there
+    memcpy(cwd,&numEntries,4);
+    memcpy(cwd+4,&startingSec,4);
+
+    BYTE* curLoc;
+    ENTRY* curEntry;
+    //go through all of the entries
+    for(uint32_t i = 0; i < numEntries; i++)
+    {
+        curLoc = (sys+(startingSec * SECTORSIZE) + (i*32));
+        curEntry = (ENTRY*)((cwd+8) + i*sizeof(ENTRY));
+
+        //Index is deleted
+        if(*curLoc == 0xE5) 
+        {
+            curEntry->empty = 1;
+        }else if (*curLoc == 0x00) //Last entry (shouldn't happen)
+        {
+            curEntry->empty = 1;
+        } else if (*curLoc == 0x0F) //Something or other
+        {
+            curEntry->empty = 1;
+        }else //If we have ourselves a rowdy one...
+        {   
+            //wipe out filename and extension
+            memset(curEntry->fileName, 0, 13);
+
+            curEntry->empty = 0;
+            memcpy(curEntry->fileName, curLoc + 0, 8);
+            trim_whitespace(curEntry->fileName);
+            (curEntry->fileName)[8] = '\0';
+            memcpy(curEntry->extension, curLoc + 8, 3);
+            (curEntry->extension)[8] = '\0';
+
+            curEntry->attributes =             *((char*)     (curLoc + 11)); 
+            curEntry->reserved =               *((uint16_t*) (curLoc + 12));
+            curEntry->creationTime =           *((uint16_t*) (curLoc + 14));
+            curEntry->creationDate =           *((uint16_t*) (curLoc + 16));
+            curEntry->lastAccessDate =         *((uint16_t*) (curLoc + 18));
+            curEntry->lastWriteTime =          *((uint16_t*) (curLoc + 22));
+            curEntry->lastWriteDate =          *((uint16_t*) (curLoc + 24));
+            curEntry->firstLogicalCluster =    *((uint16_t*) (curLoc + 26));
+            curEntry->fileSize =               *((uint32_t*) (curLoc + 28));
+        }
+
+    }
+    //
+	// BYTE* curr;
+	// for(uint32_t i = 0; i<MAXENTRIESPERDIR; i++){
+	// 	curr = (whole + (startingSec * SECTORSIZE) + (i * 32));
+	// 	// Index is deleted
+	// 	if ( *curr == 0xE5) {
+	// 		curEntry->empty = 1;
+	// 	}
+	// 	// Last index
+	// 	else if ( *curr == 0x00){
+	// 		curEntry->empty = 1;
+	// 	}
+	// 	else if( *curr == 0x0F){
+	// 		curEntry->empty = 1;
+	// 	}
+	// 	else{
+	// 			curEntry->empty = 0;
+	// 			memcpy(curEntry->fileName, curr + 0,8);
+	// 			trim(curEntry->fileName,curEntry->fileName);
+ //                curEntry->fileName[8] = '\0';
+	// 			memcpy(curEntry->extension, curr + 8,3);
+	// 			cwd[i].extension[3] = '\0';
+
+				// cwd[i].attributes = 			*((char*)     (curr + 11)); 
+				// curEntry->reserved = 				*((uint16_t*) (curr + 12));
+				// curEntry->creationTime = 			*((uint16_t*) (curr + 14));
+				// curEntry->creationDate = 			*((uint16_t*) (curr + 16));
+				// curEntry->lastAccessDate = 		*((uint16_t*) (curr + 18));
+				// curEntry->lastWriteTime = 			*((uint16_t*) (curr + 22));
+				// curEntry->lastWriteDate = 			*((uint16_t*) (curr + 24));
+				// curEntry->firstLogicalCluster = 	*((uint16_t*) (curr + 26));
+				// curEntry->fileSize = 				*((uint32_t*) (curr + 28));
+	// 	}
+	// }
 }
 
 void loadEntireSystem(char* filename)
@@ -141,11 +214,10 @@ void loadEntireSystem(char* filename)
     fat1 = loadFAT(sys, fat1StartingSec);
     fat2 = loadFAT(sys, fat2StartingSec); 
 
-    cwd = (ENTRY*) malloc(sizeof(ENTRY) * 16);
     uint32_t rootDirStartingSec = 19;
 
-    loadCWD(cwd, sys, rootDirStartingSec);
     setCwdPath(cwd[0].fileName);
+    loadCWD(sys, rootDirStartingSec);
 
     fclose(fp);
 }
@@ -158,7 +230,7 @@ uint16_t* getDiabetes1() { return fat1; }
 
 uint16_t* getDiabetes2() { return fat2; }
 
-ENTRY* getCWD() { return cwd; }
+BYTE* getCWD() { return cwd; }
 
 char* getCwdPath() { return cwdPath; }
 

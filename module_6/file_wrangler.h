@@ -23,13 +23,13 @@ typedef struct BOOTSECTORSTRUCT {
 
 void loadBootSector(FILE *fpIn);
 uint16_t *loadFAT(BYTE *fpIn, uint32_t startingSector);
-void loadCWD(ENTRY* cwd, BYTE* whole, uint32_t startingSec);
+void loadCWD(BYTE* whole, uint32_t startingSec);
 void loadEntireSystem(char* filename);
 BOOTSECTORSTRUCT *getBootSectorIn();
 BYTE* getSystem();
 uint16_t* getDiabetes1();
 uint16_t* getDiabetes2();
-ENTRY* getCWD();
+BYTE* getCWD();
 char* getCwdPath();
 void setCwdPath(const char* jerry);
 void trim (char *dest, char *src);

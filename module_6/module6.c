@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
         while (1) 
         {
-            printf("stdUser@potatOSR6:%s > ",getCwdPath());
+            printf("\033[96mstdUser@potatOSR6:%s\033[0m > ",getCwdPath());
 
             // This happens when someone hits CTRL+D to send EOF
             if (fgets(command_buffer, 511, stdin) == NULL) 
