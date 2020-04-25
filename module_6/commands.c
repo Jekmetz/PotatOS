@@ -627,6 +627,7 @@ int move_command(int argc, char** argv) {
   cwdIn += sizeof(uint32_t);  // move cwdIn to the start of the entries
 
   ENTRY *file = NULL, *dir = NULL, *cur;
+  BYTE* file_location;
 
   // finding directory and file
   for (uint32_t i = 0; i < numEntries; i++) {
@@ -641,6 +642,7 @@ int move_command(int argc, char** argv) {
         dir = cur;
       } else if (strcasecmp(argv[1], filen) == 0) {
         file = cur;
+        file_location = getSystem() + (curSector * SECTORSIZE) + (i * 32);
       }
     }
   }
@@ -654,7 +656,11 @@ int move_command(int argc, char** argv) {
 
   // getting location of entry list of destination directory
   BYTE* dest = NULL;
-  loadDir(&dest, getSystem(), 33 + dir->firstLogicalCluster - 2);
+  if (dir->firstLogicalCluster != 0x00) {
+    loadDir(&dest, getSystem(), 33 + dir->firstLogicalCluster - 2);
+  } else {
+    loadDir(&dest, getSystem(), 19);
+  }
   uint32_t* destNumEntries = ((uint32_t*)dest);
   dest += sizeof(uint32_t);  // going to the first entry
   uint32_t destStartSec = *((uint32_t*)dest);
@@ -670,20 +676,23 @@ int move_command(int argc, char** argv) {
       memcpy(newEntryLoc, &(file->extension), 3);
       *cur = *file;  // copying data
       file->empty = 1;
+      *file_location = 0xE5;
       break;
     }
   }
 
   if (file->empty == 0) {
     // Have to add one to the end
-    BYTE* newEntryLoc = getSystem() + (destStartSec * SECTORSIZE) + ((*destNumEntries) * 32);
+    BYTE* newEntryLoc =
+        getSystem() + (destStartSec * SECTORSIZE) + ((*destNumEntries) * 32);
     memcpy(newEntryLoc, &(file->fileName), 8);
     newEntryLoc += 8;
     memcpy(newEntryLoc, &(file->extension), 3);
     newEntryLoc += 3;
     memcpy(newEntryLoc, &(file->attributes), 19);
     (*destNumEntries)++;
-    file->empty = 1;
+    file->empty = 1;  // this is only a more immediate solution to remove
+    *file_location = 0xE5;
   }
 
   return 0;
