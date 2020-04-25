@@ -70,7 +70,7 @@ static command_t COMMANDS[] = {
                 .function = help_command,
                 .command_usage = "help [COMMAND]",
                 .command_description = "Get help for commands.",
-                .command_examples = "help\nhelp ls\n",
+                .command_examples = "help\nhelp ls\nhelp help help",
         },
         {
                 .command_name = "exit",

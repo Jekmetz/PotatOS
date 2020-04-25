@@ -15,6 +15,15 @@ typedef unsigned char BYTE;
 
 typedef int (*CommandFunction)(int, char **);
 
+/**
+ * @brief A struct to hold command information
+ *
+ * @param command_name The command's name
+ * @param function A pointer to the command's function
+ * @param command_usage Syntax for executing the command
+ * @param command_description A description of the command
+ * @param command_examples Example uses of the command
+ */
 struct command {
     char *command_name;
     CommandFunction function;
@@ -45,8 +54,23 @@ typedef struct PREVDIR {
 
 typedef struct command command_t;
 
+/**
+ * @brief A function to trim strings
+ *
+ * @param str The string to trim
+ *
+ * @return A pointer to the beginning of the trimmed string
+ */
 char *trim_whitespace(char *str);
 
+/**
+ * @brief A function to split up a input string into arguments for command functions
+ *
+ * @param The command input to split up
+ * @param A pointer to the destination of the argument slices, argv
+ *
+ * @return The amount of arguments split up, argc
+ */
 uint32_t split_args(char *command, char **argv);
 
 void memcpyUpper(char*,const char*, int);
