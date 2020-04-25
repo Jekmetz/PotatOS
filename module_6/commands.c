@@ -654,6 +654,11 @@ int move_command(int argc, char** argv) {
     printf("Could not locate directory : \"%s\"\n", argv[2]);
   }
 
+  if (strcasecmp(argv[2], ".") == 0) {
+    print("Nothing to be done.");
+    return 1;
+  }
+
   // getting location of entry list of destination directory
   BYTE* dest = NULL;
   if (dir->firstLogicalCluster != 0x00) {

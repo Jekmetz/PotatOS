@@ -13,6 +13,8 @@
 #include "commands.h"
 #include "file_wrangler.h"
 
+void file_recurse()
+
 int main(int argc, char **argv) {
     if (!(argc == 2 || argc == 3)) {
         printf("Usage: %s DISKIMAGE [PATH]\n", argv[0]);
@@ -76,7 +78,7 @@ int main(int argc, char **argv) {
         }
     } else //file input mode
     {
-        //recursively go through files and pruint32_t out 
+        //recursively go through files and pruint out 
         //info from found file.
         //otherwise, error report
     }
