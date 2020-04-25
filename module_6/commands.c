@@ -670,10 +670,17 @@ int move_command(int argc, char** argv) {
     }
   }
 
-  // writing dir back to the system
-  dest -= 2 * sizeof(uint32_t);
-  BYTE* starting_loc = getSystem() + ((33 + dir->firstLogicalCluster - 2) * SECTORSIZE);
-  memcpy(starting_loc, dest, 2* sizeof(uint32_t) + (*destNumEntries) * sizeof(ENTRY));
+  if (file->empty == 0) {
+    // Have to add one to the end
+    BYTE* newEntryLoc = getSystem() + (curSector * SECTORSIZE) + ((*destNumEntries) * 32);
+    memcpy(newEntryLoc, &(file->fileName), 8);
+    newEntryLoc += 8;
+    memcpy(newEntryLoc, &(file->extension), 3);
+    newEntryLoc += 3;
+    memcpy(newEntryLoc, &(file->attributes), 19);
+    (*destNumEntries)++;
+    file->empty = 1;
+  }
 
   return 0;
 }
