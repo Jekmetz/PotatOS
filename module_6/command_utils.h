@@ -1,3 +1,8 @@
+/**
+* @file command_utils.h
+*
+* @brief Holds standard typedefs and utility function headers for certain commands
+*/
 #pragma once
 
 #include <stdint.h>
@@ -76,3 +81,5 @@ uint32_t split_args(char *command, char **argv);
 void memcpyUpper(char*,const char*, int);
 
 int strcimp(char const *a, char const* b);
+
+uint16_t findDotPosition(const char *);

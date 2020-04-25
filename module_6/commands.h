@@ -1,8 +1,9 @@
 /**
- * @file commands.h
- *
- * @brief Header file for commands.c
- */
+* @file commands.h
+*
+* @brief Holds all of the command prototypes
+*/
+
 #pragma once
 
 #include <stdint.h>

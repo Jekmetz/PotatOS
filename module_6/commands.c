@@ -1,3 +1,8 @@
+/**
+* @file commands.c
+*
+* @brief Holds all command functions for FAT12 Emulation
+*/
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
@@ -191,6 +196,14 @@ int pbsi_command(int argc, char **argv) {
     return 0;
 }
 
+/**
+* @brief print root directory
+*
+* @param argc count of arguments passed in 
+* @param argv list of strings separated by space characters passed in
+*
+* @return 0
+*/
 int prd_command(int argc, char **argv) {
     //Grab the CWD
     BYTE* cwdIn = getCWD();
@@ -252,6 +265,19 @@ int root_command(int argc, char **argv) {
 }
 
 int cd_command(int argc, char **argv) {
+
+    //If they didn't use it right
+    if(argc != 2)
+    {
+        printf("Check your use of cd there, friendo! cd <directory>\n");
+        return 1;
+    }
+    //If there is a dot position
+    if(findDotPosition(argv[1]) && strcmp(argv[1],".") != 0 && strcmp(argv[1],"..") != 0)
+    {
+        printf("That's not a directory you dingus.\n");
+        return 1;
+    }
     //Grab the CWD
     BYTE* cwdIn = getCWD();
 
@@ -262,6 +288,7 @@ int cd_command(int argc, char **argv) {
 
     BYTE* whole = getSystem();
     char *title;
+
     // int place;
     
     // ENTRY* cur;
@@ -271,7 +298,7 @@ int cd_command(int argc, char **argv) {
         ENTRY* cur;
         for(uint32_t i = 0; i < numEntries; i++){
             cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
-            if(cur->empty != 1 && strcmp(cur->fileName, argv[1]) == 0){
+            if(cur->empty != 1 && strcasecmp(cur->fileName, argv[1]) == 0){
                 // printf("Yep: %s\tGo to raw: %d\n", cwdIn[i].fileName, cwdIn[i].firstLogicalCluster);
                 if(cur->firstLogicalCluster == 0x00){
                     loadCWD(whole,  19);
@@ -296,6 +323,14 @@ int cd_command(int argc, char **argv) {
     return 0;
 }
 
+/**
+* @brief list directory
+*
+* @param argc count of arguments passed in 
+* @param argv list of strings separated by space characters passed in
+*
+* @return 0
+*/
 int ls_command(int argc, char **argv) {
     //Grab the CWD
     BYTE* cwdIn = getCWD();
@@ -381,6 +416,14 @@ int ls_command(int argc, char **argv) {
     return 0;
 }
 
+/**
+* @brief prints out contents of file
+*
+* @param argc count of arguments passed in 
+* @param argv list of strings separated by space characters passed in
+*
+* @return 0
+*/
 int type_command(int argc, char **argv) {
     //error checking!
     if(argc != 2)
@@ -495,6 +538,14 @@ int type_command(int argc, char **argv) {
     return 0;
 }
 
+/**
+* @brief renames a file or directory
+*
+* @param argc count of arguments passed in 
+* @param argv list of strings separated by space characters passed in
+*
+* @return 0
+*/
 int rename_command(int argc, char **argv) {
     //error checking
     if(argc != 3)
@@ -509,19 +560,33 @@ int rename_command(int argc, char **argv) {
     uint32_t curSector = *((uint32_t*)cwdIn);
     cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
 
-    int16_t dotPosition = (int16_t)(strchr(argv[2],'.') - argv[2] + 1);
+    int16_t dotPosition = findDotPosition(argv[2]);
     char newFileName[8]= {0};
     char newExt[3] = {0};
     unsigned char hasExt = 0;
 
-    if(dotPosition == 1 || (strlen(argv[2]+dotPosition) == 0))
-    {
-        printf("Enough with your dirty tricks, Hasan.\n");
-        return 1;
-    }
-
     if(dotPosition > 0)
     {
+        if(dotPosition == 1)
+        {
+            printf("Enough with your dirty tricks, Hasan.\n");
+            return 1;
+        }
+        if(strlen(argv[2])-dotPosition <= 0)
+        {
+            printf("Make sure you have a vaild extension.\n");
+            return 1;
+        }
+        if(dotPosition > 8)
+        {
+            printf("File name can be at most 8 characters!\n");
+            return 1;
+        }
+        if(strlen(argv[2])-dotPosition > 3)
+        {
+            printf("File extension can be at most 3 characters!\n");
+            return 1;
+        }
         //if(strlen(argv[2]) != (uint16_t)(dotPosition + 3))
         //{   //invalid extension
         //    printf("Extension must be 3 characters long!\n");
@@ -529,15 +594,15 @@ int rename_command(int argc, char **argv) {
         //}
         //This has an extension
         hasExt = 1;
-        memcpyUpper(newFileName,argv[2],dotPosition - 1);
+        memcpyUpper(newFileName,argv[2],8);
+        newFileName[dotPosition-1] = '\0';
         memcpyUpper(newExt,argv[2]+dotPosition,3);
     } else
     {
         //This does not have an extension
         hasExt = 0;
-        memcpyUpper(newFileName,argv[2],strlen(argv[2]));
+        memcpyUpper(newFileName,argv[2],8);
     }
-
     BYTE found = 0;
     char curFileName[13];
     ENTRY* cur;
@@ -551,8 +616,8 @@ int rename_command(int argc, char **argv) {
             //get curFileName
             curFileName[0] = '\0';
             strcat(curFileName, cur->fileName);
-            strcat(curFileName,".\0");
-            strcat(curFileName,cur->extension);
+            if(hasExt) strcat(curFileName,".\0");
+            if(hasExt) strcat(curFileName,cur->extension);
             if(strcasecmp(argv[1],curFileName) == 0)
             {
                 found = 1;

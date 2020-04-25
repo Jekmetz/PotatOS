@@ -1,3 +1,9 @@
+/**
+* @file command_utils.c
+*
+* @brief Utility functions that will be used by certain commands
+*/
+
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
@@ -72,4 +78,24 @@ void memcpyUpper(char* dest, const char* source, int nchars)
     }
 
     return;
+}
+
+/*
+* @brief Finds the dot position of a certain string
+*
+*
+* @returns dot position uint16_t
+*/
+uint16_t findDotPosition(const char *lorainne)
+{
+    uint16_t count = 1;
+    while(*lorainne && *lorainne != '.')
+    {
+        lorainne++;
+        count++;
+    }
+
+    if(!*lorainne) count = 0;
+
+    return count;
 }

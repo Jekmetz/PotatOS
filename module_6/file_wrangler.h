@@ -1,3 +1,9 @@
+/**
+* @file file_wrangler.h
+*
+* @brief Holds all of the prototypes for file_wrangler.c and has BOOTSECTOR struct
+*/
+
 #pragma once
 
 #include <stdint.h>

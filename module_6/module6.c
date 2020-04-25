@@ -1,3 +1,9 @@
+/**
+* @file module6.c
+*
+* @brief Entry point for file system
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
