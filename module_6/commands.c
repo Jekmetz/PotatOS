@@ -651,9 +651,75 @@ int rename_command(int argc, char **argv) {
     return 0;
 }
 
-int move_command(int argc, char **argv) {
-    printf("Moving file.\n");
-    return 0;
+int move_command(int argc, char** argv) {
+  if (argc < 3) {
+    puts(
+        "Not enough arguments, command syntax is\n\tmove <file> <destination "
+        "dir>");
+    return 1;
+  }
+
+  BYTE* cwdIn = getCWD();                     // get cwdIn
+  uint32_t numEntries = *((uint32_t*)cwdIn);  // get the number of entries
+  cwdIn += sizeof(uint32_t);
+  uint32_t curSector = *((uint32_t*)cwdIn);
+  cwdIn += sizeof(uint32_t);  // move cwdIn to the start of the entries
+
+  ENTRY *file = NULL, *dir = NULL, *cur;
+
+  // finding directory and file
+  for (uint32_t i = 0; i < numEntries; i++) {
+    cur = (ENTRY*)(cwdIn + i * (sizeof(ENTRY)));
+    char filen[32] = {0};
+    strcpy(filen, cur->fileName);
+    strcat(filen, ".");
+    strcat(filen, cur->extension);
+    if (cur->empty == 0) {
+      if (strcasecmp(cur->extension, "   ") == 0 &&
+          strcasecmp(cur->fileName, argv[2]) == 0) {
+        dir = cur;
+      } else if (strcasecmp(argv[1], filen) == 0) {
+        file = cur;
+      }
+    }
+  }
+
+  if (file == NULL)
+  {
+    printf("Could not locate file : \"%s\"\n", argv[1]);
+  }
+  if (dir == NULL)
+  {
+    printf("Could not locate directory : \"%s\"\n", argv[2]);
+  }
+
+  // TODO: Move the thing
+  // getting location of entry list of destination directory
+  BYTE *dest = getSystem() + (33 + dir->firstLogicalCluster - 2) * SECTORSIZE;
+
+  printf("Found dir entry list %p\n", dest);
+
+  uint32_t* destNumEntries = ((uint32_t*)dest);
+
+  printf("%d number of entries found\n", *destNumEntries);
+
+  dest += 2 * sizeof(uint32_t) + (*destNumEntries) * sizeof(ENTRY); // going to the end of the last entry
+
+  printf("End of last entry %p\n", dest);
+
+  (*destNumEntries)++; // adding a new entry
+
+  printf("%d number of entries\n", *destNumEntries);
+
+  memcpy(dest, file, sizeof(ENTRY)); // copying entry to new dir
+
+  puts("Copied entry");
+
+  file->empty = 1; // setting file location to empty
+
+  printf("Moved %s into %s\n", argv[1], argv[2]);
+
+  return 0;
 }
 
 int exit_command(int argc, char** argv) {
