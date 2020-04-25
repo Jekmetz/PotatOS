@@ -13,6 +13,7 @@
 
 BOOTSECTORSTRUCT* bootSectorIn;
 BYTE* sys;
+uint32_t sys_size;
 uint16_t *fat1, *fat2;
 BYTE *cwd = NULL, *root = NULL;
 /*
@@ -25,6 +26,7 @@ ENTRY   :  ENTRY 2
 ENTRY   :  ENTRY (number of entries)
 */
 char cwdPath[100] = {0};
+char imagePath[100] = {0};
 
 void loadBootSector(FILE *fpIn){
     // Loading Bytes Per Sector
@@ -241,6 +243,7 @@ void loadROOT(BYTE *sys){
 */
 void loadEntireSystem(char* filename)
 {
+    strcpy(imagePath, filename);
     //init
     strcat(cwdPath,"/");
 
@@ -296,6 +299,8 @@ BOOTSECTORSTRUCT* getBootSectorIn() { return bootSectorIn; }
 */
 BYTE* getSystem() {	return sys; }
 
+uint32_t getSystemSize() { return sys_size; }
+
 /**
 * @brief gets fat table 1
 *
@@ -329,6 +334,8 @@ char* getCwdPath() { return cwdPath; }
 *
 * @return pointer to root directory
 */
+char *getImagePath() { return imagePath; }
+
 BYTE* getRoot(){ return root; }
 
 /**

@@ -668,6 +668,7 @@ int exit_command(int argc, char** argv) {
   fgets(conf, 4, stdin);
 
   // TODO: Saving state
+  FILE *fp = fopen(getImagePath(), "w");
 
   if (conf[0] == 'y' || conf[0] == 'Y') {
     puts(

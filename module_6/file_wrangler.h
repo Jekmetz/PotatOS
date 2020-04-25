@@ -38,5 +38,6 @@ uint16_t* getDiabetes1();
 uint16_t* getDiabetes2();
 BYTE* getCWD();
 char* getCwdPath();
+char* getImagePath();
 void setCwdPath(const char* jerry);
 void trim (char *dest, char *src);
