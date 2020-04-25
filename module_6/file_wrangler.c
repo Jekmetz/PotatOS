@@ -253,6 +253,7 @@ void loadEntireSystem(char* filename)
 
     fseek(fp, 0, SEEK_END);
     uint32_t size = ftell(fp);
+    sys_size = size;
     fseek(fp, 0, SEEK_SET);
 
     // Size of entire system

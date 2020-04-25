@@ -34,6 +34,7 @@ void loadROOT(BYTE *sys);
 void loadEntireSystem(char* filename);
 BOOTSECTORSTRUCT *getBootSectorIn();
 BYTE* getSystem();
+uint32_t getSystemSize();
 uint16_t* getDiabetes1();
 uint16_t* getDiabetes2();
 BYTE* getCWD();

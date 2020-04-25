@@ -667,10 +667,10 @@ int exit_command(int argc, char** argv) {
   char conf[4] = {'\0'};
   fgets(conf, 4, stdin);
 
-  // TODO: Saving state
-  FILE *fp = fopen(getImagePath(), "w");
-
   if (conf[0] == 'y' || conf[0] == 'Y') {
+    FILE *fp = fopen(getImagePath(), "w");
+    fwrite(getSystem(), getSystemSize(), 1, fp);
+    fclose(fp);
     puts(
         "\nGoodbye and have a "
         "\033[1;31ms\033[33mp\033[32ml\033[36me\033[34mn\033[35md\033[31mi\033["
