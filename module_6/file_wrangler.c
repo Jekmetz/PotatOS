@@ -98,6 +98,72 @@ uint16_t *loadFAT(BYTE* sys, uint32_t startingSector) {
     return fatTable;
 }
 
+void loadDir(BYTE** dirp, BYTE *sys, uint32_t startingSec){
+    //find how many entries we are looking at here:
+    BYTE* startingLoc = sys + (startingSec * SECTORSIZE);
+    uint32_t numEntries = 0;
+
+    BYTE* dir = *dirp;
+
+    do
+    {
+        numEntries++;
+    } while(*(startingLoc + numEntries*32) != '\0');
+
+    //free it if we have used it before
+    if(dir!=NULL) free(dir);
+
+    dir = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY));
+    *dirp = dir;
+
+    //get the first two ints in there
+    memcpy(dir,&numEntries,4);
+    memcpy(dir+4,&startingSec,4);
+
+    BYTE* curLoc;
+    ENTRY* curEntry;
+    //go through all of the entries
+    for(uint32_t i = 0; i < numEntries; i++)
+    {
+        curLoc = (sys+(startingSec * SECTORSIZE) + (i*32));
+        curEntry = (ENTRY*)((dir+8) + i*sizeof(ENTRY));
+
+        //Index is deleted
+        if(*curLoc == 0xE5) 
+        {
+            curEntry->empty = 1;
+        }else if (*curLoc == 0x00) //Last entry (shouldn't happen)
+        {
+            curEntry->empty = 1;
+        } else if (*curLoc == 0x0F) //Something or other
+        {
+            curEntry->empty = 1;
+        }else //If we have ourselves a rowdy one...
+        {   
+            //wipe out filename and extension
+            memset(curEntry->fileName, 0, 13);
+
+            curEntry->empty = 0;
+            memcpy(curEntry->fileName, curLoc + 0, 8);
+            trim_whitespace(curEntry->fileName);
+            (curEntry->fileName)[8] = '\0';
+            memcpy(curEntry->extension, curLoc + 8, 3);
+            (curEntry->extension)[8] = '\0';
+
+            curEntry->attributes =             *((char*)     (curLoc + 11)); 
+            curEntry->reserved =               *((uint16_t*) (curLoc + 12));
+            curEntry->creationTime =           *((uint16_t*) (curLoc + 14));
+            curEntry->creationDate =           *((uint16_t*) (curLoc + 16));
+            curEntry->lastAccessDate =         *((uint16_t*) (curLoc + 18));
+            curEntry->lastWriteTime =          *((uint16_t*) (curLoc + 22));
+            curEntry->lastWriteDate =          *((uint16_t*) (curLoc + 24));
+            curEntry->firstLogicalCluster =    *((uint16_t*) (curLoc + 26));
+            curEntry->fileSize =               *((uint32_t*) (curLoc + 28));
+        }
+
+    }
+}
+
 /**
 * @brief loads the current working directory into global BYTE* cwd
 *
