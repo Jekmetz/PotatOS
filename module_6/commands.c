@@ -664,6 +664,10 @@ int move_command(int argc, char** argv) {
     cur = (ENTRY*)(dest + i * (sizeof(ENTRY)));
     if (cur->empty == 1) {
       // entry is empty and able to be used
+      BYTE* newEntryLoc = getSystem() + (destStartSec * SECTORSIZE) + (i * 32);
+      memcpy(newEntryLoc, &(file->fileName), 8);
+      newEntryLoc += 8;
+      memcpy(newEntryLoc, &(file->extension), 3);
       *cur = *file;  // copying data
       file->empty = 1;
       break;
@@ -672,7 +676,7 @@ int move_command(int argc, char** argv) {
 
   if (file->empty == 0) {
     // Have to add one to the end
-    BYTE* newEntryLoc = getSystem() + (curSector * SECTORSIZE) + ((*destNumEntries) * 32);
+    BYTE* newEntryLoc = getSystem() + (destStartSec * SECTORSIZE) + ((*destNumEntries) * 32);
     memcpy(newEntryLoc, &(file->fileName), 8);
     newEntryLoc += 8;
     memcpy(newEntryLoc, &(file->extension), 3);
