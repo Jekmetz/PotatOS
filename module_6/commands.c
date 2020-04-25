@@ -655,7 +655,7 @@ int move_command(int argc, char** argv) {
   }
 
   if (strcasecmp(argv[2], ".") == 0) {
-    print("Nothing to be done.");
+    printf("Nothing to be done.");
     return 1;
   }
 
