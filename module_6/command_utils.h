@@ -84,4 +84,4 @@ int strcimp(char const *a, char const* b);
 
 uint16_t findDotPosition(const char *);
 
-uint32_t strstarsearchcmp(const char* starryboi, const char* cmp);
+uint32_t starsearch(const char* starryboi, const char* fileboi);

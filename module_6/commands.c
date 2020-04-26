@@ -12,6 +12,7 @@
 #include <string.h>
 #include <strings.h>
 #include <termios.h>
+#include <command_utils.h>
 
 #include "file_wrangler.h"
 
@@ -374,7 +375,8 @@ int ls_command(int argc, char** argv) {
     BYTE found = 0;
     for (uint32_t i = 0; i < numEntries; i++) {
       cur = (ENTRY*)(cwdIn + i * sizeof(ENTRY));
-      if (cur->empty == 0) {
+      if (cur->empty != 1 && cur->attributes != 0x0F &&
+            !(cur->attributes & 0x02) && !(cur->attributes & 0x08)) {
         // get curFileName
         curFileName[0] = '\0';
         strcat(curFileName, cur->fileName);
@@ -383,7 +385,7 @@ int ls_command(int argc, char** argv) {
         if (!isDir)
           strcat(curFileName, cur->extension);
 
-        if (strcasecmp(fileName, curFileName) ==
+        if (starsearch(fileName, curFileName) ==
             0) {  // If we have found a match...
           found = 1;
           printf(
@@ -394,12 +396,12 @@ int ls_command(int argc, char** argv) {
               "Creation Date: %hu\n"
               "Last Access Date: %hu\n"
               "Last Write Date: %hu\n"
-              "First Locical Cluster: %x\n"
+              "First Logical Cluster: %x\n"
               "File Size: %d\n\n",
               cur->fileName, cur->extension, cur->attributes, cur->creationTime,
               cur->creationDate, cur->lastAccessDate, cur->lastWriteDate,
               cur->firstLogicalCluster, cur->fileSize);
-          break;
+//          break;
         }
       }
     }

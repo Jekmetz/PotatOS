@@ -99,3 +99,43 @@ uint16_t findDotPosition(const char *lorainne)
 
     return count;
 }
+
+uint32_t strcmpn(const char* str1, size_t str1_len, const char* str2, size_t str2_len) {
+    if (str1_len != str2_len) {
+        return 1;
+    }
+
+    size_t i = 0;
+
+    while(str1[i] == str2[i] && (i + 1) != str1_len) {
+        i += 1;
+    }
+
+    return str2[i] - str1[i];
+}
+
+uint32_t starsearch(const char* starryboi, const char* fileboi) {
+    // Convenience prepping for sanity. Separate the name and extension
+    uint32_t dot_pos_star = strchr(starryboi, '.') - starryboi;
+    const char* starry_ext = starryboi + dot_pos_star + 1;
+    size_t starry_ext_len = strlen(starryboi) - dot_pos_star - 1;
+
+    uint32_t dot_pos_file = strchr(fileboi, '.') - fileboi;
+    const char* file_ext = fileboi + dot_pos_file + 1;
+    size_t file_ext_len = strlen(fileboi) - dot_pos_file - 1;
+
+    // If the file or ext was a star, then its a match regardless
+    bool name_matches = strcmpn("*", 1, starryboi, dot_pos_star);
+    bool ext_matches = strcmpn("*", 1, starry_ext, starry_ext_len);
+
+    // If it wasn't s star, just do plain string comparison
+    if (name_matches != 0) {
+        name_matches = strcmpn(starryboi, dot_pos_star, fileboi, dot_pos_file);
+    }
+
+    if (ext_matches != 0) {
+        ext_matches = strcmpn(starry_ext, starry_ext_len, file_ext, file_ext_len);
+    }
+
+    return ext_matches || name_matches;
+}
