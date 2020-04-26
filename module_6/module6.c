@@ -98,16 +98,6 @@ int main(int argc, char** argv) {
         count += SECTORSIZE;
       }
 
-      // Terminal Setup for Any Key
-      struct termios old, new;
-      tcgetattr(0, &old);
-      tcgetattr(0, &new);     /* get current terminal attirbutes; 0 is the file
-                                 descriptor for stdin */
-      new.c_lflag &= ~ICANON; /* disable canonical mode */
-      new.c_cc[VMIN] = 1;     /* wait until at least one keystroke available */
-      new.c_cc[VTIME] = 0;    /* no timeout */
-      tcsetattr(0, TCSANOW, &new); /* set immediately */
-
       // print entire boi 25 lines at a time
       uint32_t lineCount = 0;
       char c, recieved;
@@ -116,30 +106,7 @@ int main(int argc, char** argv) {
         if (c == '\n')
           lineCount++;
         putc(c, stdout);
-
-        if (lineCount == 25) {
-          printf("------- PRESS ANY KEY (q to quit) -------\r");
-          lineCount = 0;
-          recieved = getchar();
-
-          if (recieved == '\n') {
-            printf("\033[1A");
-            printf("                                         \r");
-            printf("\033[1A");
-          } else if (recieved == 'q') {  // they doneski bois
-            printf("\b");
-            printf("                                         \r");
-            printf("\033[1A");
-            break;
-          } else {
-            printf("\b");
-            printf("                                         \r");
-            printf("\033[1A");
-          }
-        }
       }
-
-      tcsetattr(0, TCSANOW, &old); /* set immediately */
     }
   } else {
     puts("Invalid arguments");

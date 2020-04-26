@@ -695,6 +695,23 @@ int move_command(int argc, char** argv) {
     memcpy(newEntryLoc, &(file->extension), 3);
     newEntryLoc += 3;
     memcpy(newEntryLoc, &(file->attributes), 19);
+    newEntryLoc += 1;
+    memcpy(newEntryLoc, &(file->reserved), 2);
+    newEntryLoc += 2;
+    memcpy(newEntryLoc, &(file->creationTime), 2);
+    newEntryLoc += 2;
+    memcpy(newEntryLoc, &(file->creationDate), 2);
+    newEntryLoc += 2;
+    memcpy(newEntryLoc, &(file->lastAccessDate), 2);
+    newEntryLoc += 4;
+    memcpy(newEntryLoc, &(file->lastWriteTime), 2);
+    newEntryLoc += 2;
+    memcpy(newEntryLoc, &(file->lastWriteDate), 2);
+    newEntryLoc += 2;
+    memcpy(newEntryLoc, &(file->firstLogicalCluster), 2);
+    newEntryLoc += 2;
+    memcpy(newEntryLoc, &(file->fileSize), 4);
+    
     (*destNumEntries)++;
     file->empty = 1;  // this is only a more immediate solution to remove
     *file_location = 0xE5;
