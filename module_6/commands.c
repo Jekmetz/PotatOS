@@ -196,39 +196,75 @@ int pbsi_command(int argc, char** argv) {
   return 0;
 }
 
-int prd_command(int argc, char** argv) {
-  // Grab the CWD
-  BYTE* cwdIn = getRoot();
+/**
+* @brief print root directory
+*
+* @param argc count of arguments passed in 
+* @param argv list of strings separated by space characters passed in
+*
+* @return 0
+*/
+int prd_command(int argc, char **argv) {
+    //Grab the CWD
+    BYTE* cwdIn = getRoot();
 
-  uint32_t numEntries = *((uint32_t*)cwdIn);  // get the number of entries
-  cwdIn += sizeof(uint32_t);
-  uint32_t curSector = *((uint32_t*)cwdIn);
-  cwdIn += sizeof(uint32_t);  // move cwdIn to the start of the entries
+    uint32_t numEntries = *((uint32_t*)cwdIn); //get the number of entries
+    cwdIn += sizeof(uint32_t);
+    uint32_t curSector = *((uint32_t*)cwdIn);
+    cwdIn += sizeof(uint32_t);   //move cwdIn to the start of the entries
 
-  ENTRY* cur;
-  for (uint32_t i = 0; i < numEntries; i++) {
-    cur = (ENTRY*)(cwdIn + i * sizeof(ENTRY));
-    if (cur->empty == 0) {
-      if (cur->attributes != 0x0F && !(cur->attributes & 0x02) &&
-          !(cur->attributes & 0x08)) {
-        printf(
-            "Filename: %s\n"
-            "Extension: %s\n"
-            "Attributes: %x\n"
-            "Creation Time: %hu\n"
-            "Creation Date: %hu\n"
-            "Last Access Date: %hu\n"
-            "Last Write Date: %hu\n"
-            "First Locical Cluster: %x\n"
-            "File Size: %d\n\n",
-            cur->fileName, cur->extension, cur->attributes, cur->creationTime,
-            cur->creationDate, cur->lastAccessDate, cur->lastWriteDate,
-            cur->firstLogicalCluster, cur->fileSize);
-      }
+    ENTRY* cur;
+    for(uint32_t i = 0; i<numEntries; i++)
+    {
+        cur = (ENTRY*)(cwdIn + i*sizeof(ENTRY));
+        if(cur->empty == 0)
+        {
+            if(cur->attributes != 0x0F && !(cur->attributes & 0x02) && !(cur->attributes & 0x08))
+            {
+                printf(
+                    "Filename: %s\n"
+                    "Extension: %s\n"
+                    "Attributes: %x\n"
+                    "Creation Time: %02hu:%02hu:%02hu\n"
+                    "Creation Date: %04hu/%02hu/%02hu\n"
+                    "Last Access Date: %04hu/%02hu/%02hu\n"
+                    "Last Write Date: %04hu/%02hu/%02hu\n"
+                    "Last Write Time: %02hu:%02hu:%02hu\n"
+                    "First Locical Cluster: %x\n"
+                    "File Size: %d\n\n",
+                    cur->fileName,
+                    cur->extension,
+                    cur->attributes,
+                    // cur->creationTime,
+                    cur->creationHour,
+                    cur->creationMin,
+                    cur->creationSec,
+                    cur->creationYear,
+                    cur->creationMonth,
+                    cur->creationDay,
+                    // cur->creationDate,
+                    // cur->lastAccessDate,
+                    cur->lastAccessYear,
+                    cur->lastAccessMonth,
+                    cur->lastAccessDay,
+                    // cur->lastWriteDate,
+                    cur->lastWriteYear,
+                    cur->lastWriteMonth,
+                    cur->lastWriteDay,
+                    cur->lastWriteHour,
+                    cur->lastWriteMin,
+                    cur->lastWriteSec,
+                    cur->firstLogicalCluster,
+                    cur->fileSize
+                    );
+            }
+        }
     }
-  }
-  return 0;
+
+
+    return 0;
 }
+
 
 /**
  * @brief Returns to the root directory.
@@ -368,18 +404,41 @@ int ls_command(int argc, char** argv) {
             0) {  // If we have found a match...
           found = 1;
           printf(
-              "Filename: %s\n"
-              "Extension: %s\n"
-              "Attributes: %x\n"
-              "Creation Time: %hu\n"
-              "Creation Date: %hu\n"
-              "Last Access Date: %hu\n"
-              "Last Write Date: %hu\n"
-              "First Logical Cluster: %x\n"
-              "File Size: %d\n\n",
-              cur->fileName, cur->extension, cur->attributes, cur->creationTime,
-              cur->creationDate, cur->lastAccessDate, cur->lastWriteDate,
-              cur->firstLogicalCluster, cur->fileSize);
+            "Filename: %s\n"
+            "Extension: %s\n"
+            "Attributes: %x\n"
+            "Creation Time: %02hu:%02hu:%02hu\n"
+            "Creation Date: %04hu/%02hu/%02hu\n"
+            "Last Access Date: %04hu/%02hu/%02hu\n"
+            "Last Write Date: %04hu/%02hu/%02hu\n"
+            "Last Write Time: %02hu:%02hu:%02hu\n"
+            "First Locical Cluster: %x\n"
+            "File Size: %d\n\n",
+            cur->fileName,
+            cur->extension,
+            cur->attributes,
+            // cur->creationTime,
+            cur->creationHour,
+            cur->creationMin,
+            cur->creationSec,
+            cur->creationYear,
+            cur->creationMonth,
+            cur->creationDay,
+            // cur->creationDate,
+            // cur->lastAccessDate,
+            cur->lastAccessYear,
+            cur->lastAccessMonth,
+            cur->lastAccessDay,
+            // cur->lastWriteDate,
+            cur->lastWriteYear,
+            cur->lastWriteMonth,
+            cur->lastWriteDay,
+            cur->lastWriteHour,
+            cur->lastWriteMin,
+            cur->lastWriteSec,
+            cur->firstLogicalCluster,
+            cur->fileSize
+            );
 //          break;
         }
       }
@@ -639,9 +698,11 @@ int move_command(int argc, char** argv) {
 
   if (file == NULL) {
     printf("Could not locate file : \"%s\"\n", argv[1]);
+    return 1;
   }
   if (dir == NULL) {
     printf("Could not locate directory : \"%s\"\n", argv[2]);
+    return 1;
   }
 
   if (strcasecmp(argv[2], ".") == 0) {

@@ -100,8 +100,7 @@ void loadDir(BYTE** dirp, BYTE *sys, uint32_t startingSec){
     //free it if we have used it before
     if(dir!=NULL) free(dir);
 
-    dir = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY) + sizeof(ENTRY));
-    numEntries++;
+    dir = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY));
     
     *dirp = dir;
 
@@ -202,6 +201,62 @@ void loadCWD(BYTE *sys, uint32_t startingSec){
             memcpy(curEntry->extension, curLoc + 8, 3);
             (curEntry->extension)[8] = '\0';
 
+                // Creation time
+            uint16_t creationTime =     *((uint16_t*) (curLoc + 14));
+            uint8_t creationTimeHour, creationTimeMin, CreationTimeSec;
+            creationTimeHour =          (creationTime & 0xF800) >> 11; 
+            creationTimeMin =           (creationTime & 0x07E0) >> 5;
+            CreationTimeSec =           (creationTime & 0x001E); // No bit shift needed
+            curEntry->creationHour =    creationTimeHour;
+            curEntry->creationMin =     creationTimeMin;
+            curEntry->creationSec =     CreationTimeSec;
+
+            // Creation date
+            uint16_t creationDate =     *((uint16_t*) (curLoc + 16));
+            uint16_t creationDateYear;
+            uint8_t creationDateMonth, creationDateDay;
+            creationDateYear = 1980;
+            creationDateYear +=         (creationDate & 0xFE00) >> 9;
+            creationDateMonth =         (creationDate & 0x01E0) >> 5;
+            creationDateDay =           (creationDate & 0x001F); // No bit shift needed
+            curEntry->creationYear =    creationDateYear;
+            curEntry->creationMonth =   creationDateMonth;
+            curEntry->creationDay =     creationDateDay;
+
+            // Last Access Date
+            uint16_t lastAccessDate =   *((uint16_t*) (curLoc + 18));
+            uint16_t lastAccessYear;
+            uint8_t lastAccessMonth, lastAccessDay;
+            lastAccessYear = 1980;
+            lastAccessYear +=           (lastAccessDate & 0xFE00) >> 9;
+            lastAccessMonth =           (lastAccessDate & 0x01E0) >> 5;
+            lastAccessDay =             (lastAccessDate & 0x001F); // No bit shift needed
+            curEntry->lastAccessYear =  lastAccessYear;
+            curEntry->lastAccessMonth = lastAccessMonth;
+            curEntry->lastAccessDay =   lastAccessDay;
+
+            // Last Write Time
+            uint16_t lastWriteTime =    *((uint16_t*) (curLoc + 22));
+            uint8_t lastWriteHour, lastWriteMin, lastWriteSec;
+            lastWriteHour =             (lastWriteTime & 0xF800) >> 11; 
+            lastWriteMin =              (lastWriteTime & 0x07E0) >> 5;
+            lastWriteSec =              (lastWriteTime & 0x001E); // No bit shift needed
+            curEntry->lastWriteHour =   lastWriteHour;
+            curEntry->lastWriteMin =    lastWriteMin;
+            curEntry->lastWriteSec =    lastWriteSec;
+
+            // Last Write Date
+            uint16_t lastWriteDate =    *((uint16_t*) (curLoc + 24));
+            uint16_t lastWriteYear;
+            uint8_t lastWriteMonth, lastWriteDay;
+            lastWriteYear = 1980;
+            lastWriteYear +=            (lastWriteDate & 0xFE00) >> 9;
+            lastWriteMonth =            (lastWriteDate & 0x01E0) >> 5;
+            lastWriteDay =              (lastWriteDate & 0x001F); // No bit shift needed
+            curEntry->lastWriteYear =   lastWriteYear;
+            curEntry->lastWriteMonth =  lastWriteMonth;
+            curEntry->lastWriteDay =    lastWriteDay;
+
             curEntry->attributes =             *((char*)     (curLoc + 11)); 
             curEntry->reserved =               *((uint16_t*) (curLoc + 12));
             curEntry->creationTime =           *((uint16_t*) (curLoc + 14));
@@ -265,6 +320,62 @@ void loadROOT(BYTE *sys){
             (curEntry->fileName)[8] = '\0';
             memcpy(curEntry->extension, curLoc + 8, 3);
             (curEntry->extension)[8] = '\0';
+
+                // Creation time
+            uint16_t creationTime =     *((uint16_t*) (curLoc + 14));
+            uint8_t creationTimeHour, creationTimeMin, CreationTimeSec;
+            creationTimeHour =          (creationTime & 0xF800) >> 11; 
+            creationTimeMin =           (creationTime & 0x07E0) >> 5;
+            CreationTimeSec =           (creationTime & 0x001E); // No bit shift needed
+            curEntry->creationHour =    creationTimeHour;
+            curEntry->creationMin =     creationTimeMin;
+            curEntry->creationSec =     CreationTimeSec;
+
+            // Creation date
+            uint16_t creationDate =     *((uint16_t*) (curLoc + 16));
+            uint16_t creationDateYear;
+            uint8_t creationDateMonth, creationDateDay;
+            creationDateYear = 1980;
+            creationDateYear +=         (creationDate & 0xFE00) >> 9;
+            creationDateMonth =         (creationDate & 0x01E0) >> 5;
+            creationDateDay =           (creationDate & 0x001F); // No bit shift needed
+            curEntry->creationYear =    creationDateYear;
+            curEntry->creationMonth =   creationDateMonth;
+            curEntry->creationDay =     creationDateDay;
+
+            // Last Access Date
+            uint16_t lastAccessDate =   *((uint16_t*) (curLoc + 18));
+            uint16_t lastAccessYear;
+            uint8_t lastAccessMonth, lastAccessDay;
+            lastAccessYear = 1980;
+            lastAccessYear +=           (lastAccessDate & 0xFE00) >> 9;
+            lastAccessMonth =           (lastAccessDate & 0x01E0) >> 5;
+            lastAccessDay =             (lastAccessDate & 0x001F); // No bit shift needed
+            curEntry->lastAccessYear =  lastAccessYear;
+            curEntry->lastAccessMonth = lastAccessMonth;
+            curEntry->lastAccessDay =   lastAccessDay;
+
+            // Last Write Time
+            uint16_t lastWriteTime =    *((uint16_t*) (curLoc + 22));
+            uint8_t lastWriteHour, lastWriteMin, lastWriteSec;
+            lastWriteHour =             (lastWriteTime & 0xF800) >> 11; 
+            lastWriteMin =              (lastWriteTime & 0x07E0) >> 5;
+            lastWriteSec =              (lastWriteTime & 0x001E); // No bit shift needed
+            curEntry->lastWriteHour =   lastWriteHour;
+            curEntry->lastWriteMin =    lastWriteMin;
+            curEntry->lastWriteSec =    lastWriteSec;
+
+            // Last Write Date
+            uint16_t lastWriteDate =    *((uint16_t*) (curLoc + 24));
+            uint16_t lastWriteYear;
+            uint8_t lastWriteMonth, lastWriteDay;
+            lastWriteYear = 1980;
+            lastWriteYear +=            (lastWriteDate & 0xFE00) >> 9;
+            lastWriteMonth =            (lastWriteDate & 0x01E0) >> 5;
+            lastWriteDay =              (lastWriteDate & 0x001F); // No bit shift needed
+            curEntry->lastWriteYear =   lastWriteYear;
+            curEntry->lastWriteMonth =  lastWriteMonth;
+            curEntry->lastWriteDay =    lastWriteDay;
 
             curEntry->attributes =             *((char*)     (curLoc + 11)); 
             curEntry->reserved =               *((uint16_t*) (curLoc + 12));
