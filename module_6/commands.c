@@ -704,9 +704,6 @@ int move_command(int argc, char** argv) {
       memcpy(newEntryLoc, &(file->fileName), 8);
       newEntryLoc += 8;
       memcpy(newEntryLoc, &(file->extension), 3);
-      memcpy(newEntryLoc, &(file->fileName), 8);
-      newEntryLoc += 8;
-      memcpy(newEntryLoc, &(file->extension), 3);
       newEntryLoc += 3;
       memcpy(newEntryLoc, &(file->attributes), 19);
       newEntryLoc += 1;
