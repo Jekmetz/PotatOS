@@ -1,8 +1,3 @@
-/**
-* @file file_wrangler.c
-*
-* @brief Holds all global variables that have to do with the file system and has all initialization functions for system
-*/
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,6 +11,7 @@ BYTE* sys;
 uint32_t sys_size;
 uint16_t *fat1, *fat2;
 BYTE *cwd = NULL, *root = NULL;
+
 /*
 CWD is stored:
 uint32  :  number of entries
@@ -57,17 +53,8 @@ void loadBootSector(FILE *fpIn){
     bootSectorIn->volumeLabel = volumeLabel;
     memcpy(fileSystemType, bs+54, sizeof(char) * 8);
     bootSectorIn->fileSystemType = fileSystemType;
-
 }
 
-/**
-* @brief loads the FAT
-*
-* @param sys raw byte array of entire file system
-* @param startingSector number of the sector to start loading the fat from
-*
-* @return pointer to FAT
-*/
 uint16_t *loadFAT(BYTE* sys, uint32_t startingSector) { 
     
     //move sys forward to the correct starting position
@@ -166,12 +153,6 @@ void loadDir(BYTE** dirp, BYTE *sys, uint32_t startingSec){
     }
 }
 
-/**
-* @brief loads the current working directory into global BYTE* cwd
-*
-* @param sys raw byte array of entire file system
-* @param startingSector number of the sector to start loading the cwd from
-*/
 void loadCWD(BYTE *sys, uint32_t startingSec){
     //find how many entries we are looking at here:
     BYTE* startingLoc = sys + (startingSec * SECTORSIZE);
@@ -235,11 +216,6 @@ void loadCWD(BYTE *sys, uint32_t startingSec){
     }
 }
 
-/**
-* @brief loads the root into global BYTE* root
-*
-* @param sys raw byte array of entire file system
-*/
 void loadROOT(BYTE *sys){
     //find how many entries we are looking at here:
     int startingSec = 19;
@@ -304,11 +280,6 @@ void loadROOT(BYTE *sys){
     }
 }
 
-/**
-* @brief loads the entire system
-*
-* @param filename filename of the correct FAT12 Image
-*/
 void loadEntireSystem(char* filename)
 {
     strcpy(imagePath, filename);
@@ -351,69 +322,27 @@ void loadEntireSystem(char* filename)
     fclose(fp);
 }
 
-/**
-* @brief gets boot sector in
-*
-* @return pointer to boot sector in
-*/
 BOOTSECTORSTRUCT* getBootSectorIn() { return bootSectorIn; }
 
-
-
-
-/**
-* @brief gets entire system pointer
-*
-* @return pointer to entire system
-*/
 BYTE* getSystem() {	return sys; }
 
 uint32_t getSystemSize() { return sys_size; }
 
-/**
-* @brief gets fat table 1
-*
-* @return pointer to fat table 1
-*/
 uint16_t* getDiabetes1() { return fat1; }
 
-/**
-* @brief gets fat table 2
-*
-* @return pointer to fat table 2
-*/
 uint16_t* getDiabetes2() { return fat2; }
 
-/**
-* @brief gets current working directory BYTE*
-*
-* @return pointer to current working directory
-*/
 BYTE* getCWD() { return cwd; }
 
-/**
-* @brief gets cwd path
-*
-* @return pointer to cwdpath
-*/
 char* getCwdPath() { return cwdPath; }
 
-/**
-* @brief gets root directory
-*
-* @return pointer to root directory
-*/
 char *getImagePath() { return imagePath; }
 
 BYTE* getRoot(){ return root; }
 
-/**
-* @brief sets cwd path
-*
-* @param jerry string to make cwdPath
-*/
 void setCwdPath(const char* jerry) { memcpy(cwdPath, jerry, sizeof(cwdPath)); } // Changed this: strlen(jerry)
 
+// Depricated, do not use
 void trim (char *dest, char *src)
 {
     if (!src || !dest)

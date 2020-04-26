@@ -1,8 +1,3 @@
-/**
- * @file commands.c
- *
- * @brief Holds all command functions for FAT12 Emulation
- */
 #include "commands.h"
 
 #include <stdbool.h>
@@ -201,14 +196,6 @@ int pbsi_command(int argc, char** argv) {
   return 0;
 }
 
-/**
- * @brief print root directory
- *
- * @param argc count of arguments passed in
- * @param argv list of strings separated by space characters passed in
- *
- * @return 0
- */
 int prd_command(int argc, char** argv) {
   // Grab the CWD
   BYTE* cwdIn = getRoot();
@@ -325,14 +312,6 @@ int cd_command(int argc, char** argv) {
   return 0;
 }
 
-/**
- * @brief list directory
- *
- * @param argc count of arguments passed in
- * @param argv list of strings separated by space characters passed in
- *
- * @return 0
- */
 int ls_command(int argc, char** argv) {
   // Grab the CWD
   BYTE* cwdIn = getCWD();
@@ -414,14 +393,6 @@ int ls_command(int argc, char** argv) {
   return 0;
 }
 
-/**
- * @brief prints out contents of file
- *
- * @param argc count of arguments passed in
- * @param argv list of strings separated by space characters passed in
- *
- * @return 0
- */
 int type_command(int argc, char** argv) {
   // error checking!
   if (argc != 2) {
@@ -527,14 +498,6 @@ int type_command(int argc, char** argv) {
   return 0;
 }
 
-/**
- * @brief renames a file or directory
- *
- * @param argc count of arguments passed in
- * @param argv list of strings separated by space characters passed in
- *
- * @return 0
- */
 int rename_command(int argc, char** argv) {
   // error checking
   if (argc != 3) {

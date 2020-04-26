@@ -1,18 +1,11 @@
-
+// Doxygen ignore
+// File was a dumping ground for all of our different code before we consolodated
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <ctype.h>
-
-
-
-
-
-
-
-
 
 uint32_t copy(uint32_t startingLoc, uint32_t numBytes, unsigned char bs[SECTORSIZE]);
 char hexToAscii( char first, char second);

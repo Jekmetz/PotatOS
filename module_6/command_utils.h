@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 
+// TODO: Define this struct
 // Sector size is 512 bytes always with FAT12
 #define SECTORSIZE 512
 #define SECTORSPERFAT 9 
@@ -14,10 +15,13 @@
 #define MAXDIRENTRY 16
 #define MAXENTRIESPERDIR 16
 
+// TODO: Define this struct
 #define DEBLOC() printf("\033[33;1m%s(%d)\033[0m\n",__FILE__,__LINE__)
 
+// TODO: Define this struct
 typedef unsigned char BYTE;
 
+// TODO: Define this struct
 typedef int (*CommandFunction)(int, char **);
 
 /**
@@ -37,6 +41,7 @@ struct command {
     char *command_examples;
 };
 
+// TODO: Define this struct
 typedef struct ENTRY {
 	BYTE empty;
 	char fileName[9];
@@ -52,11 +57,13 @@ typedef struct ENTRY {
 	uint32_t fileSize;
 } ENTRY;
 
+// TODO: Define this struct
 typedef struct PREVDIR {
 	char *dirName;
 	uint32_t sectorStart;
 } PREVDIR;
 
+// TODO: Define this struct
 typedef struct command command_t;
 
 /**
@@ -78,10 +85,24 @@ char *trim_whitespace(char *str);
  */
 uint32_t split_args(char *command, char **argv);
 
+/**
+* @brief A memcpy function that takes all characters to their uppercase equivalent
+* 
+* @param dest The destination char pointer
+* @param source The source char pointer
+* @param nchars The number of chars to copy, and toUpper, from source to dest
+*
+* @return void method, copies in place
+*/
 void memcpyUpper(char*,const char*, int);
 
+// TODO: Need to figure out what this is
 int strcimp(char const *a, char const* b);
 
-uint16_t findDotPosition(const char *);
-
 uint32_t starsearch(const char* starryboi, const char* fileboi);
+/*
+* @brief Finds the dot position of a certain string
+*
+* @returns dot position uint16_t
+*/
+uint16_t findDotPosition(const char *);
