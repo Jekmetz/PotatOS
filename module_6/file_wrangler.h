@@ -39,6 +39,7 @@ uint32_t getSystemSize();
 uint16_t* getDiabetes1();
 uint16_t* getDiabetes2();
 BYTE* getCWD();
+BYTE* getRoot();
 char* getCwdPath();
 char* getImagePath();
 void setCwdPath(const char* jerry);

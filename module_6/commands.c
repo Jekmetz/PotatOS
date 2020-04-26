@@ -210,7 +210,7 @@ int pbsi_command(int argc, char** argv) {
  */
 int prd_command(int argc, char** argv) {
   // Grab the CWD
-  BYTE* cwdIn = getCWD();
+  BYTE* cwdIn = getRoot();
 
   uint32_t numEntries = *((uint32_t*)cwdIn);  // get the number of entries
   cwdIn += sizeof(uint32_t);
@@ -336,7 +336,10 @@ int ls_command(int argc, char** argv) {
   BYTE isDir = 0;
   ENTRY* cur;
 
+  uint8_t filenamelen;
+
   if (argc == 1) {  // if we are listing the directory...
+    printf("\033[33m%-13s%-15s%-25s\033[0m\n","Name","File Size", "Starting Logical Cluster");
     for (uint32_t i = 0; i < numEntries; i++)  // for the number of entries...
     {
       cur = (ENTRY*)(cwdIn + i * sizeof(ENTRY));
@@ -347,9 +350,12 @@ int ls_command(int argc, char** argv) {
         // and is not empty...
         isDir = cur->attributes & 0x10;
         if (isDir)  // directory
-          printf("\033[32m%s\033[0m\n", cur->fileName);
+          printf("\033[32m%-13s%-15d%-25x\033[0m\n", cur->fileName, cur->fileSize, cur->firstLogicalCluster);
         else  // not directory
-          printf("%s.%s\n", cur->fileName, cur->extension);
+        {
+          filenamelen = strlen(cur->fileName);
+          printf("%-*s.%-*s%-15d%-25x\n", filenamelen, cur->fileName, 12 - filenamelen, cur->extension, cur->fileSize, cur->firstLogicalCluster);
+        }
       }
     }
   } else if (argc == 2) {  // if we are printing a file...
@@ -380,7 +386,7 @@ int ls_command(int argc, char** argv) {
               "Last Access Date: %hu\n"
               "Last Write Date: %hu\n"
               "First Locical Cluster: %x\n"
-              "File Size: %d\n",
+              "File Size: %d\n\n",
               cur->fileName, cur->extension, cur->attributes, cur->creationTime,
               cur->creationDate, cur->lastAccessDate, cur->lastWriteDate,
               cur->firstLogicalCluster, cur->fileSize);

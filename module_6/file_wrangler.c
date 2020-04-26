@@ -113,7 +113,9 @@ void loadDir(BYTE** dirp, BYTE *sys, uint32_t startingSec){
     //free it if we have used it before
     if(dir!=NULL) free(dir);
 
-    dir = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY));
+    dir = (BYTE*) malloc(2* sizeof(uint32_t) + numEntries * sizeof(ENTRY) + sizeof(ENTRY));
+    numEntries++;
+    
     *dirp = dir;
 
     //get the first two ints in there
