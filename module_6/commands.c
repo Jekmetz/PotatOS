@@ -242,6 +242,15 @@ int prd_command(int argc, char** argv) {
   return 0;
 }
 
+/**
+ * @brief Returns to the root directory.
+ *
+ * Sends user's current working directory to the root.
+ *
+ * @param argc Number of arguments
+ * @param argv List of string arguments.
+ * @return int Success condition.
+ */
 int root_command(int argc, char** argv) {
   BYTE* cwdIn = getCWD();
 
@@ -618,6 +627,16 @@ int rename_command(int argc, char** argv) {
   return 0;
 }
 
+/**
+ * @brief Moves a file from one directory to another.
+ * 
+ * Takes the name of a file and directory within the same directory, and moves the file entry
+ * into the specified directory.
+ * 
+ * @param argc Number of arguments.
+ * @param argv List of arguments argv[1] is the file to move, argv[2] is the destination directory.
+ * @return int Success condition.
+ */
 int move_command(int argc, char** argv) {
   if (argc < 3) {
     puts(
@@ -685,7 +704,27 @@ int move_command(int argc, char** argv) {
       memcpy(newEntryLoc, &(file->fileName), 8);
       newEntryLoc += 8;
       memcpy(newEntryLoc, &(file->extension), 3);
-      *cur = *file;  // copying data
+      memcpy(newEntryLoc, &(file->fileName), 8);
+      newEntryLoc += 8;
+      memcpy(newEntryLoc, &(file->extension), 3);
+      newEntryLoc += 3;
+      memcpy(newEntryLoc, &(file->attributes), 19);
+      newEntryLoc += 1;
+      memcpy(newEntryLoc, &(file->reserved), 2);
+      newEntryLoc += 2;
+      memcpy(newEntryLoc, &(file->creationTime), 2);
+      newEntryLoc += 2;
+      memcpy(newEntryLoc, &(file->creationDate), 2);
+      newEntryLoc += 2;
+      memcpy(newEntryLoc, &(file->lastAccessDate), 2);
+      newEntryLoc += 4;
+      memcpy(newEntryLoc, &(file->lastWriteTime), 2);
+      newEntryLoc += 2;
+      memcpy(newEntryLoc, &(file->lastWriteDate), 2);
+      newEntryLoc += 2;
+      memcpy(newEntryLoc, &(file->firstLogicalCluster), 2);
+      newEntryLoc += 2;
+      memcpy(newEntryLoc, &(file->fileSize), 4);
       file->empty = 1;
       *file_location = 0xE5;
       break;
@@ -717,7 +756,7 @@ int move_command(int argc, char** argv) {
     memcpy(newEntryLoc, &(file->firstLogicalCluster), 2);
     newEntryLoc += 2;
     memcpy(newEntryLoc, &(file->fileSize), 4);
-    
+
     (*destNumEntries)++;
     file->empty = 1;  // this is only a more immediate solution to remove
     *file_location = 0xE5;
@@ -726,6 +765,15 @@ int move_command(int argc, char** argv) {
   return 0;
 }
 
+/**
+ * @brief Exits the shell.
+ * 
+ * Confirms user wants to exit, and saves the state of the image.
+ * 
+ * @param argc Number of arguments
+ * @param argv List of arguments. (None are applicable).
+ * @return int Success condition.
+ */
 int exit_command(int argc, char** argv) {
   puts("\n\033[33;43m▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\033[0m");
   puts(
@@ -738,7 +786,7 @@ int exit_command(int argc, char** argv) {
   fgets(conf, 4, stdin);
 
   if (conf[0] == 'y' || conf[0] == 'Y') {
-    FILE *fp = fopen(getImagePath(), "w");
+    FILE* fp = fopen(getImagePath(), "w");
     fwrite(getSystem(), getSystemSize(), 1, fp);
     fclose(fp);
     puts(

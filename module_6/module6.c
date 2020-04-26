@@ -115,6 +115,17 @@ int main(int argc, char** argv) {
   return 0;
 }
 
+/**
+ * @brief Searches through an entire file system for a file
+ * 
+ * Using a recursive search, this function will search through an entire image to find a specified
+ * file. This then returns an entry for this file.
+ * 
+ * @param dir Current searching directory
+ * @param whole Pointer to the system.
+ * @param key Name of the file to search for, including extension.
+ * @return ENTRY* Entry of the file that was being searched for. NULL if the file is not found.
+ */
 ENTRY* file_recurse(BYTE* dir, BYTE* whole, const char* key) {
   // getting dir info
   uint32_t num_entries = *((uint32_t*)dir);
