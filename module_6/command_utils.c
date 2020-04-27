@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include "command_utils.h"
 
-// Doxygen in .h file
 char *trim_whitespace(char *str) {
     while (isspace(*str)) {
         *str = 0;
@@ -21,7 +20,6 @@ char *trim_whitespace(char *str) {
     return str;
 }
 
-// Doxygen in .h file
 uint32_t split_args(char *command, char **argv) {
     // Delegate the responsibility of making an array of char pointers to the calling function
     uint32_t argc = 0;
@@ -66,7 +64,6 @@ uint32_t split_args(char *command, char **argv) {
     return argc;
 }
 
-// Doxygen in .h file
 void memcpyUpper(char* dest, const char* source, int nchars)
 {
     for(int i = 0; i < nchars; i++)
@@ -77,7 +74,6 @@ void memcpyUpper(char* dest, const char* source, int nchars)
     return;
 }
 
-// Doxygen in .h file
 uint16_t findDotPosition(const char *lorainne)
 {
     uint16_t count = 1;

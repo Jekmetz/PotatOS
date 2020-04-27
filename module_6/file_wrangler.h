@@ -34,14 +34,21 @@ void loadBootSector(FILE *fpIn);
 /**
 * @brief loads the FAT
 *
-* @param sys raw byte array of entire file system
+* @param fpIn raw byte array of entire file system
 * @param startingSector number of the sector to start loading the fat from
 *
 * @return pointer to FAT
 */
 uint16_t *loadFAT(BYTE *fpIn, uint32_t startingSector);
 
-// TODO: Doxy
+/**
+* @brief loads a directory
+*
+* @param sys raw byte array of entire file system
+* @param startingSector number of the sector to start loading the fat from
+*
+* @return pointer to FAT
+*/
 void loadDir(BYTE** dirp, BYTE *sys, uint32_t startingSec);
 
 /**
@@ -80,7 +87,11 @@ BOOTSECTORSTRUCT *getBootSectorIn();
 */
 BYTE* getSystem();
 
-// TODO: Doxy
+/**
+* @brief gets entire system size
+*
+* @return u32 int that is system size
+*/
 uint32_t getSystemSize();
 
 /**
@@ -104,8 +115,18 @@ uint16_t* getDiabetes2();
 */
 BYTE* getCWD();
 
+/**
+* @brief gets the root directory
+*
+* @return pointer to the root directory
+*/
 BYTE* getRoot();
 
+/**
+* @brief gets current working directory path
+*
+* @return char pointer that contains current working directory path
+*/
 char* getCwdPath();
 
 /**

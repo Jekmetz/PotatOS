@@ -7,7 +7,6 @@
 
 #include <stdint.h>
 
-// TODO: Define this struct
 // Sector size is 512 bytes always with FAT12
 #define SECTORSIZE 512
 #define SECTORSPERFAT 9 
@@ -15,13 +14,10 @@
 #define MAXDIRENTRY 16
 #define MAXENTRIESPERDIR 16
 
-// TODO: Define this struct
 #define DEBLOC() printf("\033[33;1m%s(%d)\033[0m\n",__FILE__,__LINE__)
 
-// TODO: Define this struct
 typedef unsigned char BYTE;
 
-// TODO: Define this struct
 typedef int (*CommandFunction)(int, char **);
 
 /**
@@ -41,7 +37,37 @@ struct command {
     char *command_examples;
 };
 
-// TODO: Define this struct
+/**
+* @brief A struct to hold an directory entry
+*
+* @param empty If the entry is empty
+* @param fileName The name of the entry
+* @param extension The extension, type, of the entry
+* @param attributes The attributes of the entry
+* @param reserved If the entry is resereved
+* @param creationTime Entry creation time
+* @param creationHour Entry creation hour
+* @param creationMin Entry creation min
+* @param creationSec Entry creation sec
+* @param creationDate Entry creation date
+* @param creationYear Entry creation year
+* @param creationMonth Entry creation month
+* @param creationDay Entry creation day
+* @param lastAccessDate Entry access date
+* @param lastAccessYear Entry access year
+* @param lastAccessMonth Entry access month
+* @param lastAccessDay Entry access day
+* @param lastWriteTime Entry last write time
+* @param lastWriteHour Entry last write hour
+* @param lastWriteMin Entry last write min
+* @param lastWriteSec Entry last write sec
+* @param lastWriteDate Entry last write date
+* @param lastWriteYear Entry last write year
+* @param lastWriteMonth Entry last write month
+* @param lastWriteDay Entry last write day
+* @param firstLogicalCluster First logical cluster
+* @param fileSize Entry filesize
+ */
 typedef struct ENTRY {
 	BYTE empty;
 	char fileName[9];
@@ -78,7 +104,6 @@ typedef struct PREVDIR {
 	uint32_t sectorStart;
 } PREVDIR;
 
-// TODO: Define this struct
 typedef struct command command_t;
 
 /**
@@ -111,9 +136,14 @@ uint32_t split_args(char *command, char **argv);
 */
 void memcpyUpper(char*,const char*, int);
 
-// TODO: Need to figure out what this is
+// Do not include
 int strcimp(char const *a, char const* b);
 
+/**
+* @brief Star search for ls
+*
+* @param starryboi The char pointer that contians a star search
+*/
 uint32_t starsearch(const char* starryboi, const char* fileboi);
 /*
 * @brief Finds the dot position of a certain string
