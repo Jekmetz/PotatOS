@@ -1,0 +1,65 @@
+Alarm: 
+	alarm -s <alarm name> -d MM:DD:YYYY
+	alarm -d <alarm name>
+	alarm -l	
+Alias: 
+	alias <native command> <alias command> 
+Change Directory:
+	cd <dir>
+Date:
+	-s MM:DD:YYY 
+Delete PCB:
+	deletePCB <command Name>
+Exit (M6):
+	exit
+Help (MPX and M6):
+	help <command>
+History:
+	history
+Infinity:
+	infinity
+List:
+	ls
+	ls <file>
+Loadr3:
+	loadr3
+Move:
+	move <file> <location>
+Print Boot Sector:
+	pbsi
+Print root dir
+	prd
+Rename:
+	rename <file> <newName>
+Resume PCB:
+	resumePCB <process name>
+Root:
+	root
+Set PCB Priority:
+	setPriorityPCB <process name> -p <priority>
+Show All PCBs:
+	showAllPCBs
+Show Blocked PCBs:
+	showBlockedPCBs
+Show PCB:
+	showPCB <process name>
+Show Memory:
+	showMem
+Show Allocated Memory:
+	showAllocMem
+Show Free Memory:
+	showFreeMem
+Show Ready PCBs:
+	showReadyPCBs
+Show Suspended Ready PCBs:
+	showSusReadyPCBs
+Shutdown:
+	shutdown
+Suspend PCB:
+	suspendPCB <process name>
+Time:
+	time -s HH:MM:SS
+Type:
+	type <file.ext>
+Version:
+	version
